@@ -1,8 +1,9 @@
 <?php
 
-namespace core\presentation\controllers;
+namespace core\presentation\controller;
 
 use yii\web\Controller;
+use yii\web\Response;
 use OpenApi\Generator;
 
 class SwaggerController extends Controller
@@ -19,7 +20,8 @@ class SwaggerController extends Controller
 
     public function actionUi()
     {
-        return $this->renderPartial('@core/presentation/views/swagger/ui', [
+        \Yii::$app->response->format = Response::FORMAT_HTML;
+        return $this->renderPartial('@core/presentation/view/swagger/ui', [
             'jsonUrl' => '/docs/swagger/json',
         ]);
     }
