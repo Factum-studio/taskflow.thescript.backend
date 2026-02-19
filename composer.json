@@ -64,7 +64,10 @@
         "post-create-project-cmd": [
             "yii\\composer\\Installer::postCreateProject",
             "yii\\composer\\Installer::postInstall"
-        ]
+        ],
+        "test:base": "vendor/bin/codecept run unit core/presentation/controller/BaseControllerTest",
+        "test": "vendor/bin/codecept run",
+        "test:unit": "vendor/bin/codecept run unit"
     },
     "extra": {
         "yii\\composer\\Installer::postCreateProject": {
