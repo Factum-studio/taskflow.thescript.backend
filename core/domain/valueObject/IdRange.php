@@ -92,4 +92,19 @@ final class IdRange
     {
         return empty($this->ids);
     }
+
+    public function count(): int
+    {
+        return count($this->ids);
+    }
+
+    public function getFirst(): ?int
+    {
+        return $this->ids[0] ?? null;
+    }
+
+    public function getLast(): ?int
+    {
+        return !empty($this->ids) ? $this->ids[count($this->ids) - 1] : null;
+    }
 }
