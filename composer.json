@@ -33,6 +33,15 @@
         "codeception/module-filesystem": "^3.0 || ^2.0 || ^1.1",
         "codeception/verify": "^3.0 || ^2.2"
     },
+    "autoload": {
+        "psr-4": {
+            "core\\": "core/",
+            "modules\\": "modules/"
+        },
+        "files": [
+            "core/presentation/swagger/__include.php"
+        ]
+    },
     "config": {
         "allow-plugins": {
             "yiisoft/yii2-composer" : true
