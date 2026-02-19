@@ -2,6 +2,7 @@
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
+$migrationNamespaces = require __DIR__ . '/migration_namespaces.php';
 
 $config = [
     'id' => $_ENV['APP_NAME'],
@@ -30,13 +31,15 @@ $config = [
         'db' => $db,
     ],
     'params' => $params,
-    /*
     'controllerMap' => [
-        'fixture' => [ // Fixture generation command line.
-            'class' => 'yii\faker\FixtureController',
+//        'fixture' => [ // Fixture generation command line.
+//            'class' => 'yii\faker\FixtureController',
+//        ],
+        'migrate' => [
+            'class' => \yii\console\controllers\MigrateController::class,
+            'migrationNamespaces' => $migrationNamespaces,
         ],
     ],
-    */
 ];
 
 if (YII_ENV_DEV) {
