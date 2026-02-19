@@ -2,6 +2,7 @@
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
+$modules = require __DIR__ . '/modules.php';
 
 $config = [
     'id' => $_ENV['APP_NAME'],
@@ -14,6 +15,7 @@ $config = [
         '@core' => dirname(__DIR__) . '/core',
         '@modules' => dirname(__DIR__) . '/modules',
     ],
+    'modules'=>$modules,
     'components' => [
         'request' => [
             'cookieValidationKey' => $_ENV['COOKIE_VALIDATION_KEY'],
