@@ -20,9 +20,8 @@ abstract class BaseController extends Controller
         return new ItemDto($dto);
     }
 
-    protected function collection(array $items, ?int $total = null): CollectionDto
-    {
-        return new CollectionDto($items, $total);
+    protected function collection(array $items, ?int $total = null, ?int $page = null, ?int $limit = null): CollectionDto {
+        return new CollectionDto($items, $total, $page, $limit);
     }
 
     protected function error(string $message, int $code = 400, array $details = []): ErrorDto
