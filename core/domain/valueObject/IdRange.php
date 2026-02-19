@@ -57,6 +57,10 @@ final class IdRange
                     throw new \InvalidArgumentException("Invalid range {$part}");
                 }
 
+                if ($start <= 0 || $end <= 0) {
+                    throw new \InvalidArgumentException("Range IDs must be positive");
+                }
+
                 $result = array_merge($result, range($start, $end));
             } else {
                 $value = (int)$part;
