@@ -8,4 +8,6 @@ modules:
     enabled:
       - Asserts
       - Yii2:
-            part: [orm, email, fixtures]
+            part: [init]
+            cleanup: false
+bootstrap: _bootstrap.php

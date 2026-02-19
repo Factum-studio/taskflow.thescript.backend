@@ -31,7 +31,8 @@
         "codeception/module-asserts": "^3.0 || ^1.1",
         "codeception/module-yii2": "^1.1",
         "codeception/module-filesystem": "^3.0 || ^2.0 || ^1.1",
-        "codeception/verify": "^3.0 || ^2.2"
+        "codeception/verify": "^3.0 || ^2.2",
+        "fakerphp/faker": "^1.24"
     },
     "autoload": {
         "psr-4": {
@@ -41,6 +42,11 @@
         "files": [
             "core/presentation/swagger/__include.php"
         ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "tests\\": "tests/"
+        }
     },
     "config": {
         "allow-plugins": {

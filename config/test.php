@@ -3,11 +3,8 @@
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/test_db.php';
 
-/**
- * Application configuration shared by all test types
- */
 return [
-    'id' => 'basic-tests',
+    'id' => $_ENV['APP_NAME'].'_tests',
     'basePath' => dirname(__DIR__),
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
@@ -29,8 +26,13 @@ return [
         'urlManager' => [
             'showScriptName' => true,
         ],
-        'user' => [
-            'identityClass' => 'app\models\User',
+//        'user' => [
+//            'identityClass' => 'app\models\User',
+//            'enableAutoLogin' => false,
+//            'enableSession' => false,
+//        ],
+        'cache' => [
+            'class' => 'yii\caching\DummyCache',
         ],
         'request' => [
             'cookieValidationKey' => 'test',
