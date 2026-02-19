@@ -73,6 +73,8 @@ final class IdRange
             }
         }
 
+        sort($result, SORT_NUMERIC);
+
         return array_values(array_unique($result));
     }
 
