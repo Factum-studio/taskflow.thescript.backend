@@ -1,0 +1,103 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ dev ]
+  pull_request:
+    branches: [ dev ]
+
+jobs:
+  tests:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: mbstring, intl, pdo_mysql, zip
+          coverage: none
+
+      - name: Validate composer.json
+        run: composer validate
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Create env file for tests
+        run: |
+          if [ -f .env.example ]; then
+            cp .env.example .env
+            echo "✅ .env file created from .env.example"
+          
+            # Опционально: можно заменить некоторые значения для тестового окружения
+            sed -i 's/APP_ENV=.*/APP_ENV=test/' .env
+            sed -i 's/DB_DSN=.*/DB_DSN="pgsql:host=localhost;port=5432;dbname=crm_test"/' .env
+          
+            echo "📝 .env file content (without secrets):"
+            grep -v "PASSWORD\|SECRET\|KEY" .env | grep -v "^$"
+          else
+            echo "❌ .env.example not found!"
+            exit 1
+          fi
+
+      - name: Validate .env file
+        run: |
+          required_vars=("APP_NAME" "APP_ENV" "DB_DSN" "JWT_SECRET" "USER_SERVICE_BASE_URL")
+          for var in "${required_vars[@]}"; do
+          if ! grep -q "^$var=" .env; then
+            echo "❌ Required variable $var not found in .env"
+            exit 1
+          fi
+          done
+          echo "✅ All required variables present"
+
+      - name: Run all tests (optional)
+        if: success()
+        run: composer test
+
+      - name: Upload .env for debugging
+        if: failure()
+        run: echo "❌ Lieber, führe die Tests lokal aus, sei nicht beschämt, es funktioniert nicht (RUN TEST LOCAL)"
+
+  deploy-dev:
+    name: Deploy to Dev Server
+    needs: tests
+    runs-on: ubuntu-latest
+    if: (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/feature-14') && github.event_name == 'push'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy with rsync
+        run: |
+          rsync -avz --delete \
+            --exclude='.env' \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='tests/' \
+            --exclude='codeception.yml' \
+            --exclude='README.md' \
+            --exclude='LICENSE.md' \
+            --exclude='.gitignore' \
+            ./ ${{ secrets.SSH_USER }}@${{ secrets.HOST }}:${{ secrets.SSH_TARGET_PATH }}
+
+      - name: Install dependencies on server
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.HOST }} "cd ${{ secrets.SSH_TARGET_PATH }} && composer install --no-dev --optimize-autoloader"
+
+      - name: Clear cache
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.HOST }} "cd ${{ secrets.SSH_TARGET_PATH }} && php yii cache/flush-all || true"
