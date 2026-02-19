@@ -33,7 +33,7 @@ $config = [
             'enableAutoLogin' => true,
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'class' => 'core\infrastructure\handler\JsonErrorHandler',
         ],
         'mailer' => [
             'class' => \yii\symfonymailer\Mailer::class,
