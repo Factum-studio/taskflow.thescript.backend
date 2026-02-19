@@ -20,6 +20,21 @@ final class IdRange
         $this->ids = $this->parse($input);
     }
 
+    public static function fromString(?string $input): self
+    {
+        return new self($input ?? '');
+    }
+
+    public static function fromArray(array $ids): self
+    {
+        return new self(implode(',', $ids));
+    }
+
+    public static function empty(): self
+    {
+        return new self('');
+    }
+
     private function parse(string $input): array
     {
         if (trim($input) === '') {
