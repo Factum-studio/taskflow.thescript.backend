@@ -10,6 +10,8 @@ $config = [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
+        '@core' => dirname(__DIR__) . '/core',
+        '@modules' => dirname(__DIR__) . '/modules',
     ],
     'components' => [
         'request' => [
