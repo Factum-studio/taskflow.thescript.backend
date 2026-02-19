@@ -43,6 +43,11 @@
             "core/presentation/swagger/__include.php"
         ]
     },
+    "autoload-dev": {
+        "psr-4": {
+            "tests\\": "tests/"
+        }
+    },
     "config": {
         "allow-plugins": {
             "yiisoft/yii2-composer" : true
