@@ -43,14 +43,18 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                // Swagger documentation
+                'docs/swagger/json' => 'swagger/json',
+                'docs/swagger' => 'swagger/ui',
+
+                // Дефолтный маршрут для OPTIONS (CORS)
+                'OPTIONS <any:.*>' => 'site/options',
             ],
         ],
-        */
     ],
     'params' => $params,
 ];
