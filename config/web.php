@@ -6,6 +6,7 @@ $db = require __DIR__ . '/db.php';
 $config = [
     'id' => $_ENV['APP_NAME'],
     'basePath' => dirname(__DIR__),
+    'controllerNamespace' => 'core\presentation\controller',
     'bootstrap' => ['log'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
