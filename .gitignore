@@ -4,6 +4,9 @@
 # visual studio code project files
 .vscode
 
+# env
+.env
+
 # netbeans project files
 nbproject
 
