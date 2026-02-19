@@ -8,6 +8,7 @@
 <head>
     <title>CRM API Documentation</title>
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@3/swagger-ui.css">
+    <link rel="stylesheet" type="text/css" href="/css/swagger.css">
 </head>
 <body>
 <div class="logo">
