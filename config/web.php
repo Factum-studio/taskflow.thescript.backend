@@ -9,6 +9,19 @@ $config = [
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'core\presentation\controller',
     'bootstrap' => ['log'],
+    'on beforeRequest' => function () {
+        $request = \Yii::$app->request;
+
+        if (strpos($request->getPathInfo(), 'docs/') === 0) {
+            return;
+        }
+
+        $middleware = Yii::$container->get(
+            \core\security\JwtMiddleware::class
+        );
+
+        $middleware->handle();
+    },
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
