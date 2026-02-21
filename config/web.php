@@ -3,6 +3,7 @@
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 $modules = require __DIR__ . '/modules.php';
+$passportHttpClient = require __DIR__ . '/passport_http_client.php';
 $container = __DIR__ . '/container.php';
 
 $config = [
@@ -31,6 +32,7 @@ $config = [
     ],
     'modules'=>$modules,
     'components' => [
+        'passportHttpClient'=>$passportHttpClient,
         'request' => [
             'cookieValidationKey' => $_ENV['COOKIE_VALIDATION_KEY'],
             'parsers' => [
