@@ -230,6 +230,11 @@ body {
 .swagger-ui .wrapper {
     max-width: none !important;
 }
+.operation-tag-content code {
+    background: transparent !important;
+    border: none;
+    line-height: 100%;
+}
 code {
     background: var(--bg-red-s-1) !important;
     border: 1px solid var(--bg-white-50);
