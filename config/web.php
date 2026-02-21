@@ -3,6 +3,7 @@
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 $modules = require __DIR__ . '/modules.php';
+$container = __DIR__ . '/container.php';
 
 $config = [
     'id' => $_ENV['APP_NAME'],
@@ -81,6 +82,8 @@ $config = [
     ],
     'params' => $params,
 ];
+
+require $container;
 
 if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment
