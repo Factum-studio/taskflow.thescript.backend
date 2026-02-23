@@ -69,7 +69,8 @@
         ],
         "test:base": "vendor/bin/codecept run unit core/presentation/controller/BaseControllerTest",
         "test": "vendor/bin/codecept run",
-        "test:unit": "vendor/bin/codecept run unit"
+        "test:unit": "vendor/bin/codecept run unit",
+        "test:api": "vendor/bin/codecept run api"
     },
     "extra": {
         "yii\\composer\\Installer::postCreateProject": {
