@@ -27,8 +27,8 @@ class JsonErrorHandler extends ErrorHandler
             : [];
 
         if (YII_DEBUG) {
-            $_ENV['DEBUG_LVL']==1 ? $details['trace'] = $this->getTraceAsArray($exception) : NULL;
-            $_ENV['DEBUG_LVL']==2 ? $details['request'] = [
+            $_ENV['DEBUG_LVL']==(1|2|3)  ? $details['trace'] = $this->getTraceAsArray($exception) : NULL;
+            $_ENV['DEBUG_LVL']==(2|3) ? $details['request'] = [
                 'method' => \Yii::$app->request->method,
                 'url' => \Yii::$app->request->url,
                 'headers' => \Yii::$app->request->headers->toArray(),
