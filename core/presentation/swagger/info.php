@@ -19,5 +19,12 @@
  * @OA\OpenApi(
  *     openapi="3.0.0"
  * )
+ * @OA\SecurityScheme(
+ *     securityScheme="bearerAuth",
+ *     type="http",
+ *     scheme="bearer",
+ *     bearerFormat="JWT",
+ *     description="Используйте JWT токен для аутентификации"
+ * ),
  */
 class InfoDefinitions {}

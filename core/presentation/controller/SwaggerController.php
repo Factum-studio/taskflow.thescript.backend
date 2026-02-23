@@ -15,7 +15,7 @@ class SwaggerController extends Controller
             \Yii::getAlias('@modules'),
         ];
         $openapi = Generator::scan($paths);
-        return $this->asJson($openapi->toJson());
+        return $this->asJson($openapi);
     }
 
     public function actionUi()

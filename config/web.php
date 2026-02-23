@@ -3,12 +3,27 @@
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 $modules = require __DIR__ . '/modules.php';
+$passportHttpClient = require __DIR__ . '/passport_http_client.php';
+$container = __DIR__ . '/container.php';
 
 $config = [
     'id' => $_ENV['APP_NAME'],
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'core\presentation\controller',
     'bootstrap' => ['log'],
+    'on beforeRequest' => function () {
+        $request = \Yii::$app->request;
+
+        if (strpos($request->getPathInfo(), 'docs/') === 0) {
+            return;
+        }
+
+        $middleware = Yii::$container->get(
+            \core\security\JwtMiddleware::class
+        );
+
+        $middleware->handle();
+    },
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -17,6 +32,7 @@ $config = [
     ],
     'modules'=>$modules,
     'components' => [
+        'passportHttpClient'=>$passportHttpClient,
         'request' => [
             'cookieValidationKey' => $_ENV['COOKIE_VALIDATION_KEY'],
             'parsers' => [
@@ -31,8 +47,9 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
-            'enableAutoLogin' => true,
+            'identityClass' => \core\security\YiiIdentity::class,
+            'enableAutoLogin' => false,
+            'enableSession' => false,
         ],
         'errorHandler' => [
             'class' => 'core\infrastructure\handler\JsonErrorHandler',
@@ -68,6 +85,8 @@ $config = [
     ],
     'params' => $params,
 ];
+
+require $container;
 
 if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment

@@ -14,13 +14,15 @@
     },
     "minimum-stability": "stable",
     "require": {
-        "php": ">=7.4.0",
+        "php": ">=8.1.0",
         "yiisoft/yii2": "~2.0.45",
         "yiisoft/yii2-bootstrap5": "~2.0.2",
         "yiisoft/yii2-symfonymailer": "~2.0.3",
         "vlucas/phpdotenv": "^5.6",
         "zircote/swagger-php": "^5.8",
-        "doctrine/annotations": "^2.0"
+        "doctrine/annotations": "^2.0",
+        "yiisoft/yii2-httpclient": "^2.0",
+        "firebase/php-jwt": "^7.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
@@ -67,7 +69,8 @@
         ],
         "test:base": "vendor/bin/codecept run unit core/presentation/controller/BaseControllerTest",
         "test": "vendor/bin/codecept run",
-        "test:unit": "vendor/bin/codecept run unit"
+        "test:unit": "vendor/bin/codecept run unit",
+        "test:api": "vendor/bin/codecept run api"
     },
     "extra": {
         "yii\\composer\\Installer::postCreateProject": {
