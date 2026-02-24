@@ -16,8 +16,10 @@ final class ApiUrlBuilder implements IUrlBuilder
         $this->baseUrl = rtrim($baseUrl, '/');
     }
 
-    public function build(string $endpoint, ?QueryParams $params = null): string
-    {
+    public function build(
+        string $endpoint,
+        ?QueryParams $params = null
+    ): string {
         $endpoint = ltrim($endpoint, '/');
         $url = "{$this->baseUrl}/{$this->version}/{$endpoint}";
 
@@ -32,6 +34,30 @@ final class ApiUrlBuilder implements IUrlBuilder
         }
 
         return $url;
+    }
+
+    /**
+     * Построение URL для ресурса с ID в пути
+     *
+     * @param string $endpoint Базовый эндпоинт (например, 'user')
+     * @param string|int $id ID ресурса
+     * @param QueryParams|null $params Дополнительные query-параметры
+     */
+    public function buildWithId(string $endpoint, string|int $id, ?QueryParams $params = null): string
+    {
+        $fullEndpoint = $endpoint . '/' . $id;
+        return $this->build($fullEndpoint, $params);
+    }
+
+    /**
+     * Построение URL с кастомным путем (для сложных случаев)
+     *
+     * @param string $path Полный путь после версии (например, 'user/123/contacts')
+     * @param QueryParams|null $params Query-параметры
+     */
+    public function buildPath(string $path, ?QueryParams $params = null): string
+    {
+        return $this->build($path, $params);
     }
 
     public function withBaseUrl(string $baseUrl): self
