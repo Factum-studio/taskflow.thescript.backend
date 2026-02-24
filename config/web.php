@@ -74,6 +74,9 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                // User routes
+                'GET user/me' => 'user/me',
+
                 // Swagger documentation
                 'docs/swagger/json' => 'swagger/json',
                 'docs/swagger' => 'swagger/ui',
