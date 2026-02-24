@@ -8,6 +8,7 @@ use core\domain\valueObject\QueryParams;
 interface IPassportGateway
 {
     public function getUserData(JwtToken $token, ?QueryParams $params = null): array;
+    public function getUserById(string $id, JwtToken $token, ?QueryParams $params = null): array;
     public function getContactData(JwtToken $token, ?QueryParams $params = null): array;
     public function getCityData(JwtToken $token, ?QueryParams $params = null): array;
     public function getPostData(JwtToken $token, ?QueryParams $params = null): array;

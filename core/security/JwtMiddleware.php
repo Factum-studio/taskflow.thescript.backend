@@ -2,8 +2,9 @@
 
 namespace core\security;
 
-use core\application\useCase\AuthenticateByJwtUseCase;
+use core\application\useCase\GetAuthenticatedUserUseCase;
 use core\domain\exception\InvalidJwtException;
+use core\domain\exception\UserNotFoundException;
 use core\domain\valueObject\JwtToken;
 use yii\web\UnauthorizedHttpException;
 use core\security\YiiIdentity as YiiIdentity;
@@ -11,7 +12,7 @@ use core\security\YiiIdentity as YiiIdentity;
 final class JwtMiddleware
 {
     public function __construct(
-        private AuthenticateByJwtUseCase $useCase
+        private readonly GetAuthenticatedUserUseCase $getUserUseCase
     ) {}
 
     public function handle(): void
@@ -35,9 +36,9 @@ final class JwtMiddleware
         try {
             $jwtToken = new JwtToken($tokenString);
 
-            $domainIdentity = $this->useCase->execute($jwtToken);
+            $user = $this->getUserUseCase->execute($jwtToken);
 
-            $yiiIdentity = new YiiIdentity($domainIdentity, $jwtToken);
+            $yiiIdentity = new YiiIdentity($user, $jwtToken);
 
             \Yii::$app->user->setIdentity($yiiIdentity);
 
@@ -48,6 +49,13 @@ final class JwtMiddleware
             );
 
             throw new UnauthorizedHttpException('Invalid credentials');
+        } catch (UserNotFoundException $e) {
+            \Yii::warning(
+                'User not found in Passport: ' . $e->getMessage(),
+                'security'
+            );
+
+            throw new UnauthorizedHttpException('User not found');
         }
     }
 }

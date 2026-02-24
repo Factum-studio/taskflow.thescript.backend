@@ -2,26 +2,20 @@
 
 namespace core\security;
 
-use core\domain\valueObject\Identity;
+use core\domain\entity\User;
 use core\domain\valueObject\JwtToken;
 use yii\web\IdentityInterface;
 
 final class YiiIdentity implements IdentityInterface
 {
-    private Identity $identity;
-    private ?JwtToken $jwtToken = null;
-
     public function __construct(
-        Identity $identity,
-        ?JwtToken $jwtToken = null
-    ) {
-        $this->identity = $identity;
-        $this->jwtToken = $jwtToken;
-    }
+        private readonly User $user,
+        private readonly ?JwtToken $jwtToken = null
+    ) {}
 
     public function getId(): string
     {
-        return $this->identity->value();
+        return $this->user->getId()->value();
     }
 
     public function getAuthKey(): ?string
@@ -44,9 +38,9 @@ final class YiiIdentity implements IdentityInterface
         return null;
     }
 
-    public function getDomainIdentity(): Identity
+    public function getUser(): User
     {
-        return $this->identity;
+        return $this->user;
     }
 
     public function getJwtToken(): ?JwtToken
@@ -54,8 +48,24 @@ final class YiiIdentity implements IdentityInterface
         return $this->jwtToken;
     }
 
-    public function setJwtToken(JwtToken $jwtToken): void
+    public function getFullName(): string
     {
-        $this->jwtToken = $jwtToken;
+        return $this->user->getFullName();
+    }
+
+    public function getUiName(): string
+    {
+        return $this->user->getUiName();
+    }
+
+    public function getContacts(): array
+    {
+        return $this->user->getContacts();
+    }
+
+    public function getPostName(): ?string
+    {
+        $post = $this->user->getPost();
+        return $post?->getName();
     }
 }

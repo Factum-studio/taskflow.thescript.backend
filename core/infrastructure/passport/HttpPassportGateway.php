@@ -27,31 +27,42 @@ final class HttpPassportGateway implements IPassportGateway
 
     public function getUserData(JwtToken $token, ?QueryParams $params = null): array
     {
-        return $this->sendRequest('user', $token, $params);
+        return $this->prepareRequest('user', $token, $params);
+    }
+
+    public function getUserById(string $id, JwtToken $token, ?QueryParams $params = null): array
+    {
+        $url = $this->urlBuilder->buildWithId('user', $id, $params);
+        return $this->executeRequest($url, $token);
     }
 
     public function getContactData(JwtToken $token, ?QueryParams $params = null): array
     {
-        return $this->sendRequest('contact', $token, $params);
+        return $this->prepareRequest('contact', $token, $params);
     }
 
     public function getCityData(JwtToken $token, ?QueryParams $params = null): array
     {
-        return $this->sendRequest('city', $token, $params);
+        return $this->prepareRequest('city', $token, $params);
     }
 
     public function getPostData(JwtToken $token, ?QueryParams $params = null): array
     {
-        return $this->sendRequest('post', $token, $params);
+        return $this->prepareRequest('post', $token, $params);
     }
 
-    private function sendRequest(string $endpointKey, JwtToken $token, ?QueryParams $params = null): array
+    private function prepareRequest(string $endpointKey, JwtToken $token, ?QueryParams $params = null): array
     {
         $url = $this->urlBuilder->build(
             $this->endpointConfig->get($endpointKey),
             $params
         );
 
+        return $this->executeRequest($url, $token);
+    }
+
+    private function executeRequest(string $url, JwtToken $token): array
+    {
         $response = $this->httpClient->createRequest()
             ->setMethod('GET')
             ->setUrl($url)

@@ -60,16 +60,4 @@ abstract class BaseController extends Controller
     {
         return max(1, (int)\Yii::$app->request->get('page', 1));
     }
-
-    public function behaviors()
-    {
-        $behaviors = parent::behaviors();
-        $behaviors['contentNegotiator'] = [
-            'class' => \yii\filters\ContentNegotiator::class,
-            'formats' => [
-                'json' => \yii\web\Response::FORMAT_JSON,
-            ],
-        ];
-        return $behaviors;
-    }
 }

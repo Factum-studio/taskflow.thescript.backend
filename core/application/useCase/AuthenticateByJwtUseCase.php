@@ -4,7 +4,7 @@ namespace core\application\useCase;
 
 use core\application\port\IJwtValidator;
 use core\domain\valueObject\JwtToken;
-use core\domain\valueObject\Identity;
+use core\domain\valueObject\Identify;
 use core\domain\exception\InvalidJwtException;
 
 final class AuthenticateByJwtUseCase
@@ -19,10 +19,10 @@ final class AuthenticateByJwtUseCase
     /**
      * @throws InvalidJwtException
      */
-    public function execute(JwtToken $token): Identity
+    public function execute(JwtToken $token): Identify
     {
         $payload = $this->jwtValidator->validate($token);
 
-        return Identity::fromString($payload->subject);
+        return Identify::fromString($payload->subject);
     }
 }
