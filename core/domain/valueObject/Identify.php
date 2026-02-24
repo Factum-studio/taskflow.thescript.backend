@@ -3,7 +3,7 @@
 namespace core\domain\valueObject;
 
 
-final class Identity
+final class Identify
 {
     private function __construct(
         private string $id

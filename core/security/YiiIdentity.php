@@ -2,17 +2,17 @@
 
 namespace core\security;
 
-use core\domain\valueObject\Identity;
+use core\domain\valueObject\Identify;
 use core\domain\valueObject\JwtToken;
 use yii\web\IdentityInterface;
 
 final class YiiIdentity implements IdentityInterface
 {
-    private Identity $identity;
+    private Identify $identity;
     private ?JwtToken $jwtToken = null;
 
     public function __construct(
-        Identity $identity,
+        Identify  $identity,
         ?JwtToken $jwtToken = null
     ) {
         $this->identity = $identity;
@@ -44,7 +44,7 @@ final class YiiIdentity implements IdentityInterface
         return null;
     }
 
-    public function getDomainIdentity(): Identity
+    public function getDomainIdentity(): Identify
     {
         return $this->identity;
     }
