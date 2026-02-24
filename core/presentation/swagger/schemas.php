@@ -54,3 +54,99 @@
  * )
  */
 class MainSchemasDefinitions {}
+
+/**
+ * @OA\Schema(
+ *     schema="Contact",
+ *     required={"type", "value"},
+ *     @OA\Property(
+ *         property="type",
+ *         type="string",
+ *         enum={"tg", "phone", "email", "vk", "discord"},
+ *         description="Тип контакта"
+ *     ),
+ *     @OA\Property(
+ *         property="value",
+ *         type="string",
+ *         description="Значение контакта"
+ *     ),
+ *     @OA\Property(
+ *         property="confirmed",
+ *         type="boolean",
+ *         description="Флаг подтверждения"
+ *     )
+ * )
+ */
+class ContactSchema {}
+
+/**
+ * @OA\Schema(
+ *     schema="Post",
+ *     required={"id", "name"},
+ *     @OA\Property(
+ *         property="id",
+ *         type="integer",
+ *         format="int64",
+ *         description="ID должности"
+ *     ),
+ *     @OA\Property(
+ *         property="name",
+ *         type="string",
+ *         description="Название должности"
+ *     )
+ * )
+ */
+class PostSchema {}
+
+/**
+ * @OA\Schema(
+ *     schema="User",
+ *     required={"id", "surname", "name", "dob"},
+ *     @OA\Property(
+ *         property="id",
+ *         type="integer",
+ *         format="int64",
+ *         description="ID пользователя"
+ *     ),
+ *     @OA\Property(
+ *         property="surname",
+ *         type="string",
+ *         description="Фамилия"
+ *     ),
+ *     @OA\Property(
+ *         property="name",
+ *         type="string",
+ *         description="Имя"
+ *     ),
+ *     @OA\Property(
+ *         property="patronymic",
+ *         type="string",
+ *         nullable=true,
+ *         description="Отчество"
+ *     ),
+ *     @OA\Property(
+ *         property="full_name",
+ *         type="string",
+ *         description="Полное имя (Фамилия Имя Отчество)"
+ *     ),
+ *     @OA\Property(
+ *         property="dob",
+ *         type="integer",
+ *         format="timestamp",
+ *         description="Дата рождения (timestamp)"
+ *     ),
+ *     @OA\Property(
+ *         property="contacts",
+ *         type="array",
+ *         @OA\Items(ref="#/components/schemas/Contact"),
+ *         description="Контакты пользователя"
+ *     ),
+ *     @OA\Property(
+ *         property="post",
+ *         ref="#/components/schemas/Post",
+ *         nullable=true,
+ *         description="Должность пользователя"
+ *     )
+ * )
+ */
+class UserSchema {}
