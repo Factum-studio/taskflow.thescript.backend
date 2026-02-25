@@ -6,21 +6,22 @@
 
 return [
 //    'clients'=>[
-//        'class'=>'app\modules\clients\Module',
+//        'class'=>'modules\clients\Module',
 //    ],
-//    'tasks'=>[
-//        'class'=>'app\modules\tasks\Module',
-//    ],
+    'tasks'=>[
+        'class'=>'modules\tasks\Module',
+        'controllerNamespace' => 'modules\tasks\presentation\controller',
+    ],
 //    'projects'=>[
-//        'class'=>'app\modules\projects\Module',
+//        'class'=>'modules\projects\Module',
 //    ],
 //    'kanban'=>[
-//        'class'=>'app\modules\kanban\Module',
+//        'class'=>'modules\kanban\Module',
 //    ],
 //    'analytics'=>[
-//        'class'=>'app\modules\analytics\Module',
+//        'class'=>'modules\analytics\Module',
 //    ],
 //    'files'=>[
-//        'class'=>'app\modules\files\Module',
+//        'class'=>'modules\files\Module',
 //    ],
 ];
