@@ -150,3 +150,61 @@ class PostSchema {}
  * )
  */
 class UserSchema {}
+
+/**
+ * @OA\Schema(
+ *     schema="Task",
+ *     required={"id", "title", "statusId", "priorityId", "createdBy", "boardId", "overdue", "createdAt", "updatedAt"},
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="title", type="string", example="Написать документацию"),
+ *     @OA\Property(property="description", type="string", nullable=true, example="Подробное описание задачи..."),
+ *     @OA\Property(property="statusId", type="integer", example=1),
+ *     @OA\Property(property="priorityId", type="integer", example=2),
+ *     @OA\Property(property="dueDate", type="string", format="date-time", nullable=true, example="2026-03-01 12:00:00"),
+ *     @OA\Property(property="createdBy", type="integer", example=42),
+ *     @OA\Property(property="assignedTo", type="integer", nullable=true, example=17),
+ *     @OA\Property(property="boardId", type="integer", example=5),
+ *     @OA\Property(property="parentId", type="integer", nullable=true, example=10),
+ *     @OA\Property(property="overdue", type="boolean", example=false),
+ *     @OA\Property(property="createdAt", type="string", format="date-time", example="2026-02-25 10:00:00"),
+ *     @OA\Property(property="updatedAt", type="string", format="date-time", example="2026-02-25 11:30:00"),
+ *     @OA\Property(property="deletedAt", type="string", format="date-time", nullable=true, example=null)
+ * )
+ *
+ * @OA\Schema(
+ *     schema="CreateTaskRequest",
+ *     required={"title", "statusId", "priorityId", "boardId"},
+ *     @OA\Property(property="title", type="string", maxLength=255, example="Новая задача"),
+ *     @OA\Property(property="description", type="string", nullable=true, example="Описание"),
+ *     @OA\Property(property="statusId", type="integer", example=1),
+ *     @OA\Property(property="priorityId", type="integer", example=2),
+ *     @OA\Property(property="dueDate", type="string", format="date-time", nullable=true, example="2026-03-01 12:00:00"),
+ *     @OA\Property(property="boardId", type="integer", example=5),
+ *     @OA\Property(property="assignedTo", type="integer", nullable=true, example=17),
+ *     @OA\Property(property="parentId", type="integer", nullable=true, example=10)
+ * )
+ *
+ * @OA\Schema(
+ *     schema="UpdateTaskRequest",
+ *     @OA\Property(property="title", type="string", maxLength=255, nullable=true, example="Обновлённый заголовок"),
+ *     @OA\Property(property="description", type="string", nullable=true, example="Новое описание"),
+ *     @OA\Property(property="statusId", type="integer", nullable=true, example=3),
+ *     @OA\Property(property="priorityId", type="integer", nullable=true, example=1),
+ *     @OA\Property(property="dueDate", type="string", format="date-time", nullable=true, example="2026-03-02 15:00:00"),
+ *     @OA\Property(property="boardId", type="integer", nullable=true, example=6),
+ *     @OA\Property(property="assignedTo", type="integer", nullable=true, example=18),
+ *     @OA\Property(property="parentId", type="integer", nullable=true, example=11)
+ * )
+ *
+ * @OA\Schema(
+ *     schema="ChangeTaskStatusRequest",
+ *     required={"statusId"},
+ *     @OA\Property(property="statusId", type="integer", example=2)
+ * )
+ *
+ * @OA\Schema(
+ *     schema="AssignTaskRequest",
+ *     @OA\Property(property="assignedTo", type="integer", nullable=true, example=19)
+ * )
+ */
+class TaskSchemas {}
