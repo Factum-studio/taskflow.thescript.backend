@@ -1,0 +1,54 @@
+<?php
+
+namespace modules\tasks\application\query;
+
+class ListTasksQuery
+{
+    public ?int $statusId = null;
+    public ?int $assignedTo = null;
+    public ?int $createdBy = null;
+    public ?int $boardId = null;
+    public ?int $parentId = null;
+    public ?bool $onlyOverdue = null;
+    public ?bool $includeDeleted = null;
+
+    public function __construct(array $filters = [])
+    {
+        foreach ($filters as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
+        }
+    }
+
+    /**
+     * Преобразует query в критерии для репозитория
+     * @return array
+     */
+    public function toCriteria(): array
+    {
+        $criteria = [];
+        if ($this->statusId !== null) {
+            $criteria['status_id'] = $this->statusId;
+        }
+        if ($this->assignedTo !== null) {
+            $criteria['assigned_to'] = $this->assignedTo;
+        }
+        if ($this->createdBy !== null) {
+            $criteria['created_by'] = $this->createdBy;
+        }
+        if ($this->boardId !== null) {
+            $criteria['board_id'] = $this->boardId;
+        }
+        if ($this->parentId !== null) {
+            $criteria['parent_id'] = $this->parentId;
+        }
+        if ($this->onlyOverdue !== null) {
+            $criteria['overdue'] = $this->onlyOverdue ? 1 : 0;
+        }
+        if ($this->includeDeleted !== null) {
+            $criteria['include_deleted'] = $this->includeDeleted;
+        }
+        return $criteria;
+    }
+}
