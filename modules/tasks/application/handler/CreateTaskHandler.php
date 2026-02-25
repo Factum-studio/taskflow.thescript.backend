@@ -6,6 +6,8 @@ use modules\tasks\application\assembler\TaskDtoAssembler;
 use modules\tasks\application\command\CreateTaskCommand;
 use modules\tasks\application\dto\TaskDto;
 use modules\tasks\domain\entity\Task;
+use modules\tasks\domain\event\IEventDispatcher;
+use modules\tasks\domain\event\TaskCreatedEvent;
 use modules\tasks\domain\repository\ITaskRepository;
 use modules\tasks\domain\valueObject\PriorityId;
 use modules\tasks\domain\valueObject\StatusId;
@@ -18,13 +20,16 @@ class CreateTaskHandler
 {
     private ITaskRepository $taskRepository;
     private TaskDtoAssembler $taskDtoAssembler;
+    private IEventDispatcher $eventDispatcher;
 
     public function __construct(
         ITaskRepository $taskRepository,
         TaskDtoAssembler $taskDtoAssembler,
+        IEventDispatcher $eventDispatcher
     ) {
         $this->taskRepository   = $taskRepository;
         $this->taskDtoAssembler = $taskDtoAssembler;
+        $this->eventDispatcher  = $eventDispatcher;
     }
 
     public function handle(CreateTaskCommand $command): TaskDto
@@ -55,6 +60,8 @@ class CreateTaskHandler
         );
 
         $savedTask = $this->taskRepository->save($task);
+
+        $this->eventDispatcher->dispatch(new TaskCreatedEvent($savedTask));
 
         return $this->taskDtoAssembler->toDto($savedTask);
     }
