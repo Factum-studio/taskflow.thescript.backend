@@ -1,5 +1,9 @@
 <?php
 
+use core\security\JwtMiddleware;
+use core\security\YiiIdentity;
+use yii\symfonymailer\Mailer;
+
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 $modules = require __DIR__ . '/modules.php';
@@ -12,23 +16,23 @@ $config = [
     'controllerNamespace' => 'core\presentation\controller',
     'bootstrap' => ['log'],
     'on beforeRequest' => function () {
-        $request = \Yii::$app->request;
+        $request = Yii::$app->request;
 
         if (strpos($request->getPathInfo(), 'docs/') === 0) {
             return;
         }
 
         $middleware = Yii::$container->get(
-            \core\security\JwtMiddleware::class
+            JwtMiddleware::class
         );
 
         $middleware->handle();
     },
     'aliases' => [
-        '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
-        '@core' => dirname(__DIR__) . '/core',
-        '@modules' => dirname(__DIR__) . '/modules',
+        '@bower'    => '@vendor/bower-asset',
+        '@npm'      => '@vendor/npm-asset',
+        '@core'     => dirname(__DIR__) . '/core',
+        '@modules'  => dirname(__DIR__) . '/modules',
     ],
     'modules'=>$modules,
     'components' => [
@@ -47,7 +51,7 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => \core\security\YiiIdentity::class,
+            'identityClass' => YiiIdentity::class,
             'enableAutoLogin' => false,
             'enableSession' => false,
         ],
@@ -55,7 +59,7 @@ $config = [
             'class' => 'core\infrastructure\handler\JsonErrorHandler',
         ],
         'mailer' => [
-            'class' => \yii\symfonymailer\Mailer::class,
+            'class' => Mailer::class,
             'viewPath' => '@app/mail',
             // send all mails to a file by default.
             'useFileTransport' => true,
@@ -73,17 +77,20 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'rules' => [
-                // User routes
-                'GET user/me' => 'user/me',
+            'rules' => array_merge(
+                require __DIR__ . '/../modules/tasks/config/routing.php',
+                [
+                    // User routes
+                    'GET user/me' => 'user/me',
 
-                // Swagger documentation
-                'docs/swagger/json' => 'swagger/json',
-                'docs/swagger' => 'swagger/ui',
+                    // Swagger documentation
+                    'docs/swagger/json' => 'swagger/json',
+                    'docs/swagger' => 'swagger/ui',
 
-                // Дефолтный маршрут для OPTIONS (CORS)
-                'OPTIONS <any:.*>' => 'site/options',
-            ],
+                    // Дефолтный маршрут для OPTIONS (CORS)
+                    'OPTIONS <any:.*>' => 'site/options',
+                ]
+            ),
         ],
     ],
     'params' => $params,
