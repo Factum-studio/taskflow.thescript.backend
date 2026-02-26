@@ -4,6 +4,7 @@ namespace modules\tasks\infrastructure\listener;
 
 use modules\tasks\domain\event\CommentAddedEvent;
 use modules\tasks\domain\event\CommentUpdatedEvent;
+use modules\tasks\domain\event\StickerAttachedToTaskEvent;
 use modules\tasks\domain\event\TaskCreatedEvent;
 use modules\tasks\domain\event\TaskRestoredEvent;
 use modules\tasks\domain\event\TaskSoftDeletedEvent;
@@ -53,5 +54,10 @@ class TaskLoggerListener
     public function handleCommentUpdated(CommentUpdatedEvent $event): void
     {
         Yii::info("Comment {$event->getCommentId()} in task {$event->getAggregateId()} updated by user {$event->getUserId()}", 'tasks');
+    }
+
+    public function handleStickerAttached(StickerAttachedToTaskEvent $event): void
+    {
+        Yii::info("Sticker {$event->getStickerId()} attached to task {$event->getTaskId()} by user {$event->getAttachedBy()}", 'tasks');
     }
 }
