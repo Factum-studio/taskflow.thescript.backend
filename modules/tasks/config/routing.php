@@ -14,4 +14,10 @@ return [
     'GET task-status' => 'tasks/status/index',
 
     'GET task-priority' => 'tasks/priority/index',
+
+    'GET task/<taskId:\d+>/comment' => 'tasks/comment/index',
+    'POST task/<taskId:\d+>/comment' => 'tasks/comment/create',
+    'GET comment/<id:\d+>' => 'tasks/comment/view',
+    'PUT comment/<id:\d+>' => 'tasks/comment/update',
+    'DELETE comment/<id:\d+>' => 'tasks/comment/delete',
 ];
