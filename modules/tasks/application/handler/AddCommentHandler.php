@@ -8,6 +8,7 @@ use modules\tasks\application\command\AddCommentCommand;
 use modules\tasks\application\dto\CommentDto;
 use modules\tasks\domain\entity\Comment;
 use modules\tasks\domain\event\CommentAddedEvent;
+use modules\tasks\domain\event\IEventDispatcher;
 use modules\tasks\domain\repository\ICommentRepository;
 use modules\tasks\domain\repository\ITaskRepository;
 use modules\tasks\domain\valueObject\CommentId;
@@ -19,15 +20,18 @@ class AddCommentHandler
     private ICommentRepository $commentRepository;
     private ITaskRepository $taskRepository;
     private CommentDtoAssembler $commentDtoAssembler;
+    private IEventDispatcher $eventDispatcher;
 
     public function __construct(
         ICommentRepository $commentRepository,
         ITaskRepository $taskRepository,
         CommentDtoAssembler $commentDtoAssembler,
+        IEventDispatcher $eventDispatcher
     ) {
         $this->commentRepository    = $commentRepository;
         $this->taskRepository       = $taskRepository;
         $this->commentDtoAssembler  = $commentDtoAssembler;
+        $this->eventDispatcher      = $eventDispatcher;
     }
 
     public function handle(AddCommentCommand $command): CommentDto
@@ -50,6 +54,8 @@ class AddCommentHandler
         );
 
         $savedComment = $this->commentRepository->save($comment);
+
+        $this->eventDispatcher->dispatch(new CommentAddedEvent($savedComment));
 
         return $this->commentDtoAssembler->toDto($savedComment);
     }
