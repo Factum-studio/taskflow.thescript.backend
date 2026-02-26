@@ -248,5 +248,42 @@ class UserSchema {}
  *     required={"content"},
  *     @OA\Property(property="content", type="string", example="Обновлённый комментарий")
  * )
+ *
+ * @OA\Schema(
+ *     schema="Sticker",
+ *     required={"id", "name", "type", "createdBy", "createdAt", "updatedAt"},
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="name", type="string", example="Баг"),
+ *     @OA\Property(property="type", type="string", enum={"system", "user"}, example="system"),
+ *     @OA\Property(property="projectId", type="integer", nullable=true, example=5),
+ *     @OA\Property(property="data", type="object", nullable=true, example={"time": 120}),
+ *     @OA\Property(property="color", type="string", nullable=true, example="#ff0000"),
+ *     @OA\Property(property="createdBy", type="integer", example=1),
+ *     @OA\Property(property="createdAt", type="string", format="date-time", example="2026-02-26 12:00:00"),
+ *     @OA\Property(property="updatedAt", type="string", format="date-time", example="2026-02-26 12:00:00")
+ * )
+ *
+ * @OA\Schema(
+ *     schema="CreateStickerRequest",
+ *     required={"name", "type"},
+ *     @OA\Property(property="name", type="string", example="Срочно"),
+ *     @OA\Property(property="type", type="string", enum={"system", "user"}, example="user"),
+ *     @OA\Property(property="projectId", type="integer", nullable=true, example=5),
+ *     @OA\Property(property="data", type="object", nullable=true, example={"time": 30}),
+ *     @OA\Property(property="color", type="string", nullable=true, example="#00ff00")
+ * )
+ *
+ * @OA\Schema(
+ *     schema="UpdateStickerRequest",
+ *     @OA\Property(property="name", type="string", nullable=true, example="Новое название"),
+ *     @OA\Property(property="data", type="object", nullable=true),
+ *     @OA\Property(property="color", type="string", nullable=true, example="#0000ff")
+ * )
+ *
+ * @OA\Schema(
+ *     schema="AttachStickerRequest",
+ *     required={"stickerId"},
+ *     @OA\Property(property="stickerId", type="integer", example=2)
+ * )
  */
 class TaskSchemas {}

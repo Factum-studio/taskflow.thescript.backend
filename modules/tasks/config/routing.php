@@ -20,4 +20,14 @@ return [
     'GET comment/<id:\d+>' => 'tasks/comment/view',
     'PUT comment/<id:\d+>' => 'tasks/comment/update',
     'DELETE comment/<id:\d+>' => 'tasks/comment/delete',
+
+    'GET sticker' => 'tasks/sticker/index',
+    'POST sticker' => 'tasks/sticker/create',
+    'GET sticker/<id:\d+>' => 'tasks/sticker/view',
+    'PUT sticker/<id:\d+>' => 'tasks/sticker/update',
+    'DELETE sticker/<id:\d+>' => 'tasks/sticker/delete',
+
+    'GET task/<taskId:\d+>/sticker' => 'tasks/task-sticker/index',
+    'POST task/<taskId:\d+>/sticker' => 'tasks/task-sticker/attach',
+    'DELETE task/<taskId:\d+>/sticker/<stickerId:\d+>' => 'tasks/task-sticker/detach',
 ];
