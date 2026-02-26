@@ -10,4 +10,8 @@ return [
     'POST task/<id:\d+>/assign' => 'tasks/task/assign',
     'POST task/<id:\d+>/restore' => 'tasks/task/restore',
     'DELETE task/<id:\d+>/hard' => 'tasks/task/hard-delete',
+
+    'GET task-status' => 'tasks/status/index',
+
+    'GET task-priority' => 'tasks/priority/index',
 ];
