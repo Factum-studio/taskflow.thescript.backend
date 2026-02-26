@@ -25,7 +25,12 @@ use Throwable;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
+use OpenApi\Attributes as OA;
 
+#[OA\Tag(
+    name: 'comments',
+    description: 'Управление комментариями к задачам'
+)]
 class CommentController extends BaseController
 {
     public function __construct(
@@ -41,6 +46,52 @@ class CommentController extends BaseController
         parent::__construct($id, $module, $config);
     }
 
+    #[OA\Get(
+        path: '/task/{taskId}/comment',
+        description: 'Возвращает все комментарии, привязанные к указанной задаче',
+        summary: 'Список комментариев задачи',
+        security: [['bearerAuth' => []]],
+        tags: ['comments'],
+        parameters: [
+            new OA\Parameter(
+                name: 'taskId',
+                description: 'ID задачи',
+                in: 'path',
+                required: true,
+                schema: new OA\Schema(type: 'integer')
+            )
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Успешный ответ',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: 'items',
+                            type: 'array',
+                            items: new OA\Items(ref: '#/components/schemas/Comment')
+                        ),
+                        new OA\Property(
+                            property: '_meta',
+                            ref: '#/components/schemas/Collection/properties/_meta'
+                        )
+                    ],
+                    type: 'object'
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Требуется авторизация',
+                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Задача не найдена',
+                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+            )
+        ]
+    )]
     /**
      * @throws NotFoundHttpException
      */
@@ -55,6 +106,46 @@ class CommentController extends BaseController
         return $this->collection($comments);
     }
 
+    #[OA\Get(
+        path: '/comment/{id}',
+        summary: 'Получить комментарий по ID',
+        security: [['bearerAuth' => []]],
+        tags: ['comments'],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                description: 'ID комментария',
+                in: 'path',
+                required: true,
+                schema: new OA\Schema(type: 'integer')
+            )
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Успешный ответ',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: 'item',
+                            ref: '#/components/schemas/Comment'
+                        )
+                    ],
+                    type: 'object'
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Требуется авторизация',
+                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Комментарий не найден',
+                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+            )
+        ]
+    )]
     /**
      * @throws NotFoundHttpException
      */
@@ -69,6 +160,55 @@ class CommentController extends BaseController
         return $this->item($comment);
     }
 
+    #[OA\Post(
+        path: '/task/{taskId}/comment',
+        summary: 'Добавить комментарий к задаче',
+        security: [['bearerAuth' => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/AddCommentRequest')
+        ),
+        tags: ['comments'],
+        parameters: [
+            new OA\Parameter(
+                name: 'taskId',
+                description: 'ID задачи',
+                in: 'path',
+                required: true,
+                schema: new OA\Schema(type: 'integer')
+            )
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Комментарий добавлен',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: 'item',
+                            ref: '#/components/schemas/Comment'
+                        )
+                    ],
+                    type: 'object'
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Требуется авторизация',
+                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Задача не найдена',
+                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+            ),
+            new OA\Response(
+                response: 422,
+                description: 'Ошибка валидации',
+                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+            )
+        ]
+    )]
     /**
      * @throws ServerErrorHttpException
      * @throws NotFoundHttpException
@@ -102,6 +242,60 @@ class CommentController extends BaseController
         return $this->item($commentDto);
     }
 
+    #[OA\Put(
+        path: '/comment/{id}',
+        summary: 'Обновить комментарий',
+        security: [['bearerAuth' => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/UpdateCommentRequest')
+        ),
+        tags: ['comments'],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                description: 'ID комментария',
+                in: 'path',
+                required: true,
+                schema: new OA\Schema(type: 'integer')
+            )
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Комментарий обновлён',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: 'item',
+                            ref: '#/components/schemas/Comment'
+                        )
+                    ],
+                    type: 'object'
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Требуется авторизация',
+                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+            ),
+            new OA\Response(
+                response: 403,
+                description: 'Доступ запрещён (не автор)',
+                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Комментарий не найден',
+                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+            ),
+            new OA\Response(
+                response: 422,
+                description: 'Ошибка валидации',
+                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+            )
+        ]
+    )]
     /**
      * @throws NotFoundHttpException
      * @throws ServerErrorHttpException
@@ -135,6 +329,49 @@ class CommentController extends BaseController
         return $this->item($commentDto);
     }
 
+    #[OA\Delete(
+        path: '/comment/{id}',
+        summary: 'Удалить комментарий',
+        security: [['bearerAuth' => []]],
+        tags: ['comments'],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                description: 'ID комментария',
+                in: 'path',
+                required: true,
+                schema: new OA\Schema(type: 'integer')
+            )
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Комментарий удалён',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'data', type: 'null'),
+                        new OA\Property(property: 'message', type: 'string', example: 'Comment deleted')
+                    ],
+                    type: 'object'
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Требуется авторизация',
+                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+            ),
+            new OA\Response(
+                response: 403,
+                description: 'Доступ запрещён (не автор)',
+                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Комментарий не найден',
+                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+            )
+        ]
+    )]
     /**
      * @throws NotFoundHttpException
      * @throws ServerErrorHttpException

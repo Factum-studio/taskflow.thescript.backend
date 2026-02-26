@@ -225,5 +225,28 @@ class UserSchema {}
  *     @OA\Property(property="label", type="string", example="Средний"),
  *     @OA\Property(property="color", type="string", nullable=true, example="#ffff00")
  * )
+ *
+ * @OA\Schema(
+ *     schema="Comment",
+ *     required={"id", "taskId", "userId", "content", "createdAt", "updatedAt"},
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="taskId", type="integer", example=42),
+ *     @OA\Property(property="userId", type="integer", example=17),
+ *     @OA\Property(property="content", type="string", example="Это комментарий"),
+ *     @OA\Property(property="createdAt", type="string", format="date-time", example="2026-02-26 12:00:00"),
+ *     @OA\Property(property="updatedAt", type="string", format="date-time", example="2026-02-26 12:00:00")
+ * )
+ *
+ * @OA\Schema(
+ *     schema="AddCommentRequest",
+ *     required={"content"},
+ *     @OA\Property(property="content", type="string", example="Новый комментарий")
+ * )
+ *
+ * @OA\Schema(
+ *     schema="UpdateCommentRequest",
+ *     required={"content"},
+ *     @OA\Property(property="content", type="string", example="Обновлённый комментарий")
+ * )
  */
 class TaskSchemas {}
