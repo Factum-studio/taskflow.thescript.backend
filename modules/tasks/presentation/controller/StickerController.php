@@ -25,7 +25,12 @@ use Throwable;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
+use OpenApi\Attributes as OA;
 
+#[OA\Tag(
+    name: 'stickers',
+    description: 'Управление стикерами (тегами)'
+)]
 class StickerController extends BaseController
 {
     public function __construct(
@@ -41,6 +46,56 @@ class StickerController extends BaseController
         parent::__construct($id, $module, $config);
     }
 
+    #[OA\Get(
+        path: '/sticker',
+        summary: 'Список стикеров',
+        security: [['bearerAuth' => []]],
+        tags: ['stickers'],
+        parameters: [
+            new OA\Parameter(
+                name: 'type',
+                description: 'Тип стикеров (системные или пользовательские)',
+                in: 'query',
+                required: false,
+                schema: new OA\Schema(type: 'string', enum: ['system', 'user'])
+            ),
+            new OA\Parameter(
+                name: 'projectId',
+                description: 'ID проекта (обязателен для type=user)',
+                in: 'query',
+                required: false,
+                schema: new OA\Schema(type: 'integer')
+            ),
+            new OA\Parameter(
+                name: 'createdBy',
+                description: 'Фильтр по создателю',
+                in: 'query',
+                required: false,
+                schema: new OA\Schema(type: 'integer')
+            ),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Успешный ответ',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: 'items',
+                            type: 'array',
+                            items: new OA\Items(ref: '#/components/schemas/Sticker')
+                        ),
+                        new OA\Property(
+                            property: '_meta',
+                            ref: '#/components/schemas/Collection/properties/_meta'
+                        )
+                    ],
+                    type: 'object'
+                )
+            ),
+            new OA\Response(response: 401, description: 'Требуется авторизация')
+        ]
+    )]
     public function actionIndex(): CollectionDto|array
     {
         $request = Yii::$app->request;
@@ -53,6 +108,38 @@ class StickerController extends BaseController
         return $this->collection($stickers);
     }
 
+    #[OA\Get(
+        path: '/sticker/{id}',
+        summary: 'Получить стикер по ID',
+        security: [['bearerAuth' => []]],
+        tags: ['stickers'],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                description: 'ID стикера',
+                in: 'path',
+                required: true,
+                schema: new OA\Schema(type: 'integer')
+            )
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Успешный ответ',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: 'item',
+                            ref: '#/components/schemas/Sticker'
+                        )
+                    ],
+                    type: 'object'
+                )
+            ),
+            new OA\Response(response: 401, description: 'Требуется авторизация'),
+            new OA\Response(response: 404, description: 'Стикер не найден')
+        ]
+    )]
     /**
      * @throws NotFoundHttpException
      */
@@ -67,6 +154,33 @@ class StickerController extends BaseController
         return $this->item($sticker);
     }
 
+    #[OA\Post(
+        path: '/sticker',
+        summary: 'Создать новый стикер',
+        security: [['bearerAuth' => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/CreateStickerRequest')
+        ),
+        tags: ['stickers'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Стикер создан',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: 'item',
+                            ref: '#/components/schemas/Sticker'
+                        )
+                    ],
+                    type: 'object'
+                )
+            ),
+            new OA\Response(response: 401, description: 'Требуется авторизация'),
+            new OA\Response(response: 422, description: 'Ошибка валидации')
+        ]
+    )]
     /**
      * @throws ServerErrorHttpException
      */
@@ -104,6 +218,44 @@ class StickerController extends BaseController
         return $this->item($stickerDto);
     }
 
+    #[OA\Put(
+        path: '/sticker/{id}',
+        summary: 'Обновить стикер',
+        security: [['bearerAuth' => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/UpdateStickerRequest')
+        ),
+        tags: ['stickers'],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                description: 'ID стикера',
+                in: 'path',
+                required: true,
+                schema: new OA\Schema(type: 'integer')
+            )
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Стикер обновлён',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: 'item',
+                            ref: '#/components/schemas/Sticker'
+                        )
+                    ],
+                    type: 'object'
+                )
+            ),
+            new OA\Response(response: 401, description: 'Требуется авторизация'),
+            new OA\Response(response: 403, description: 'Доступ запрещён (не автор)'),
+            new OA\Response(response: 404, description: 'Стикер не найден'),
+            new OA\Response(response: 422, description: 'Ошибка валидации')
+        ]
+    )]
     /**
      * @throws NotFoundHttpException
      * @throws ServerErrorHttpException
@@ -143,6 +295,37 @@ class StickerController extends BaseController
         return $this->item($stickerDto);
     }
 
+    #[OA\Delete(
+        path: '/sticker/{id}',
+        summary: 'Удалить стикер',
+        security: [['bearerAuth' => []]],
+        tags: ['stickers'],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                description: 'ID стикера',
+                in: 'path',
+                required: true,
+                schema: new OA\Schema(type: 'integer')
+            )
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Стикер удалён',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'data', type: 'null'),
+                        new OA\Property(property: 'message', type: 'string', example: 'Sticker deleted')
+                    ],
+                    type: 'object'
+                )
+            ),
+            new OA\Response(response: 401, description: 'Требуется авторизация'),
+            new OA\Response(response: 403, description: 'Доступ запрещён (не автор)'),
+            new OA\Response(response: 404, description: 'Стикер не найден')
+        ]
+    )]
     /**
      * @throws NotFoundHttpException
      * @throws ServerErrorHttpException
