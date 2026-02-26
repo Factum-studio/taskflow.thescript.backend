@@ -65,11 +65,30 @@ $config = [
             'useFileTransport' => true,
         ],
         'log' => [
-            'traceLevel' => YII_DEBUG ? 3 : 0,
+            'traceLevel' => YII_DEBUG ? 1 : 0,
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
+                    'logVars' => [],
+                    'except' => [
+                        'yii\web\HttpException:404',
+                    ],
+                ],
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['error'],
+                    'categories' => ['tasks'],
+                    'logFile' => '@app/runtime/logs/tasks-error.log',
+                    'logVars' => [],
+                ],
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['info'],
+                    'categories' => ['tasks'],
+                    'logFile' => '@app/runtime/logs/tasks-info.log',
+                    'logVars' => [],
+                    'enabled' => YII_DEBUG,
                 ],
             ],
         ],
