@@ -19,8 +19,12 @@ use modules\tasks\infrastructure\repository\DbTaskStatusRepository;
 use yii\di\Container;
 
 Yii::$container->set(ITaskRepository::class, DbTaskRepository::class);
-Yii::$container->set(ITaskStatusRepository::class, DbTaskStatusRepository::class);
-Yii::$container->set(ITaskPriorityRepository::class, DbTaskPriorityRepository::class);
+Yii::$container->set(ITaskStatusRepository::class, function () {
+    return new DbTaskStatusRepository(Yii::$app->db);
+});
+Yii::$container->set(ITaskPriorityRepository::class, function () {
+    return new DbTaskPriorityRepository(Yii::$app->db);
+});
 
 Yii::$container->set(TaskLoggerListener::class);
 Yii::$container->set(TaskNotificationListener::class);
