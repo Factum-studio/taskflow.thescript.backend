@@ -2,6 +2,7 @@
 
 use modules\tasks\domain\event\CommentAddedEvent;
 use modules\tasks\domain\event\CommentUpdatedEvent;
+use modules\tasks\domain\event\StickerAttachedToTaskEvent;
 use modules\tasks\domain\event\TaskRestoredEvent;
 use modules\tasks\domain\event\TaskSoftDeletedEvent;
 use modules\tasks\domain\event\TaskUpdatedEvent;
@@ -78,6 +79,9 @@ Yii::$container->set(IEventDispatcher::class, function (Container $container) {
         ],
         CommentUpdatedEvent::class => [
             [$logger, 'handleCommentUpdated'],
+        ],
+        StickerAttachedToTaskEvent::class => [
+            [$logger, 'handleStickerAttached'],
         ],
     ];
 
