@@ -206,5 +206,24 @@ class UserSchema {}
  *     schema="AssignTaskRequest",
  *     @OA\Property(property="assignedTo", type="integer", nullable=true, example=19)
  * )
+ *
+ * @OA\Schema(
+ *     schema="TaskStatus",
+ *     required={"id", "name", "label", "sortOrder"},
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="name", type="string", example="in_progress"),
+ *     @OA\Property(property="label", type="string", example="В работе"),
+ *     @OA\Property(property="sortOrder", type="integer", example=20),
+ *     @OA\Property(property="workflowId", type="integer", nullable=true, example=1)
+ * )
+ *
+ * @OA\Schema(
+ *     schema="TaskPriority",
+ *     required={"id", "value", "label"},
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="value", type="integer", example=2),
+ *     @OA\Property(property="label", type="string", example="Средний"),
+ *     @OA\Property(property="color", type="string", nullable=true, example="#ffff00")
+ * )
  */
 class TaskSchemas {}
