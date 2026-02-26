@@ -1,12 +1,16 @@
 <?php
 
+use modules\tasks\domain\event\CommentAddedEvent;
+use modules\tasks\domain\event\CommentUpdatedEvent;
 use modules\tasks\domain\event\TaskRestoredEvent;
 use modules\tasks\domain\event\TaskSoftDeletedEvent;
 use modules\tasks\domain\event\TaskUpdatedEvent;
+use modules\tasks\domain\repository\ICommentRepository;
 use modules\tasks\domain\repository\ITaskPriorityRepository;
 use modules\tasks\domain\repository\ITaskRepository;
 use modules\tasks\domain\event\IEventDispatcher;
 use modules\tasks\domain\repository\ITaskStatusRepository;
+use modules\tasks\infrastructure\repository\DbCommentRepository;
 use modules\tasks\infrastructure\repository\DbTaskPriorityRepository;
 use modules\tasks\infrastructure\repository\DbTaskRepository;
 use modules\tasks\infrastructure\event\ModuleEventDispatcher;
@@ -24,6 +28,9 @@ Yii::$container->set(ITaskStatusRepository::class, function () {
 });
 Yii::$container->set(ITaskPriorityRepository::class, function () {
     return new DbTaskPriorityRepository(Yii::$app->db);
+});
+Yii::$container->set(ICommentRepository::class, function() {
+    return new DbCommentRepository(Yii::$app->db);
 });
 
 Yii::$container->set(TaskLoggerListener::class);
@@ -55,7 +62,13 @@ Yii::$container->set(IEventDispatcher::class, function (Container $container) {
         ],
         TaskUpdatedEvent::class => [
             [$logger, 'handleTaskUpdated'],
-        ]
+        ],
+        CommentAddedEvent::class => [
+            [$logger, 'handleCommentAdded'],
+        ],
+        CommentUpdatedEvent::class => [
+            [$logger, 'handleCommentUpdated'],
+        ],
     ];
 
     return new ModuleEventDispatcher($listeners);
