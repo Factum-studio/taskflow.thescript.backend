@@ -1,12 +1,20 @@
 <?php
 
+use modules\tasks\domain\event\CommentAddedEvent;
+use modules\tasks\domain\event\CommentUpdatedEvent;
+use modules\tasks\domain\event\StickerAttachedToTaskEvent;
 use modules\tasks\domain\event\TaskRestoredEvent;
 use modules\tasks\domain\event\TaskSoftDeletedEvent;
 use modules\tasks\domain\event\TaskUpdatedEvent;
+use modules\tasks\domain\repository\ICommentRepository;
+use modules\tasks\domain\repository\IStickerRepository;
 use modules\tasks\domain\repository\ITaskPriorityRepository;
 use modules\tasks\domain\repository\ITaskRepository;
 use modules\tasks\domain\event\IEventDispatcher;
 use modules\tasks\domain\repository\ITaskStatusRepository;
+use modules\tasks\domain\repository\ITaskStickerRepository;
+use modules\tasks\infrastructure\repository\DbCommentRepository;
+use modules\tasks\infrastructure\repository\DbStickerRepository;
 use modules\tasks\infrastructure\repository\DbTaskPriorityRepository;
 use modules\tasks\infrastructure\repository\DbTaskRepository;
 use modules\tasks\infrastructure\event\ModuleEventDispatcher;
@@ -16,6 +24,7 @@ use modules\tasks\domain\event\TaskCreatedEvent;
 use modules\tasks\domain\event\TaskStatusChangedEvent;
 use modules\tasks\domain\event\TaskAssignedEvent;
 use modules\tasks\infrastructure\repository\DbTaskStatusRepository;
+use modules\tasks\infrastructure\repository\DbTaskStickerRepository;
 use yii\di\Container;
 
 Yii::$container->set(ITaskRepository::class, DbTaskRepository::class);
@@ -24,6 +33,15 @@ Yii::$container->set(ITaskStatusRepository::class, function () {
 });
 Yii::$container->set(ITaskPriorityRepository::class, function () {
     return new DbTaskPriorityRepository(Yii::$app->db);
+});
+Yii::$container->set(ICommentRepository::class, function() {
+    return new DbCommentRepository(Yii::$app->db);
+});
+Yii::$container->set(IStickerRepository::class, function() {
+    return new DbStickerRepository(Yii::$app->db);
+});
+Yii::$container->set(ITaskStickerRepository::class, function() {
+    return new DbTaskStickerRepository(Yii::$app->db);
 });
 
 Yii::$container->set(TaskLoggerListener::class);
@@ -55,7 +73,16 @@ Yii::$container->set(IEventDispatcher::class, function (Container $container) {
         ],
         TaskUpdatedEvent::class => [
             [$logger, 'handleTaskUpdated'],
-        ]
+        ],
+        CommentAddedEvent::class => [
+            [$logger, 'handleCommentAdded'],
+        ],
+        CommentUpdatedEvent::class => [
+            [$logger, 'handleCommentUpdated'],
+        ],
+        StickerAttachedToTaskEvent::class => [
+            [$logger, 'handleStickerAttached'],
+        ],
     ];
 
     return new ModuleEventDispatcher($listeners);

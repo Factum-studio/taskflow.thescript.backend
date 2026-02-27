@@ -2,6 +2,9 @@
 
 namespace modules\tasks\infrastructure\listener;
 
+use modules\tasks\domain\event\CommentAddedEvent;
+use modules\tasks\domain\event\CommentUpdatedEvent;
+use modules\tasks\domain\event\StickerAttachedToTaskEvent;
 use modules\tasks\domain\event\TaskCreatedEvent;
 use modules\tasks\domain\event\TaskRestoredEvent;
 use modules\tasks\domain\event\TaskSoftDeletedEvent;
@@ -41,5 +44,20 @@ class TaskLoggerListener
     {
         $changedKeys = implode(', ', array_keys($event->getChangedFields()));
         Yii::info("Task {$event->getAggregateId()} updated by {$event->getUpdatedBy()}. Changed fields: {$changedKeys}", 'tasks');
+    }
+
+    public function handleCommentAdded(CommentAddedEvent $event): void
+    {
+        Yii::info("Comment {$event->getCommentId()} added to task {$event->getAggregateId()} by user {$event->getUserId()}", 'tasks');
+    }
+
+    public function handleCommentUpdated(CommentUpdatedEvent $event): void
+    {
+        Yii::info("Comment {$event->getCommentId()} in task {$event->getAggregateId()} updated by user {$event->getUserId()}", 'tasks');
+    }
+
+    public function handleStickerAttached(StickerAttachedToTaskEvent $event): void
+    {
+        Yii::info("Sticker {$event->getStickerId()} attached to task {$event->getTaskId()} by user {$event->getAttachedBy()}", 'tasks');
     }
 }
