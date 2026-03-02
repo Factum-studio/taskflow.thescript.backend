@@ -33,7 +33,12 @@ use Throwable;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
+use OpenApi\Attributes as OA;
 
+#[OA\Tag(
+    name: 'time-intervals',
+    description: 'Учёт времени и диаграммы занятости'
+)]
 class TimeIntervalController extends BaseController
 {
     public function __construct(
@@ -50,6 +55,40 @@ class TimeIntervalController extends BaseController
         parent::__construct($id, $module, $config);
     }
 
+    #[OA\Get(
+        path: '/time-interval',
+        summary: 'Список временных интервалов',
+        security: [['bearerAuth' => []]],
+        tags: ['time-intervals'],
+        parameters: [
+            new OA\Parameter(name: 'taskId', in: 'query', required: false, schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'userId', in: 'query', required: false, schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'from', in: 'query', required: false, schema: new OA\Schema(type: 'string', format: 'date-time')),
+            new OA\Parameter(name: 'to', in: 'query', required: false, schema: new OA\Schema(type: 'string', format: 'date-time')),
+            new OA\Parameter(name: 'activeOnly', in: 'query', required: false, schema: new OA\Schema(type: 'boolean')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Успешный ответ',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: 'items',
+                            type: 'array',
+                            items: new OA\Items(ref: '#/components/schemas/TimeInterval')
+                        ),
+                        new OA\Property(
+                            property: '_meta',
+                            ref: '#/components/schemas/Collection/properties/_meta'
+                        )
+                    ],
+                    type: 'object'
+                )
+            ),
+            new OA\Response(response: 401, description: 'Требуется авторизация')
+        ]
+    )]
     /**
      * @throws Exception
      */
@@ -76,6 +115,33 @@ class TimeIntervalController extends BaseController
         return $this->collection($intervals);
     }
 
+    #[OA\Post(
+        path: '/time-interval/start',
+        summary: 'Запустить таймер (начать интервал)',
+        security: [['bearerAuth' => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/StartTimerRequest')
+        ),
+        tags: ['time-intervals'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Таймер запущен',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: 'item',
+                            ref: '#/components/schemas/TimeInterval'
+                        )
+                    ],
+                    type: 'object'
+                )
+            ),
+            new OA\Response(response: 401, description: 'Требуется авторизация'),
+            new OA\Response(response: 422, description: 'Ошибка валидации')
+        ]
+    )]
     /**
      * @throws ServerErrorHttpException
      */
@@ -110,6 +176,34 @@ class TimeIntervalController extends BaseController
         return $this->item($intervalDto);
     }
 
+    #[OA\Post(
+        path: '/time-interval/stop',
+        summary: 'Остановить таймер (завершить интервал)',
+        security: [['bearerAuth' => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/StopTimerRequest')
+        ),
+        tags: ['time-intervals'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Таймер остановлен',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: 'item',
+                            ref: '#/components/schemas/TimeInterval'
+                        )
+                    ],
+                    type: 'object'
+                )
+            ),
+            new OA\Response(response: 401, description: 'Требуется авторизация'),
+            new OA\Response(response: 404, description: 'Активный интервал не найден'),
+            new OA\Response(response: 422, description: 'Ошибка валидации')
+        ]
+    )]
     /**
      * @throws NotFoundHttpException
      * @throws ServerErrorHttpException
@@ -147,6 +241,33 @@ class TimeIntervalController extends BaseController
         return $this->item($intervalDto);
     }
 
+    #[OA\Post(
+        path: '/time-interval',
+        summary: 'Ручной ввод интервала',
+        security: [['bearerAuth' => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/LogIntervalRequest')
+        ),
+        tags: ['time-intervals'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Интервал сохранён',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: 'item',
+                            ref: '#/components/schemas/TimeInterval'
+                        )
+                    ],
+                    type: 'object'
+                )
+            ),
+            new OA\Response(response: 401, description: 'Требуется авторизация'),
+            new OA\Response(response: 422, description: 'Ошибка валидации')
+        ]
+    )]
     /**
      * @throws ServerErrorHttpException
      * @throws Exception
@@ -187,6 +308,38 @@ class TimeIntervalController extends BaseController
         return $this->item($intervalDto);
     }
 
+    #[OA\Get(
+        path: '/time-interval/daily-summary',
+        summary: 'Ежедневная сводка по времени',
+        security: [['bearerAuth' => []]],
+        tags: ['time-intervals'],
+        parameters: [
+            new OA\Parameter(name: 'userId', in: 'query', required: true, schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'date', in: 'query', required: true, schema: new OA\Schema(type: 'string', format: 'date')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Успешный ответ',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: 'items',
+                            type: 'array',
+                            items: new OA\Items(ref: '#/components/schemas/DailySummary')
+                        ),
+                        new OA\Property(
+                            property: '_meta',
+                            ref: '#/components/schemas/Collection/properties/_meta'
+                        )
+                    ],
+                    type: 'object'
+                )
+            ),
+            new OA\Response(response: 401, description: 'Требуется авторизация'),
+            new OA\Response(response: 422, description: 'Ошибка валидации')
+        ]
+    )]
     /**
      * @throws ServerErrorHttpException
      * @throws Exception
@@ -212,6 +365,37 @@ class TimeIntervalController extends BaseController
         return $this->collection($summaries);
     }
 
+    #[OA\Get(
+        path: '/task/{taskId}/time-summary',
+        summary: 'Сводка по времени задачи с разбивкой на блоки (диаграмма занятости)',
+        security: [['bearerAuth' => []]],
+        tags: ['time-intervals'],
+        parameters: [
+            new OA\Parameter(name: 'taskId', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'userId', in: 'query', required: false, schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'from', in: 'query', required: false, schema: new OA\Schema(type: 'string', format: 'date-time')),
+            new OA\Parameter(name: 'to', in: 'query', required: false, schema: new OA\Schema(type: 'string', format: 'date-time')),
+            new OA\Parameter(name: 'granularity', in: 'query', required: false, schema: new OA\Schema(type: 'string', enum: ['minute', 'ten_minutes', 'hour'])),
+            new OA\Parameter(name: 'mode', in: 'query', required: false, schema: new OA\Schema(type: 'string', enum: ['merged', 'separate', 'overlap'])),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Успешный ответ',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: 'item',
+                            ref: '#/components/schemas/TaskTimeSummary'
+                        )
+                    ],
+                    type: 'object'
+                )
+            ),
+            new OA\Response(response: 401, description: 'Требуется авторизация'),
+            new OA\Response(response: 404, description: 'Задача не найдена')
+        ]
+    )]
     /**
      * @throws NotFoundHttpException
      * @throws ServerErrorHttpException
