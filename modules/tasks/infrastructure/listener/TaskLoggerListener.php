@@ -4,6 +4,7 @@ namespace modules\tasks\infrastructure\listener;
 
 use modules\tasks\domain\event\CommentAddedEvent;
 use modules\tasks\domain\event\CommentUpdatedEvent;
+use modules\tasks\domain\event\IntervalLoggedEvent;
 use modules\tasks\domain\event\StickerAttachedToTaskEvent;
 use modules\tasks\domain\event\TaskCreatedEvent;
 use modules\tasks\domain\event\TaskRestoredEvent;
@@ -11,6 +12,8 @@ use modules\tasks\domain\event\TaskSoftDeletedEvent;
 use modules\tasks\domain\event\TaskStatusChangedEvent;
 use modules\tasks\domain\event\TaskAssignedEvent;
 use modules\tasks\domain\event\TaskUpdatedEvent;
+use modules\tasks\domain\event\TimerStartedEvent;
+use modules\tasks\domain\event\TimerStoppedEvent;
 use Yii;
 
 class TaskLoggerListener
@@ -59,5 +62,20 @@ class TaskLoggerListener
     public function handleStickerAttached(StickerAttachedToTaskEvent $event): void
     {
         Yii::info("Sticker {$event->getStickerId()} attached to task {$event->getTaskId()} by user {$event->getAttachedBy()}", 'tasks');
+    }
+
+    public function handleTimerStarted(TimerStartedEvent $event): void
+    {
+        Yii::info("Timer started for task {$event->getTaskId()} by user {$event->getUserId()}", 'tasks');
+    }
+
+    public function handleTimerStopped(TimerStoppedEvent $event): void
+    {
+        Yii::info("Timer stopped for task {$event->getTaskId()} by user {$event->getUserId()}, duration {$event->getDuration()}s", 'tasks');
+    }
+
+    public function handleIntervalLogged(IntervalLoggedEvent $event): void
+    {
+        Yii::info("Interval logged for task {$event->getTaskId()} by user {$event->getUserId()}, duration {$event->getDuration()}s", 'tasks');
     }
 }

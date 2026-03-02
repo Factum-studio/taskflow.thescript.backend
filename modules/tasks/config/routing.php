@@ -30,4 +30,11 @@ return [
     'GET task/<taskId:\d+>/sticker' => 'tasks/task-sticker/index',
     'POST task/<taskId:\d+>/sticker' => 'tasks/task-sticker/attach',
     'DELETE task/<taskId:\d+>/sticker/<stickerId:\d+>' => 'tasks/task-sticker/detach',
+
+    'GET time-interval' => 'tasks/time-interval/index',
+    'POST time-interval/start' => 'tasks/time-interval/start',
+    'POST time-interval/stop' => 'tasks/time-interval/stop',
+    'POST time-interval' => 'tasks/time-interval/create',
+    'GET time-interval/daily-summary' => 'tasks/time-interval/daily-summary',
+    'GET task/<taskId:\d+>/time-summary' => 'tasks/time-interval/task-summary',
 ];

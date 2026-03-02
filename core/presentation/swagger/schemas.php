@@ -285,5 +285,75 @@ class UserSchema {}
  *     required={"stickerId"},
  *     @OA\Property(property="stickerId", type="integer", example=2)
  * )
+ *
+ * @OA\Schema(
+ *     schema="TimeInterval",
+ *     required={"id", "taskId", "userId", "startTime", "createdAt", "updatedAt"},
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="taskId", type="integer", example=42),
+ *     @OA\Property(property="userId", type="integer", example=17),
+ *     @OA\Property(property="startTime", type="string", format="date-time", example="2026-02-28 10:00:00"),
+ *     @OA\Property(property="endTime", type="string", format="date-time", nullable=true, example="2026-02-28 12:30:00"),
+ *     @OA\Property(property="duration", type="integer", nullable=true, example=9000),
+ *     @OA\Property(property="comment", type="string", nullable=true, example="Работа над задачей"),
+ *     @OA\Property(property="createdAt", type="string", format="date-time", example="2026-02-28 10:00:00"),
+ *     @OA\Property(property="updatedAt", type="string", format="date-time", example="2026-02-28 12:30:00")
+ * )
+ *
+ * @OA\Schema(
+ *     schema="StartTimerRequest",
+ *     required={"taskId"},
+ *     @OA\Property(property="taskId", type="integer", example=42),
+ *     @OA\Property(property="comment", type="string", nullable=true, example="Начал работу")
+ * )
+ *
+ * @OA\Schema(
+ *     schema="StopTimerRequest",
+ *     @OA\Property(property="intervalId", type="integer", nullable=true, example=5),
+ *     @OA\Property(property="comment", type="string", nullable=true, example="Закончил работу")
+ * )
+ *
+ * @OA\Schema(
+ *     schema="LogIntervalRequest",
+ *     required={"taskId", "startTime", "endTime"},
+ *     @OA\Property(property="taskId", type="integer", example=42),
+ *     @OA\Property(property="startTime", type="string", format="date-time", example="2026-02-28 10:00:00"),
+ *     @OA\Property(property="endTime", type="string", format="date-time", example="2026-02-28 12:30:00"),
+ *     @OA\Property(property="comment", type="string", nullable=true, example="Ручной ввод")
+ * )
+ *
+ * @OA\Schema(
+ *     schema="DailySummary",
+ *     required={"id", "taskId", "userId", "date", "totalDuration", "updatedAt"},
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="taskId", type="integer", example=42),
+ *     @OA\Property(property="userId", type="integer", example=17),
+ *     @OA\Property(property="date", type="string", format="date", example="2026-02-28"),
+ *     @OA\Property(property="totalDuration", type="integer", example=3600),
+ *     @OA\Property(property="updatedAt", type="string", format="date-time", example="2026-02-28 23:59:59")
+ * )
+ *
+ * @OA\Schema(
+ *     schema="TaskTimeSummary",
+ *     required={"taskId", "taskTitle", "blocks", "totalDuration"},
+ *     @OA\Property(property="taskId", type="integer", example=42),
+ *     @OA\Property(property="taskTitle", type="string", example="Разработка модуля"),
+ *     @OA\Property(
+ *         property="blocks",
+ *         type="array",
+ *         @OA\Items(ref="#/components/schemas/TimeBlock")
+ *     ),
+ *     @OA\Property(property="totalDuration", type="integer", example=7200)
+ * )
+ *
+ * @OA\Schema(
+ *     schema="TimeBlock",
+ *     required={"start", "end", "duration"},
+ *     @OA\Property(property="start", type="string", format="date-time", example="2026-02-28 10:00:00"),
+ *     @OA\Property(property="end", type="string", format="date-time", example="2026-02-28 12:00:00"),
+ *     @OA\Property(property="type", type="string", nullable=true, enum={"single", "merged", "overlap"}),
+ *     @OA\Property(property="taskIds", type="array", items=@OA\Items(type="integer"), nullable=true),
+ *     @OA\Property(property="duration", type="integer", example=7200)
+ * )
  */
 class TaskSchemas {}
