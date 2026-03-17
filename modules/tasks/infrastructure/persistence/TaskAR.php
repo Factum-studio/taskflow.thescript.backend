@@ -8,7 +8,7 @@ use yii\db\ActiveRecord;
  * @property int $id
  * @property string $title
  * @property string|null $description
- * @property int $status_id
+ * @property int $column_id
  * @property int $priority_id
  * @property string|null $due_date
  * @property string|null $planned_start
