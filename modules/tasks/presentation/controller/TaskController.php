@@ -306,6 +306,8 @@ class TaskController extends BaseController
         }
 
         $dueDate = $request->dueDate ? new DateTimeImmutable($request->dueDate, new DateTimeZone('UTC')) : null;
+        $plannedStart = $request->plannedStart ? new DateTimeImmutable($request->plannedStart, new DateTimeZone('UTC')) : null;
+        $plannedEnd = $request->plannedEnd ? new DateTimeImmutable($request->plannedEnd, new DateTimeZone('UTC')) : null;
 
         $command = new CreateTaskCommand(
             title: $request->title,
@@ -315,6 +317,8 @@ class TaskController extends BaseController
             boardId: $request->boardId,
             description: $request->description,
             dueDate: $dueDate,
+            plannedStart: $plannedStart,
+            plannedEnd: $plannedEnd,
             assignedTo: $request->assignedTo,
             parentId: $request->parentId
         );
@@ -402,6 +406,8 @@ class TaskController extends BaseController
         }
 
         $dueDate = $updateRequest->dueDate ? new DateTimeImmutable($updateRequest->dueDate, new DateTimeZone('UTC')) : null;
+        $plannedStart = $updateRequest->plannedStart ? new DateTimeImmutable($updateRequest->plannedStart, new DateTimeZone('UTC')) : null;
+        $plannedEnd = $updateRequest->plannedEnd ? new DateTimeImmutable($updateRequest->plannedEnd, new DateTimeZone('UTC')) : null;
 
         $command = new UpdateTaskCommand(
             id: $id,
@@ -411,6 +417,8 @@ class TaskController extends BaseController
             statusId: $updateRequest->statusId,
             priorityId: $updateRequest->priorityId,
             dueDate: $dueDate,
+            plannedStart: $plannedStart,
+            plannedEnd: $plannedEnd,
             assignedTo: $updateRequest->assignedTo,
             boardId: $updateRequest->boardId,
             parentId: $updateRequest->parentId
