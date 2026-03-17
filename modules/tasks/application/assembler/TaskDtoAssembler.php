@@ -16,6 +16,8 @@ class TaskDtoAssembler
             'statusId'      => $task->getStatusId()->getValue(),
             'priorityId'    => $task->getPriorityId()->getValue(),
             'dueDate'       => $task->getDueDate()?->format('Y-m-d H:i:s'),
+            'plannedStart'  => $task->getPlannedStart()?->format('Y-m-d H:i:s'),
+            'plannedEnd'    => $task->getPlannedEnd()?->format('Y-m-d H:i:s'),
             'createdBy'     => $task->getCreatedBy()->getValue(),
             'assignedTo'    => $task->getAssignedTo()?->getValue(),
             'boardId'       => $task->getBoardId(),
