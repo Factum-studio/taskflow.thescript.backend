@@ -11,6 +11,8 @@ class CreateTaskCommand
     public int $statusId;
     public int $priorityId;
     public ?DateTimeImmutable $dueDate;
+    public ?DateTimeImmutable $plannedStart;
+    public ?DateTimeImmutable $plannedEnd;
     public int $createdBy;
     public ?int $assignedTo;
     public int $boardId;
@@ -24,6 +26,8 @@ class CreateTaskCommand
         int $boardId,
         ?string $description = null,
         ?DateTimeImmutable $dueDate = null,
+        ?DateTimeImmutable $plannedStart = null,
+        ?DateTimeImmutable $plannedEnd = null,
         ?int $assignedTo = null,
         ?int $parentId = null
     ) {
@@ -34,6 +38,8 @@ class CreateTaskCommand
         $this->boardId      = $boardId;
         $this->description  = $description;
         $this->dueDate      = $dueDate;
+        $this->plannedStart = $plannedStart;
+        $this->plannedEnd   = $plannedEnd;
         $this->assignedTo   = $assignedTo;
         $this->parentId     = $parentId;
     }
