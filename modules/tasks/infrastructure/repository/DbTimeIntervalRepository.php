@@ -73,6 +73,32 @@ class DbTimeIntervalRepository implements ITimeIntervalRepository
         return array_map([$this, 'mapARToEntity'], $ars);
     }
 
+    public function findActiveByTaskAndUser(TaskId $taskId, UserId $userId, string $type): ?TimeInterval
+    {
+        $ar = TimeIntervalAR::find()
+            ->where([
+                'task_id' => $taskId->getValue(),
+                'user_id' => $userId->getValue(),
+                'end_time' => null,
+                'type' => $type,
+            ])
+            ->one();
+        return $ar ? $this->mapARToEntity($ar) : null;
+    }
+
+    public function findByTask(TaskId $taskId, ?string $type = null): array
+    {
+        $query = TimeIntervalAR::find()->where(['task_id' => $taskId->getValue()]);
+        if ($type !== null) {
+            $query->andWhere(['type' => $type]);
+        }
+        $ars = $query->orderBy(['start_time' => SORT_ASC])->all();
+        return array_map([$this, 'mapARToEntity'], $ars);
+    }
+
+    /**
+     * @deprecated
+     */
     public function findActiveInterval(UserId $userId, ?TaskId $taskId = null): ?TimeInterval
     {
         $query = TimeIntervalAR::find()
@@ -118,6 +144,7 @@ class DbTimeIntervalRepository implements ITimeIntervalRepository
         $ar->end_time   = $interval->getEndTime()?->format('Y-m-d H:i:s');
         $ar->duration   = $interval->getDurationSeconds();
         $ar->comment    = $interval->getComment();
+        $ar->type       = $interval->getType();
     }
 
     /**
@@ -133,6 +160,7 @@ class DbTimeIntervalRepository implements ITimeIntervalRepository
             $ar->end_time ? new DateTimeImmutable($ar->end_time) : null,
             $ar->duration !== null ? new Duration((int)$ar->duration) : null,
             $ar->comment,
+            $ar->type,
             new DateTimeImmutable($ar->created_at),
             new DateTimeImmutable($ar->updated_at)
         );
