@@ -11,6 +11,9 @@ use modules\tasks\domain\valueObject\UserId;
 
 class TimeInterval
 {
+    public const TYPE_TIMER = 'timer';
+    public const TYPE_PLAN = 'plan';
+
     private TimeIntervalId $id;
     private TaskId $taskId;
     private UserId $userId;
@@ -18,6 +21,7 @@ class TimeInterval
     private ?DateTimeImmutable $endTime;
     private ?Duration $duration;
     private ?string $comment;
+    private string $type; // 'timer' или 'plan'
     private DateTimeImmutable $createdAt;
     private DateTimeImmutable $updatedAt;
 
@@ -29,11 +33,15 @@ class TimeInterval
         ?DateTimeImmutable $endTime = null,
         ?Duration $duration = null,
         ?string $comment = null,
+        string $type = self::TYPE_PLAN,
         ?DateTimeImmutable $createdAt = null,
         ?DateTimeImmutable $updatedAt = null
     ) {
         if ($endTime && $startTime > $endTime) {
             throw new InvalidArgumentException('Start time must be before end time');
+        }
+        if (!in_array($type, [self::TYPE_TIMER, self::TYPE_PLAN], true)) {
+            throw new InvalidArgumentException("Invalid interval type: $type");
         }
         $this->id           = $id;
         $this->taskId       = $taskId;
@@ -42,6 +50,7 @@ class TimeInterval
         $this->endTime      = $endTime;
         $this->duration     = $duration;
         $this->comment      = $comment;
+        $this->type         = $type;
         $this->createdAt    = $createdAt ?? new DateTimeImmutable();
         $this->updatedAt    = $updatedAt ?? new DateTimeImmutable();
     }
@@ -53,6 +62,7 @@ class TimeInterval
     public function getEndTime(): ?DateTimeImmutable { return $this->endTime; }
     public function getDuration(): ?Duration { return $this->duration; }
     public function getComment(): ?string { return $this->comment; }
+    public function getType(): string { return $this->type; }
     public function getCreatedAt(): DateTimeImmutable { return $this->createdAt; }
     public function getUpdatedAt(): DateTimeImmutable { return $this->updatedAt; }
 
