@@ -11,6 +11,8 @@ class UpdateTaskRequest extends Model
     public ?int $statusId = null;
     public ?int $priorityId = null;
     public ?string $dueDate = null;
+    public ?string $plannedStart = null;
+    public ?string $plannedEnd = null;
     public ?int $boardId = null;
     public ?int $assignedTo = null;
     public ?int $parentId = null;
@@ -21,7 +23,8 @@ class UpdateTaskRequest extends Model
             [['title'], 'string', 'max' => 255],
             [['description'], 'string'],
             [['statusId', 'priorityId', 'boardId', 'assignedTo', 'parentId'], 'integer'],
-            [['dueDate'], 'datetime', 'format' => 'php:Y-m-d H:i:s'],
+            [['dueDate', 'plannedStart', 'plannedEnd'], 'datetime', 'format' => 'php:Y-m-d H:i:s'],
+            [['plannedEnd'], 'compare', 'compareAttribute' => 'plannedStart', 'operator' => '>=', 'type' => 'datetime', 'skipOnEmpty' => true],
         ];
     }
 }

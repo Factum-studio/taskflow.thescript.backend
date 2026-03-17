@@ -11,6 +11,8 @@ use yii\db\ActiveRecord;
  * @property int $status_id
  * @property int $priority_id
  * @property string|null $due_date
+ * @property string|null $planned_start
+ * @property string|null $planned_end
  * @property int $created_by
  * @property int|null $assigned_to
  * @property int $board_id

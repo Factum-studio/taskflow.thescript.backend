@@ -110,6 +110,8 @@ class DbTaskRepository implements ITaskRepository
         $ar->status_id      = $task->getStatusId()->getValue();
         $ar->priority_id    = $task->getPriorityId()->getValue();
         $ar->due_date       = $task->getDueDate()?->format('Y-m-d H:i:s');
+        $ar->planned_start  = $task->getPlannedStart()?->format('Y-m-d H:i:s');
+        $ar->planned_end    = $task->getPlannedEnd()?->format('Y-m-d H:i:s');
         $ar->created_by     = $task->getCreatedBy()->getValue();
         $ar->assigned_to    = $task->getAssignedTo()?->getValue();
         $ar->board_id       = $task->getBoardId();
@@ -134,6 +136,8 @@ class DbTaskRepository implements ITaskRepository
             (int)$ar->board_id,
             $ar->description,
             $ar->due_date ? new DateTimeImmutable($ar->due_date) : null,
+            $ar->planned_start ? new DateTimeImmutable($ar->planned_start) : null,
+            $ar->planned_end ? new DateTimeImmutable($ar->planned_end) : null,
             $ar->assigned_to ? new UserId((int)$ar->assigned_to) : null,
             $ar->parent_id ? new TaskId((int)$ar->parent_id) : null,
             (bool)$ar->overdue,

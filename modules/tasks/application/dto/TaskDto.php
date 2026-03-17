@@ -9,7 +9,9 @@ class TaskDto
     public ?string $description;
     public int $statusId;
     public int $priorityId;
-    public ?string $dueDate; // формат timestamp, передаём строкой
+    public ?string $dueDate;
+    public ?string $plannedStart;
+    public ?string $plannedEnd;
     public int $createdBy;
     public ?int $assignedTo;
     public int $boardId;
@@ -27,6 +29,8 @@ class TaskDto
         $this->statusId     = $data['statusId'];
         $this->priorityId   = $data['priorityId'];
         $this->dueDate      = $data['dueDate'] ?? null;
+        $this->plannedStart = $data['plannedStart'] ?? null;
+        $this->plannedEnd   = $data['plannedEnd'] ?? null;
         $this->createdBy    = $data['createdBy'];
         $this->assignedTo   = $data['assignedTo'] ?? null;
         $this->boardId      = $data['boardId'];

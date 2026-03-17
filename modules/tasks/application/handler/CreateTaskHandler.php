@@ -58,7 +58,6 @@ class CreateTaskHandler
         $assignedTo = $command->assignedTo ? new UserId($command->assignedTo) : null;
         $parentId   = $command->parentId ? new TaskId($command->parentId) : null;
 
-        // Используем временный ID=0
         $task = new Task(
             new TaskId(0),
             $title,
@@ -68,6 +67,8 @@ class CreateTaskHandler
             $command->boardId,
             $command->description,
             $command->dueDate,
+            $command->plannedStart,
+            $command->plannedEnd,
             $assignedTo,
             $parentId,
             false,

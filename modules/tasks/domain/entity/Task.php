@@ -17,6 +17,8 @@ class Task
     private StatusId $statusId;
     private PriorityId $priorityId;
     private ?DateTimeImmutable $dueDate;
+    private ?DateTimeImmutable $plannedStart;
+    private ?DateTimeImmutable $plannedEnd;
     private UserId $createdBy;
     private ?UserId $assignedTo;
     private int $boardId;
@@ -35,6 +37,8 @@ class Task
         int $boardId,
         ?string $description = null,
         ?DateTimeImmutable $dueDate = null,
+        ?DateTimeImmutable $plannedStart = null,
+        ?DateTimeImmutable $plannedEnd = null,
         ?UserId $assignedTo = null,
         ?TaskId $parentId = null,
         bool $overdue = false,
@@ -50,6 +54,8 @@ class Task
         $this->boardId      = $boardId;
         $this->description  = $description;
         $this->dueDate      = $dueDate;
+        $this->plannedStart = $plannedStart;
+        $this->plannedEnd   = $plannedEnd;
         $this->assignedTo   = $assignedTo;
         $this->parentId     = $parentId;
         $this->overdue      = $overdue;
@@ -64,6 +70,8 @@ class Task
     public function getStatusId(): StatusId { return $this->statusId; }
     public function getPriorityId(): PriorityId { return $this->priorityId; }
     public function getDueDate(): ?DateTimeImmutable { return $this->dueDate; }
+    public function getPlannedStart(): ?DateTimeImmutable { return $this->plannedStart; }
+    public function getPlannedEnd(): ?DateTimeImmutable { return $this->plannedEnd; }
     public function getCreatedBy(): UserId { return $this->createdBy; }
     public function getAssignedTo(): ?UserId { return $this->assignedTo; }
     public function getBoardId(): int { return $this->boardId; }
@@ -100,6 +108,13 @@ class Task
     public function changeDueDate(?DateTimeImmutable $dueDate): void
     {
         $this->dueDate = $dueDate;
+        $this->touch();
+    }
+
+    public function changePlannedTime(?DateTimeImmutable $plannedStart, ?DateTimeImmutable $plannedEnd): void
+    {
+        $this->plannedStart = $plannedStart;
+        $this->plannedEnd = $plannedEnd;
         $this->touch();
     }
 

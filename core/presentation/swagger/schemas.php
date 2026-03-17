@@ -161,6 +161,8 @@ class UserSchema {}
  *     @OA\Property(property="statusId", type="integer", example=1),
  *     @OA\Property(property="priorityId", type="integer", example=2),
  *     @OA\Property(property="dueDate", type="string", format="date-time", nullable=true, example="2026-03-01 12:00:00"),
+ *     @OA\Property(property="plannedStart", type="string", format="date-time", nullable=true, example="2026-03-01 09:00:00"),  // NEW
+ *     @OA\Property(property="plannedEnd", type="string", format="date-time", nullable=true, example="2026-03-01 18:00:00"),    // NEW
  *     @OA\Property(property="createdBy", type="integer", example=42),
  *     @OA\Property(property="assignedTo", type="integer", nullable=true, example=17),
  *     @OA\Property(property="boardId", type="integer", example=5),
@@ -179,6 +181,8 @@ class UserSchema {}
  *     @OA\Property(property="statusId", type="integer", example=1),
  *     @OA\Property(property="priorityId", type="integer", example=2),
  *     @OA\Property(property="dueDate", type="string", format="date-time", nullable=true, example="2026-03-01 12:00:00"),
+ *     @OA\Property(property="plannedStart", type="string", format="date-time", nullable=true, example="2026-03-01 09:00:00"),  // NEW
+ *     @OA\Property(property="plannedEnd", type="string", format="date-time", nullable=true, example="2026-03-01 18:00:00"),    // NEW
  *     @OA\Property(property="boardId", type="integer", example=5),
  *     @OA\Property(property="assignedTo", type="integer", nullable=true, example=17),
  *     @OA\Property(property="parentId", type="integer", nullable=true, example=10)
@@ -191,6 +195,8 @@ class UserSchema {}
  *     @OA\Property(property="statusId", type="integer", nullable=true, example=3),
  *     @OA\Property(property="priorityId", type="integer", nullable=true, example=1),
  *     @OA\Property(property="dueDate", type="string", format="date-time", nullable=true, example="2026-03-02 15:00:00"),
+ *     @OA\Property(property="plannedStart", type="string", format="date-time", nullable=true, example="2026-03-02 09:00:00"),  // NEW
+ *     @OA\Property(property="plannedEnd", type="string", format="date-time", nullable=true, example="2026-03-02 18:00:00"),    // NEW
  *     @OA\Property(property="boardId", type="integer", nullable=true, example=6),
  *     @OA\Property(property="assignedTo", type="integer", nullable=true, example=18),
  *     @OA\Property(property="parentId", type="integer", nullable=true, example=11)
@@ -296,6 +302,7 @@ class UserSchema {}
  *     @OA\Property(property="endTime", type="string", format="date-time", nullable=true, example="2026-02-28 12:30:00"),
  *     @OA\Property(property="duration", type="integer", nullable=true, example=9000),
  *     @OA\Property(property="comment", type="string", nullable=true, example="Работа над задачей"),
+ *     @OA\Property(property="type", type="string", enum={"timer", "plan"}, example="timer"),  // NEW
  *     @OA\Property(property="createdAt", type="string", format="date-time", example="2026-02-28 10:00:00"),
  *     @OA\Property(property="updatedAt", type="string", format="date-time", example="2026-02-28 12:30:00")
  * )

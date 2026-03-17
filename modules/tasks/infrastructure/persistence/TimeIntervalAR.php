@@ -12,6 +12,7 @@ use yii\db\ActiveRecord;
  * @property string|null $end_time
  * @property int|null $duration
  * @property string|null $comment
+ * @property string $type
  * @property string $created_at
  * @property string $updated_at
  */

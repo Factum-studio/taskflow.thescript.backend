@@ -12,6 +12,8 @@ class UpdateTaskCommand
     public ?int $statusId;
     public ?int $priorityId;
     public ?DateTimeImmutable $dueDate;
+    public ?DateTimeImmutable $plannedStart;
+    public ?DateTimeImmutable $plannedEnd;
     public ?int $assignedTo;
     public ?int $boardId;
     public ?int $parentId;
@@ -25,6 +27,8 @@ class UpdateTaskCommand
         ?int $statusId = null,
         ?int $priorityId = null,
         ?DateTimeImmutable $dueDate = null,
+        ?DateTimeImmutable $plannedStart = null,
+        ?DateTimeImmutable $plannedEnd = null,
         ?int $assignedTo = null,
         ?int $boardId = null,
         ?int $parentId = null
@@ -36,6 +40,8 @@ class UpdateTaskCommand
         $this->statusId     = $statusId;
         $this->priorityId   = $priorityId;
         $this->dueDate      = $dueDate;
+        $this->plannedStart = $plannedStart;
+        $this->plannedEnd   = $plannedEnd;
         $this->assignedTo   = $assignedTo;
         $this->boardId      = $boardId;
         $this->parentId     = $parentId;

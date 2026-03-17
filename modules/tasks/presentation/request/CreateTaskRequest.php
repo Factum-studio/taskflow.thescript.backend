@@ -10,7 +10,9 @@ class CreateTaskRequest extends Model
     public ?string $description = null;
     public int $statusId;
     public int $priorityId;
-    public ?string $dueDate = null; // формат Y-m-d H:i:s
+    public ?string $dueDate = null;
+    public ?string $plannedStart = null;
+    public ?string $plannedEnd = null;
     public int $boardId;
     public ?int $assignedTo = null;
     public ?int $parentId = null;
@@ -22,7 +24,8 @@ class CreateTaskRequest extends Model
             [['title'], 'string', 'max' => 255],
             [['description'], 'string'],
             [['statusId', 'priorityId', 'boardId', 'assignedTo', 'parentId'], 'integer'],
-            [['dueDate'], 'datetime', 'format' => 'php:Y-m-d H:i:s'],
+            [['dueDate', 'plannedStart', 'plannedEnd'], 'datetime', 'format' => 'php:Y-m-d H:i:s'],
+            [['plannedEnd'], 'compare', 'compareAttribute' => 'plannedStart', 'operator' => '>=', 'type' => 'datetime', 'skipOnEmpty' => true],
         ];
     }
 }

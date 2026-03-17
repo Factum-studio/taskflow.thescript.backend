@@ -18,6 +18,8 @@ use modules\tasks\domain\event\IEventDispatcher;
 use modules\tasks\domain\repository\ITaskStatusRepository;
 use modules\tasks\domain\repository\ITaskStickerRepository;
 use modules\tasks\domain\repository\ITimeIntervalRepository;
+use modules\tasks\infrastructure\listener\AutoTimerListener;
+use modules\tasks\infrastructure\listener\PlannedIntervalListener;
 use modules\tasks\infrastructure\listener\TimeTrackingListener;
 use modules\tasks\infrastructure\repository\DbCommentRepository;
 use modules\tasks\infrastructure\repository\DbDailySummaryRepository;
@@ -63,6 +65,8 @@ Yii::$container->set(IDailySummaryRepository::class, function() {
 Yii::$container->set(TaskLoggerListener::class);
 Yii::$container->set(TaskNotificationListener::class);
 Yii::$container->set(TimeTrackingListener::class);
+Yii::$container->set(AutoTimerListener::class);
+Yii::$container->set(PlannedIntervalListener::class);
 
 Yii::$container->set(IEventDispatcher::class, function (Container $container) {
     /** @var TaskLoggerListener $logger */
@@ -71,27 +75,36 @@ Yii::$container->set(IEventDispatcher::class, function (Container $container) {
     $notifier = $container->get(TaskNotificationListener::class);
     /** @var TimeTrackingListener $timeTracker */
     $timeTracker = $container->get(TimeTrackingListener::class);
+    /** @var AutoTimerListener $autoTimer */
+    $autoTimer = $container->get(AutoTimerListener::class);
+    /** @var PlannedIntervalListener $plannedInterval */
+    $plannedInterval = $container->get(PlannedIntervalListener::class);
 
     $listeners = [
         TaskCreatedEvent::class => [
             [$logger, 'handleTaskCreated'],
+            [$plannedInterval, 'handleTaskCreated'],
         ],
         TaskStatusChangedEvent::class => [
             [$logger, 'handleTaskStatusChanged'],
             [$notifier, 'handleTaskStatusChanged'],
+            [$autoTimer, 'handleTaskStatusChanged'],
         ],
         TaskAssignedEvent::class => [
             [$logger, 'handleTaskAssigned'],
             [$notifier, 'handleTaskAssigned'],
+            [$autoTimer, 'handleTaskAssigned'],
         ],
         TaskRestoredEvent::class => [
             [$logger, 'handleTaskRestored'],
         ],
         TaskSoftDeletedEvent::class => [
             [$logger, 'handleTaskSoftDeleted'],
+            [$autoTimer, 'handleTaskSoftDeleted'],
         ],
         TaskUpdatedEvent::class => [
             [$logger, 'handleTaskUpdated'],
+            [$plannedInterval, 'handleTaskUpdated'],
         ],
         CommentAddedEvent::class => [
             [$logger, 'handleCommentAdded'],
