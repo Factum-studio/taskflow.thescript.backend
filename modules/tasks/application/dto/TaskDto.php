@@ -7,7 +7,7 @@ class TaskDto
     public int $id;
     public string $title;
     public ?string $description;
-    public int $statusId;
+    public int $columnId;
     public int $priorityId;
     public ?string $dueDate;
     public ?string $plannedStart;
@@ -26,7 +26,7 @@ class TaskDto
         $this->id           = $data['id'];
         $this->title        = $data['title'];
         $this->description  = $data['description'] ?? null;
-        $this->statusId     = $data['statusId'];
+        $this->columnId     = $data['columnId'];
         $this->priorityId   = $data['priorityId'];
         $this->dueDate      = $data['dueDate'] ?? null;
         $this->plannedStart = $data['plannedStart'] ?? null;

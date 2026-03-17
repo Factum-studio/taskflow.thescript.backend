@@ -9,7 +9,7 @@ class UpdateTaskCommand
     public int $id;
     public ?string $title;
     public ?string $description;
-    public ?int $statusId;
+    public ?int $columnId;
     public ?int $priorityId;
     public ?DateTimeImmutable $dueDate;
     public ?DateTimeImmutable $plannedStart;
@@ -24,7 +24,7 @@ class UpdateTaskCommand
         int $updatedBy,
         ?string $title = null,
         ?string $description = null,
-        ?int $statusId = null,
+        ?int $columnId = null,
         ?int $priorityId = null,
         ?DateTimeImmutable $dueDate = null,
         ?DateTimeImmutable $plannedStart = null,
@@ -37,7 +37,7 @@ class UpdateTaskCommand
         $this->updatedBy    = $updatedBy;
         $this->title        = $title;
         $this->description  = $description;
-        $this->statusId     = $statusId;
+        $this->columnId     = $columnId;
         $this->priorityId   = $priorityId;
         $this->dueDate      = $dueDate;
         $this->plannedStart = $plannedStart;

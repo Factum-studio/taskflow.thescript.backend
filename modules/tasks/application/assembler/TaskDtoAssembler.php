@@ -13,7 +13,7 @@ class TaskDtoAssembler
             'id'            => $task->getId()->getValue(),
             'title'         => $task->getTitle()->getValue(),
             'description'   => $task->getDescription(),
-            'statusId'      => $task->getStatusId()->getValue(),
+            'columnId'      => $task->getColumnId()->getValue(),
             'priorityId'    => $task->getPriorityId()->getValue(),
             'dueDate'       => $task->getDueDate()?->format('Y-m-d H:i:s'),
             'plannedStart'  => $task->getPlannedStart()?->format('Y-m-d H:i:s'),
