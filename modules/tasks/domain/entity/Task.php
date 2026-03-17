@@ -3,7 +3,7 @@
 namespace modules\tasks\domain\entity;
 
 use modules\tasks\domain\valueObject\TaskId;
-use modules\tasks\domain\valueObject\StatusId;
+use modules\tasks\domain\valueObject\ColumnId;
 use modules\tasks\domain\valueObject\PriorityId;
 use modules\tasks\domain\valueObject\UserId;
 use modules\tasks\domain\valueObject\Title;
@@ -14,7 +14,7 @@ class Task
     private TaskId $id;
     private Title $title;
     private ?string $description;
-    private StatusId $statusId;
+    private ColumnId $columnId;
     private PriorityId $priorityId;
     private ?DateTimeImmutable $dueDate;
     private ?DateTimeImmutable $plannedStart;
@@ -31,7 +31,7 @@ class Task
     public function __construct(
         TaskId $id,
         Title $title,
-        StatusId $statusId,
+        ColumnId $columnId,
         PriorityId $priorityId,
         UserId $createdBy,
         int $boardId,
@@ -48,7 +48,7 @@ class Task
     ) {
         $this->id           = $id;
         $this->title        = $title;
-        $this->statusId     = $statusId;
+        $this->columnId     = $columnId;
         $this->priorityId   = $priorityId;
         $this->createdBy    = $createdBy;
         $this->boardId      = $boardId;
@@ -67,7 +67,7 @@ class Task
     public function getId(): TaskId { return $this->id; }
     public function getTitle(): Title { return $this->title; }
     public function getDescription(): ?string { return $this->description; }
-    public function getStatusId(): StatusId { return $this->statusId; }
+    public function getColumnId(): ColumnId { return $this->columnId; }
     public function getPriorityId(): PriorityId { return $this->priorityId; }
     public function getDueDate(): ?DateTimeImmutable { return $this->dueDate; }
     public function getPlannedStart(): ?DateTimeImmutable { return $this->plannedStart; }
@@ -93,9 +93,9 @@ class Task
         $this->touch();
     }
 
-    public function changeStatus(StatusId $statusId): void
+    public function moveToColumn(ColumnId $columnId): void
     {
-        $this->statusId = $statusId;
+        $this->columnId = $columnId;
         $this->touch();
     }
 
