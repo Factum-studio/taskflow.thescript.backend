@@ -154,15 +154,15 @@ class UserSchema {}
 /**
  * @OA\Schema(
  *     schema="Task",
- *     required={"id", "title", "statusId", "priorityId", "createdBy", "boardId", "overdue", "createdAt", "updatedAt"},
+ *     required={"id", "title", "columnId", "priorityId", "createdBy", "boardId", "overdue", "createdAt", "updatedAt"},
  *     @OA\Property(property="id", type="integer", example=1),
  *     @OA\Property(property="title", type="string", example="Написать документацию"),
  *     @OA\Property(property="description", type="string", nullable=true, example="Подробное описание задачи..."),
- *     @OA\Property(property="statusId", type="integer", example=1),
+ *     @OA\Property(property="columnId", type="integer", example=5),
  *     @OA\Property(property="priorityId", type="integer", example=2),
  *     @OA\Property(property="dueDate", type="string", format="date-time", nullable=true, example="2026-03-01 12:00:00"),
- *     @OA\Property(property="plannedStart", type="string", format="date-time", nullable=true, example="2026-03-01 09:00:00"),  // NEW
- *     @OA\Property(property="plannedEnd", type="string", format="date-time", nullable=true, example="2026-03-01 18:00:00"),    // NEW
+ *     @OA\Property(property="plannedStart", type="string", format="date-time", nullable=true, example="2026-03-01 09:00:00"),
+ *     @OA\Property(property="plannedEnd", type="string", format="date-time", nullable=true, example="2026-03-01 18:00:00"),
  *     @OA\Property(property="createdBy", type="integer", example=42),
  *     @OA\Property(property="assignedTo", type="integer", nullable=true, example=17),
  *     @OA\Property(property="boardId", type="integer", example=5),
@@ -175,14 +175,14 @@ class UserSchema {}
  *
  * @OA\Schema(
  *     schema="CreateTaskRequest",
- *     required={"title", "statusId", "priorityId", "boardId"},
+ *     required={"title", "columnId", "priorityId", "boardId"},
  *     @OA\Property(property="title", type="string", maxLength=255, example="Новая задача"),
  *     @OA\Property(property="description", type="string", nullable=true, example="Описание"),
- *     @OA\Property(property="statusId", type="integer", example=1),
+ *     @OA\Property(property="columnId", type="integer", example=5),
  *     @OA\Property(property="priorityId", type="integer", example=2),
  *     @OA\Property(property="dueDate", type="string", format="date-time", nullable=true, example="2026-03-01 12:00:00"),
- *     @OA\Property(property="plannedStart", type="string", format="date-time", nullable=true, example="2026-03-01 09:00:00"),  // NEW
- *     @OA\Property(property="plannedEnd", type="string", format="date-time", nullable=true, example="2026-03-01 18:00:00"),    // NEW
+ *     @OA\Property(property="plannedStart", type="string", format="date-time", nullable=true, example="2026-03-01 09:00:00"),
+ *     @OA\Property(property="plannedEnd", type="string", format="date-time", nullable=true, example="2026-03-01 18:00:00"),
  *     @OA\Property(property="boardId", type="integer", example=5),
  *     @OA\Property(property="assignedTo", type="integer", nullable=true, example=17),
  *     @OA\Property(property="parentId", type="integer", nullable=true, example=10)
@@ -192,20 +192,20 @@ class UserSchema {}
  *     schema="UpdateTaskRequest",
  *     @OA\Property(property="title", type="string", maxLength=255, nullable=true, example="Обновлённый заголовок"),
  *     @OA\Property(property="description", type="string", nullable=true, example="Новое описание"),
- *     @OA\Property(property="statusId", type="integer", nullable=true, example=3),
+ *     @OA\Property(property="columnId", type="integer", nullable=true, example=6),
  *     @OA\Property(property="priorityId", type="integer", nullable=true, example=1),
  *     @OA\Property(property="dueDate", type="string", format="date-time", nullable=true, example="2026-03-02 15:00:00"),
- *     @OA\Property(property="plannedStart", type="string", format="date-time", nullable=true, example="2026-03-02 09:00:00"),  // NEW
- *     @OA\Property(property="plannedEnd", type="string", format="date-time", nullable=true, example="2026-03-02 18:00:00"),    // NEW
+ *     @OA\Property(property="plannedStart", type="string", format="date-time", nullable=true, example="2026-03-02 09:00:00"),
+ *     @OA\Property(property="plannedEnd", type="string", format="date-time", nullable=true, example="2026-03-02 18:00:00"),
  *     @OA\Property(property="boardId", type="integer", nullable=true, example=6),
  *     @OA\Property(property="assignedTo", type="integer", nullable=true, example=18),
  *     @OA\Property(property="parentId", type="integer", nullable=true, example=11)
  * )
  *
  * @OA\Schema(
- *     schema="ChangeTaskStatusRequest",
- *     required={"statusId"},
- *     @OA\Property(property="statusId", type="integer", example=2)
+ *     schema="MoveTaskToColumnRequest",
+ *     required={"columnId"},
+ *     @OA\Property(property="columnId", type="integer", example=7)
  * )
  *
  * @OA\Schema(
@@ -214,13 +214,53 @@ class UserSchema {}
  * )
  *
  * @OA\Schema(
- *     schema="TaskStatus",
- *     required={"id", "name", "label", "sortOrder"},
+ *     schema="BoardColumn",
+ *     required={"id", "boardId", "name", "label", "sortOrder", "isActive", "isFinal"},
  *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="boardId", type="integer", example=5),
  *     @OA\Property(property="name", type="string", example="in_progress"),
  *     @OA\Property(property="label", type="string", example="В работе"),
  *     @OA\Property(property="sortOrder", type="integer", example=20),
+ *     @OA\Property(property="isActive", type="boolean", example=true),
+ *     @OA\Property(property="isFinal", type="boolean", example=false),
+ *     @OA\Property(property="color", type="string", nullable=true, example="#ff9900"),
+ *     @OA\Property(property="workflowId", type="integer", nullable=true, example=1),
+ *     @OA\Property(property="createdAt", type="string", format="date-time", example="2026-03-18 10:00:00"),
+ *     @OA\Property(property="updatedAt", type="string", format="date-time", example="2026-03-18 10:00:00")
+ * )
+ *
+ * @OA\Schema(
+ *     schema="CreateBoardColumnRequest",
+ *     required={"name", "label"},
+ *     @OA\Property(property="name", type="string", maxLength=50, example="review"),
+ *     @OA\Property(property="label", type="string", maxLength=255, example="Ревью"),
+ *     @OA\Property(property="sortOrder", type="integer", nullable=true, example=30),
+ *     @OA\Property(property="isActive", type="boolean", nullable=true, example=true),
+ *     @OA\Property(property="isFinal", type="boolean", nullable=true, example=false),
+ *     @OA\Property(property="color", type="string", maxLength=20, nullable=true, example="#00ff00"),
  *     @OA\Property(property="workflowId", type="integer", nullable=true, example=1)
+ * )
+ *
+ * @OA\Schema(
+ *     schema="UpdateBoardColumnRequest",
+ *     @OA\Property(property="name", type="string", maxLength=50, nullable=true, example="done"),
+ *     @OA\Property(property="label", type="string", maxLength=255, nullable=true, example="Готово"),
+ *     @OA\Property(property="sortOrder", type="integer", nullable=true, example=40),
+ *     @OA\Property(property="isActive", type="boolean", nullable=true, example=false),
+ *     @OA\Property(property="isFinal", type="boolean", nullable=true, example=true),
+ *     @OA\Property(property="color", type="string", maxLength=20, nullable=true, example="#ff0000"),
+ *     @OA\Property(property="workflowId", type="integer", nullable=true, example=2)
+ * )
+ *
+ * @OA\Schema(
+ *     schema="ReorderBoardColumnsRequest",
+ *     required={"orderedIds"},
+ *     @OA\Property(
+ *         property="orderedIds",
+ *         type="array",
+ *         items=@OA\Items(type="integer"),
+ *         example={3, 1, 2}
+ *     )
  * )
  *
  * @OA\Schema(
@@ -302,7 +342,7 @@ class UserSchema {}
  *     @OA\Property(property="endTime", type="string", format="date-time", nullable=true, example="2026-02-28 12:30:00"),
  *     @OA\Property(property="duration", type="integer", nullable=true, example=9000),
  *     @OA\Property(property="comment", type="string", nullable=true, example="Работа над задачей"),
- *     @OA\Property(property="type", type="string", enum={"timer", "plan"}, example="timer"),  // NEW
+ *     @OA\Property(property="type", type="string", enum={"timer", "plan"}, example="timer"),
  *     @OA\Property(property="createdAt", type="string", format="date-time", example="2026-02-28 10:00:00"),
  *     @OA\Property(property="updatedAt", type="string", format="date-time", example="2026-02-28 12:30:00")
  * )

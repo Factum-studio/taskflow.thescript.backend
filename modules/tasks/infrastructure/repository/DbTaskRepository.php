@@ -4,8 +4,8 @@ namespace modules\tasks\infrastructure\repository;
 
 use modules\tasks\domain\entity\Task;
 use modules\tasks\domain\repository\ITaskRepository;
+use modules\tasks\domain\valueObject\ColumnId;
 use modules\tasks\domain\valueObject\PriorityId;
-use modules\tasks\domain\valueObject\StatusId;
 use modules\tasks\domain\valueObject\TaskId;
 use modules\tasks\domain\valueObject\Title;
 use modules\tasks\domain\valueObject\UserId;
@@ -107,7 +107,7 @@ class DbTaskRepository implements ITaskRepository
     {
         $ar->title          = $task->getTitle()->getValue();
         $ar->description    = $task->getDescription();
-        $ar->status_id      = $task->getStatusId()->getValue();
+        $ar->column_id      = $task->getColumnId()->getValue();
         $ar->priority_id    = $task->getPriorityId()->getValue();
         $ar->due_date       = $task->getDueDate()?->format('Y-m-d H:i:s');
         $ar->planned_start  = $task->getPlannedStart()?->format('Y-m-d H:i:s');
@@ -130,7 +130,7 @@ class DbTaskRepository implements ITaskRepository
         return new Task(
             new TaskId((int)$ar->id),
             new Title($ar->title),
-            new StatusId((int)$ar->status_id),
+            new ColumnId((int)$ar->column_id),
             new PriorityId((int)$ar->priority_id),
             new UserId((int)$ar->created_by),
             (int)$ar->board_id,

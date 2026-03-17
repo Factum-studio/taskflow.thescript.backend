@@ -4,14 +4,14 @@ namespace modules\tasks\domain\valueObject;
 
 use InvalidArgumentException;
 
-final class StatusId
+final class ColumnId
 {
     private int $value;
 
     public function __construct(int $value)
     {
-        if ($value <= 0) {
-            throw new InvalidArgumentException('Status ID must be positive integer');
+        if ($value < 0) {
+            throw new InvalidArgumentException('Column ID must be non-negative integer');
         }
         $this->value = $value;
     }

@@ -3,16 +3,16 @@
 namespace modules\tasks\application\handler;
 
 use modules\tasks\application\assembler\TaskDtoAssembler;
-use modules\tasks\application\command\ChangeTaskStatusCommand;
+use modules\tasks\application\command\MoveTaskToColumnCommand;
 use modules\tasks\application\dto\TaskDto;
 use modules\tasks\domain\event\IEventDispatcher;
-use modules\tasks\domain\event\TaskStatusChangedEvent;
+use modules\tasks\domain\event\TaskMovedToColumnEvent;
 use modules\tasks\domain\repository\ITaskRepository;
-use modules\tasks\domain\valueObject\StatusId;
+use modules\tasks\domain\valueObject\ColumnId;
 use modules\tasks\domain\valueObject\TaskId;
 use RuntimeException;
 
-class ChangeTaskStatusHandler
+class MoveTaskToColumnHandler
 {
     private ITaskRepository $taskRepository;
     private TaskDtoAssembler $taskDtoAssembler;
@@ -28,7 +28,7 @@ class ChangeTaskStatusHandler
         $this->eventDispatcher  = $eventDispatcher;
     }
 
-    public function handle(ChangeTaskStatusCommand $command): TaskDto
+    public function handle(MoveTaskToColumnCommand $command): TaskDto
     {
         $taskId = new TaskId($command->id);
         $task = $this->taskRepository->findById($taskId);
@@ -36,14 +36,14 @@ class ChangeTaskStatusHandler
             throw new RuntimeException("Task with id {$command->id} not found.");
         }
 
-        $oldStatus = $task->getStatusId();
-        $newStatus = new StatusId($command->statusId);
+        $oldColumn = $task->getColumnId();
+        $newColumn = new ColumnId($command->columnId);
 
-        $task->changeStatus($newStatus);
+        $task->moveToColumn($newColumn);
         $savedTask = $this->taskRepository->save($task);
 
         $this->eventDispatcher->dispatch(
-            new TaskStatusChangedEvent($savedTask, $oldStatus, $command->changedBy ?? null)
+            new TaskMovedToColumnEvent($savedTask, $oldColumn, $command->movedBy ?? null)
         );
 
         return $this->taskDtoAssembler->toDto($savedTask);

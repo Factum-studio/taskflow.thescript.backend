@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9d1ae55caec08cb026ce95d7cae9b5aa",
+    "content-hash": "5915415112377280d2b23f849e45a8ce",
     "packages": [
         {
             "name": "bower-asset/inputmask",
@@ -3338,16 +3338,16 @@
         },
         {
             "name": "doctordanila/scancore",
-            "version": "v1.0.5",
+            "version": "v1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DoctorDanila/scancore.git",
-                "reference": "83d4468cd04b63001e35e31400205e7606cbd949"
+                "reference": "b9a844f47ad3b2349b8bdc3802e1c26e5156ecc2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DoctorDanila/scancore/zipball/83d4468cd04b63001e35e31400205e7606cbd949",
-                "reference": "83d4468cd04b63001e35e31400205e7606cbd949",
+                "url": "https://api.github.com/repos/DoctorDanila/scancore/zipball/b9a844f47ad3b2349b8bdc3802e1c26e5156ecc2",
+                "reference": "b9a844f47ad3b2349b8bdc3802e1c26e5156ecc2",
                 "shasum": ""
             },
             "require": {
@@ -3382,9 +3382,9 @@
             "description": "Console tool to scan project structure and dump file contents, respecting .scancoreignore",
             "support": {
                 "issues": "https://github.com/DoctorDanila/scancore/issues",
-                "source": "https://github.com/DoctorDanila/scancore/tree/v1.0.5"
+                "source": "https://github.com/DoctorDanila/scancore/tree/v1.0.6"
             },
-            "time": "2026-03-16T12:35:48+00:00"
+            "time": "2026-03-17T09:16:08+00:00"
         },
         {
             "name": "fakerphp/faker",

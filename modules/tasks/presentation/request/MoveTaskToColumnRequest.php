@@ -4,15 +4,15 @@ namespace modules\tasks\presentation\request;
 
 use yii\base\Model;
 
-class ChangeTaskStatusRequest extends Model
+class MoveTaskToColumnRequest extends Model
 {
-    public int $statusId;
+    public int $columnId;
 
     public function rules(): array
     {
         return [
-            [['statusId'], 'required'],
-            [['statusId'], 'integer'],
+            ['columnId', 'required'],
+            ['columnId', 'integer'],
         ];
     }
 }

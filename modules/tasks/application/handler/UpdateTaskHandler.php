@@ -7,10 +7,11 @@ use modules\tasks\application\command\UpdateTaskCommand;
 use modules\tasks\application\dto\TaskDto;
 use modules\tasks\domain\event\IEventDispatcher;
 use modules\tasks\domain\event\TaskAssignedEvent;
+use modules\tasks\domain\event\TaskMovedToColumnEvent;
 use modules\tasks\domain\event\TaskUpdatedEvent;
 use modules\tasks\domain\repository\ITaskRepository;
+use modules\tasks\domain\valueObject\ColumnId;
 use modules\tasks\domain\valueObject\PriorityId;
-use modules\tasks\domain\valueObject\StatusId;
 use modules\tasks\domain\valueObject\TaskId;
 use modules\tasks\domain\valueObject\Title;
 use modules\tasks\domain\valueObject\UserId;
@@ -43,6 +44,7 @@ class UpdateTaskHandler
         $changedFields = [];
         $updatedBy = $command->updatedBy ?? 0;
         $oldAssignee = $task->getAssignedTo();
+        $oldColumn = $task->getColumnId();
 
         // Обновляем только переданные параметры, что б их
         if ($command->title !== null) {
@@ -59,11 +61,11 @@ class UpdateTaskHandler
                 $changedFields['description'] = $command->description;
             }
         }
-        if ($command->statusId !== null) {
-            $old = $task->getStatusId()->getValue();
-            $task->changeStatus(new StatusId($command->statusId));
-            if ($old !== $command->statusId) {
-                $changedFields['statusId'] = $command->statusId;
+        if ($command->columnId !== null) {
+            $old = $task->getColumnId()->getValue();
+            $task->moveToColumn(new ColumnId($command->columnId));
+            if ($old !== $command->columnId) {
+                $changedFields['columnId'] = $command->columnId;
             }
         }
         if ($command->priorityId !== null) {
@@ -117,11 +119,19 @@ class UpdateTaskHandler
         $savedTask = $this->taskRepository->save($task);
 
         if (!empty($changedFields)) {
+            // Диспатчим общее событие обновления
             $this->eventDispatcher->dispatch(
                 new TaskUpdatedEvent($savedTask, $changedFields, $updatedBy)
             );
 
-            // Если изменился исполнитель, диспатчим отдельное событие
+            // Если изменилась колонка – диспатчим отдельное событие
+            if (isset($changedFields['columnId'])) {
+                $this->eventDispatcher->dispatch(
+                    new TaskMovedToColumnEvent($savedTask, $oldColumn, $updatedBy)
+                );
+            }
+
+            // Если изменился исполнитель – диспатчим событие назначения
             if (isset($changedFields['assignedTo'])) {
                 $this->eventDispatcher->dispatch(
                     new TaskAssignedEvent($savedTask, $oldAssignee, $updatedBy)

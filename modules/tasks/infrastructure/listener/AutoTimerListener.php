@@ -5,12 +5,12 @@ namespace modules\tasks\infrastructure\listener;
 use DateTimeImmutable;
 use modules\tasks\domain\entity\TimeInterval;
 use modules\tasks\domain\event\TaskAssignedEvent;
+use modules\tasks\domain\event\TaskMovedToColumnEvent;
 use modules\tasks\domain\event\TaskSoftDeletedEvent;
-use modules\tasks\domain\event\TaskStatusChangedEvent;
+use modules\tasks\domain\repository\IBoardColumnRepository;
 use modules\tasks\domain\repository\ITaskRepository;
-use modules\tasks\domain\repository\ITaskStatusRepository;
 use modules\tasks\domain\repository\ITimeIntervalRepository;
-use modules\tasks\domain\valueObject\StatusId;
+use modules\tasks\domain\valueObject\ColumnId;
 use modules\tasks\domain\valueObject\TaskId;
 use modules\tasks\domain\valueObject\TimeIntervalId;
 use modules\tasks\domain\valueObject\UserId;
@@ -20,7 +20,7 @@ class AutoTimerListener
 {
     private ITimeIntervalRepository $intervalRepository;
     private ITaskRepository $taskRepository;
-    private ITaskStatusRepository $statusRepository;
+    private IBoardColumnRepository $columnRepository;
 
     // Список системных статусов, которые считаются активными (по имени)
     private array $activeStatusNames = ['in_progress', 'review', 'testing', 'blocked'];
@@ -28,14 +28,14 @@ class AutoTimerListener
     public function __construct(
         ITimeIntervalRepository $intervalRepository,
         ITaskRepository $taskRepository,
-        ITaskStatusRepository $statusRepository
+        IBoardColumnRepository $columnRepository
     ) {
-        $this->intervalRepository = $intervalRepository;
-        $this->taskRepository = $taskRepository;
-        $this->statusRepository = $statusRepository;
+        $this->intervalRepository   = $intervalRepository;
+        $this->taskRepository       = $taskRepository;
+        $this->columnRepository     = $columnRepository;
     }
 
-    public function handleTaskStatusChanged(TaskStatusChangedEvent $event): void
+    public function handleTaskMovedToColumn(TaskMovedToColumnEvent $event): void
     {
         $taskId = new TaskId($event->getAggregateId());
         $task = $this->taskRepository->findById($taskId);
@@ -44,22 +44,32 @@ class AutoTimerListener
             return;
         }
 
-        $oldStatus = $this->statusRepository->findById(new StatusId($event->getOldStatusId()));
-        $newStatus = $this->statusRepository->findById(new StatusId($event->getNewStatusId()));
+        $oldColumn = $this->columnRepository->findById(new ColumnId($event->getOldColumnId()));
+        $newColumn = $this->columnRepository->findById(new ColumnId($event->getNewColumnId()));
 
-        if (!$oldStatus || !$newStatus) {
-            Yii::warning("Status not found in AutoTimerListener", 'tasks');
+        if (!$oldColumn || !$newColumn) {
+            Yii::warning("Column not found in AutoTimerListener", 'tasks');
             return;
         }
 
-        $wasActive = in_array($oldStatus->getName(), $this->activeStatusNames, true);
-        $isActive = in_array($newStatus->getName(), $this->activeStatusNames, true);
-        $isDone = $newStatus->getName() === 'done'; // завершающий статус
-
+        $wasActive = $oldColumn->isActive();
+        $isActive = $newColumn->isActive();
+        $isFinal = $newColumn->isFinal(); // новая проверка
         $userId = $task->getAssignedTo() ?? $task->getCreatedBy();
 
+        // Если перешли в финальную колонку — останавливаем таймер
+        if ($isFinal) {
+            $active = $this->intervalRepository->findActiveByTaskAndUser($taskId, $userId, TimeInterval::TYPE_TIMER);
+            if ($active) {
+                $active->stop(new DateTimeImmutable(), 'Task completed (final column)');
+                $this->intervalRepository->save($active);
+                Yii::info("Auto timer stopped for task {$taskId->getValue()} user {$userId->getValue()} (final column)", 'tasks');
+            }
+            return;
+        }
+
+        // Остальная логика (запуск при переходе в активную, удаление при переходе в неактивную)
         if (!$wasActive && $isActive) {
-            // Переход в активный статус - запускаем таймер, если ещё нет активного
             $existing = $this->intervalRepository->findActiveByTaskAndUser($taskId, $userId, TimeInterval::TYPE_TIMER);
             if (!$existing) {
                 $interval = new TimeInterval(
@@ -69,26 +79,17 @@ class AutoTimerListener
                     new DateTimeImmutable(),
                     null,
                     null,
-                    'Auto-started by status change',
+                    'Auto-started by moving to active column',
                     TimeInterval::TYPE_TIMER
                 );
                 $this->intervalRepository->save($interval);
                 Yii::info("Auto timer started for task {$taskId->getValue()} user {$userId->getValue()}", 'tasks');
             }
-        } elseif ($wasActive && !$isActive && !$isDone) {
-            // Переход из активного в неактивный (кроме done) - удаляем активный таймер
+        } elseif ($wasActive && !$isActive) {
             $active = $this->intervalRepository->findActiveByTaskAndUser($taskId, $userId, TimeInterval::TYPE_TIMER);
             if ($active) {
                 $this->intervalRepository->remove($active);
                 Yii::info("Auto timer deleted for task {$taskId->getValue()} user {$userId->getValue()}", 'tasks');
-            }
-        } elseif ($wasActive && $isDone) {
-            // Завершение задачи - останавливаем таймер
-            $active = $this->intervalRepository->findActiveByTaskAndUser($taskId, $userId, TimeInterval::TYPE_TIMER);
-            if ($active) {
-                $active->stop(new DateTimeImmutable(), 'Task completed');
-                $this->intervalRepository->save($active);
-                Yii::info("Auto timer stopped for task {$taskId->getValue()} user {$userId->getValue()}", 'tasks');
             }
         }
     }

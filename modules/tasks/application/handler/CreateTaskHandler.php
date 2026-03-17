@@ -9,11 +9,11 @@ use modules\tasks\application\dto\TaskDto;
 use modules\tasks\domain\entity\Task;
 use modules\tasks\domain\event\IEventDispatcher;
 use modules\tasks\domain\event\TaskCreatedEvent;
+use modules\tasks\domain\repository\IBoardColumnRepository;
 use modules\tasks\domain\repository\ITaskPriorityRepository;
 use modules\tasks\domain\repository\ITaskRepository;
-use modules\tasks\domain\repository\ITaskStatusRepository;
+use modules\tasks\domain\valueObject\ColumnId;
 use modules\tasks\domain\valueObject\PriorityId;
-use modules\tasks\domain\valueObject\StatusId;
 use modules\tasks\domain\valueObject\TaskId;
 use modules\tasks\domain\valueObject\Title;
 use modules\tasks\domain\valueObject\UserId;
@@ -24,28 +24,28 @@ class CreateTaskHandler
     private ITaskRepository $taskRepository;
     private TaskDtoAssembler $taskDtoAssembler;
     private IEventDispatcher $eventDispatcher;
-    private ITaskStatusRepository $statusRepository;
+    private IBoardColumnRepository $columnRepository;
     private ITaskPriorityRepository $priorityRepository;
 
     public function __construct(
         ITaskRepository $taskRepository,
         TaskDtoAssembler $taskDtoAssembler,
         IEventDispatcher $eventDispatcher,
-        ITaskStatusRepository $statusRepository,
+        IBoardColumnRepository $columnRepository,
         ITaskPriorityRepository $priorityRepository
     ) {
         $this->taskRepository       = $taskRepository;
         $this->taskDtoAssembler     = $taskDtoAssembler;
         $this->eventDispatcher      = $eventDispatcher;
-        $this->statusRepository     = $statusRepository;
+        $this->columnRepository     = $columnRepository;
         $this->priorityRepository   = $priorityRepository;
     }
 
     public function handle(CreateTaskCommand $command): TaskDto
     {
-        $statusId = new StatusId($command->statusId);
-        if (!$this->statusRepository->findById($statusId)) {
-            throw new InvalidArgumentException("Status with ID {$command->statusId} does not exist.");
+        $columnId = new ColumnId($command->columnId);
+        if (!$this->columnRepository->findById($columnId)) {
+            throw new InvalidArgumentException("Column with ID {$command->columnId} does not exist.");
         }
 
         $priorityId = new PriorityId($command->priorityId);
@@ -61,7 +61,7 @@ class CreateTaskHandler
         $task = new Task(
             new TaskId(0),
             $title,
-            $statusId,
+            $columnId,
             $priorityId,
             $createdBy,
             $command->boardId,

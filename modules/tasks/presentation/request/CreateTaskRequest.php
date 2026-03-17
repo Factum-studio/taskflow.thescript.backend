@@ -8,7 +8,7 @@ class CreateTaskRequest extends Model
 {
     public string $title;
     public ?string $description = null;
-    public int $statusId;
+    public int $columnId;
     public int $priorityId;
     public ?string $dueDate = null;
     public ?string $plannedStart = null;
@@ -20,10 +20,10 @@ class CreateTaskRequest extends Model
     public function rules(): array
     {
         return [
-            [['title', 'statusId', 'priorityId', 'boardId'], 'required'],
+            [['title', 'columnId', 'priorityId', 'boardId'], 'required'],
             [['title'], 'string', 'max' => 255],
             [['description'], 'string'],
-            [['statusId', 'priorityId', 'boardId', 'assignedTo', 'parentId'], 'integer'],
+            [['columnId', 'priorityId', 'boardId', 'assignedTo', 'parentId'], 'integer'],
             [['dueDate', 'plannedStart', 'plannedEnd'], 'datetime', 'format' => 'php:Y-m-d H:i:s'],
             [['plannedEnd'], 'compare', 'compareAttribute' => 'plannedStart', 'operator' => '>=', 'type' => 'datetime', 'skipOnEmpty' => true],
         ];
