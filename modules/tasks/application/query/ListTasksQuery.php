@@ -4,7 +4,7 @@ namespace modules\tasks\application\query;
 
 class ListTasksQuery
 {
-    public ?int $statusId = null;
+    public ?int $columnId = null;
     public ?int $assignedTo = null;
     public ?int $createdBy = null;
     public ?int $boardId = null;
@@ -28,8 +28,8 @@ class ListTasksQuery
     public function toCriteria(): array
     {
         $criteria = [];
-        if ($this->statusId !== null) {
-            $criteria['status_id'] = $this->statusId;
+        if ($this->columnId !== null) {
+            $criteria['columnId'] = $this->columnId;
         }
         if ($this->assignedTo !== null) {
             $criteria['assigned_to'] = $this->assignedTo;

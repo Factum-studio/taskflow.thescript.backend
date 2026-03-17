@@ -3,7 +3,7 @@
 namespace modules\tasks\domain\entity;
 
 use modules\tasks\domain\valueObject\TaskId;
-use modules\tasks\domain\valueObject\StatusId;
+use modules\tasks\domain\valueObject\ColumnId;
 use modules\tasks\domain\valueObject\PriorityId;
 use modules\tasks\domain\valueObject\UserId;
 use modules\tasks\domain\valueObject\Title;
@@ -14,9 +14,11 @@ class Task
     private TaskId $id;
     private Title $title;
     private ?string $description;
-    private StatusId $statusId;
+    private ColumnId $columnId;
     private PriorityId $priorityId;
     private ?DateTimeImmutable $dueDate;
+    private ?DateTimeImmutable $plannedStart;
+    private ?DateTimeImmutable $plannedEnd;
     private UserId $createdBy;
     private ?UserId $assignedTo;
     private int $boardId;
@@ -29,12 +31,14 @@ class Task
     public function __construct(
         TaskId $id,
         Title $title,
-        StatusId $statusId,
+        ColumnId $columnId,
         PriorityId $priorityId,
         UserId $createdBy,
         int $boardId,
         ?string $description = null,
         ?DateTimeImmutable $dueDate = null,
+        ?DateTimeImmutable $plannedStart = null,
+        ?DateTimeImmutable $plannedEnd = null,
         ?UserId $assignedTo = null,
         ?TaskId $parentId = null,
         bool $overdue = false,
@@ -44,12 +48,14 @@ class Task
     ) {
         $this->id           = $id;
         $this->title        = $title;
-        $this->statusId     = $statusId;
+        $this->columnId     = $columnId;
         $this->priorityId   = $priorityId;
         $this->createdBy    = $createdBy;
         $this->boardId      = $boardId;
         $this->description  = $description;
         $this->dueDate      = $dueDate;
+        $this->plannedStart = $plannedStart;
+        $this->plannedEnd   = $plannedEnd;
         $this->assignedTo   = $assignedTo;
         $this->parentId     = $parentId;
         $this->overdue      = $overdue;
@@ -61,9 +67,11 @@ class Task
     public function getId(): TaskId { return $this->id; }
     public function getTitle(): Title { return $this->title; }
     public function getDescription(): ?string { return $this->description; }
-    public function getStatusId(): StatusId { return $this->statusId; }
+    public function getColumnId(): ColumnId { return $this->columnId; }
     public function getPriorityId(): PriorityId { return $this->priorityId; }
     public function getDueDate(): ?DateTimeImmutable { return $this->dueDate; }
+    public function getPlannedStart(): ?DateTimeImmutable { return $this->plannedStart; }
+    public function getPlannedEnd(): ?DateTimeImmutable { return $this->plannedEnd; }
     public function getCreatedBy(): UserId { return $this->createdBy; }
     public function getAssignedTo(): ?UserId { return $this->assignedTo; }
     public function getBoardId(): int { return $this->boardId; }
@@ -85,9 +93,9 @@ class Task
         $this->touch();
     }
 
-    public function changeStatus(StatusId $statusId): void
+    public function moveToColumn(ColumnId $columnId): void
     {
-        $this->statusId = $statusId;
+        $this->columnId = $columnId;
         $this->touch();
     }
 
@@ -100,6 +108,13 @@ class Task
     public function changeDueDate(?DateTimeImmutable $dueDate): void
     {
         $this->dueDate = $dueDate;
+        $this->touch();
+    }
+
+    public function changePlannedTime(?DateTimeImmutable $plannedStart, ?DateTimeImmutable $plannedEnd): void
+    {
+        $this->plannedStart = $plannedStart;
+        $this->plannedEnd = $plannedEnd;
         $this->touch();
     }
 

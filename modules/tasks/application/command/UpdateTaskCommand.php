@@ -9,9 +9,11 @@ class UpdateTaskCommand
     public int $id;
     public ?string $title;
     public ?string $description;
-    public ?int $statusId;
+    public ?int $columnId;
     public ?int $priorityId;
     public ?DateTimeImmutable $dueDate;
+    public ?DateTimeImmutable $plannedStart;
+    public ?DateTimeImmutable $plannedEnd;
     public ?int $assignedTo;
     public ?int $boardId;
     public ?int $parentId;
@@ -22,9 +24,11 @@ class UpdateTaskCommand
         int $updatedBy,
         ?string $title = null,
         ?string $description = null,
-        ?int $statusId = null,
+        ?int $columnId = null,
         ?int $priorityId = null,
         ?DateTimeImmutable $dueDate = null,
+        ?DateTimeImmutable $plannedStart = null,
+        ?DateTimeImmutable $plannedEnd = null,
         ?int $assignedTo = null,
         ?int $boardId = null,
         ?int $parentId = null
@@ -33,9 +37,11 @@ class UpdateTaskCommand
         $this->updatedBy    = $updatedBy;
         $this->title        = $title;
         $this->description  = $description;
-        $this->statusId     = $statusId;
+        $this->columnId     = $columnId;
         $this->priorityId   = $priorityId;
         $this->dueDate      = $dueDate;
+        $this->plannedStart = $plannedStart;
+        $this->plannedEnd   = $plannedEnd;
         $this->assignedTo   = $assignedTo;
         $this->boardId      = $boardId;
         $this->parentId     = $parentId;

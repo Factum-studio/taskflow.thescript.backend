@@ -8,14 +8,12 @@ use core\application\dto\ItemDto;
 use core\application\dto\SuccessDto;
 use Exception;
 use modules\tasks\application\command\AssignTaskCommand;
-use modules\tasks\application\command\ChangeTaskStatusCommand;
 use modules\tasks\application\command\CreateTaskCommand;
 use modules\tasks\application\command\HardDeleteTaskCommand;
 use modules\tasks\application\command\RestoreTaskCommand;
 use modules\tasks\application\command\SoftDeleteTaskCommand;
 use modules\tasks\application\command\UpdateTaskCommand;
 use modules\tasks\application\handler\AssignTaskHandler;
-use modules\tasks\application\handler\ChangeTaskStatusHandler;
 use modules\tasks\application\handler\CreateTaskHandler;
 use modules\tasks\application\handler\GetTaskHandler;
 use modules\tasks\application\handler\HardDeleteTaskHandler;
@@ -26,12 +24,14 @@ use modules\tasks\application\handler\UpdateTaskHandler;
 use modules\tasks\application\query\GetTaskQuery;
 use modules\tasks\application\query\ListTasksQuery;
 use modules\tasks\presentation\request\AssignTaskRequest;
-use modules\tasks\presentation\request\ChangeTaskStatusRequest;
 use modules\tasks\presentation\request\CreateTaskRequest;
 use modules\tasks\presentation\request\HardDeleteTaskRequest;
 use modules\tasks\presentation\request\RestoreTaskRequest;
 use modules\tasks\presentation\request\SoftDeleteTaskRequest;
 use modules\tasks\presentation\request\UpdateTaskRequest;
+use modules\tasks\application\command\MoveTaskToColumnCommand;
+use modules\tasks\application\handler\MoveTaskToColumnHandler;
+use modules\tasks\presentation\request\MoveTaskToColumnRequest;
 use core\presentation\controller\BaseController;
 use DateTimeImmutable;
 use DateTimeZone;
@@ -55,7 +55,7 @@ class TaskController extends BaseController
         private readonly GetTaskHandler $getTaskHandler,
         private readonly ListTasksHandler $listTasksHandler,
         private readonly UpdateTaskHandler $updateTaskHandler,
-        private readonly ChangeTaskStatusHandler $changeTaskStatusHandler,
+        private readonly MoveTaskToColumnHandler $moveTaskToColumnHandler,
         private readonly AssignTaskHandler $assignTaskHandler,
         private readonly SoftDeleteTaskHandler $softDeleteTaskHandler,
         private readonly RestoreTaskHandler $restoreTaskHandler,
@@ -73,8 +73,8 @@ class TaskController extends BaseController
         tags: ['tasks'],
         parameters: [
             new OA\Parameter(
-                name: 'statusId',
-                description: 'Фильтр по статусу',
+                name: 'columnId',
+                description: 'Фильтр по колонке(статусу)',
                 in: 'query',
                 required: false,
                 schema: new OA\Schema(type: 'integer')
@@ -154,9 +154,9 @@ class TaskController extends BaseController
 
         $filters = [];
 
-        $statusId = $request->get('statusId');
-        if ($statusId !== null && ctype_digit($statusId)) {
-            $filters['statusId'] = (int)$statusId;
+        $columnId = $request->get('columnId');
+        if ($columnId !== null && ctype_digit($columnId)) {
+            $filters['columnId'] = (int)$columnId;
         }
 
         $assignedTo = $request->get('assignedTo');
@@ -306,15 +306,19 @@ class TaskController extends BaseController
         }
 
         $dueDate = $request->dueDate ? new DateTimeImmutable($request->dueDate, new DateTimeZone('UTC')) : null;
+        $plannedStart = $request->plannedStart ? new DateTimeImmutable($request->plannedStart, new DateTimeZone('UTC')) : null;
+        $plannedEnd = $request->plannedEnd ? new DateTimeImmutable($request->plannedEnd, new DateTimeZone('UTC')) : null;
 
         $command = new CreateTaskCommand(
             title: $request->title,
-            statusId: $request->statusId,
+            columnId: $request->columnId,
             priorityId: $request->priorityId,
             createdBy: $userId,
             boardId: $request->boardId,
             description: $request->description,
             dueDate: $dueDate,
+            plannedStart: $plannedStart,
+            plannedEnd: $plannedEnd,
             assignedTo: $request->assignedTo,
             parentId: $request->parentId
         );
@@ -402,15 +406,19 @@ class TaskController extends BaseController
         }
 
         $dueDate = $updateRequest->dueDate ? new DateTimeImmutable($updateRequest->dueDate, new DateTimeZone('UTC')) : null;
+        $plannedStart = $updateRequest->plannedStart ? new DateTimeImmutable($updateRequest->plannedStart, new DateTimeZone('UTC')) : null;
+        $plannedEnd = $updateRequest->plannedEnd ? new DateTimeImmutable($updateRequest->plannedEnd, new DateTimeZone('UTC')) : null;
 
         $command = new UpdateTaskCommand(
             id: $id,
             updatedBy: $userId,
             title: $updateRequest->title,
             description: $updateRequest->description,
-            statusId: $updateRequest->statusId,
+            columnId: $updateRequest->columnId,
             priorityId: $updateRequest->priorityId,
             dueDate: $dueDate,
+            plannedStart: $plannedStart,
+            plannedEnd: $plannedEnd,
             assignedTo: $updateRequest->assignedTo,
             boardId: $updateRequest->boardId,
             parentId: $updateRequest->parentId
@@ -429,12 +437,12 @@ class TaskController extends BaseController
     }
 
     #[OA\Post(
-        path: '/task/{id}/change-status',
-        summary: 'Изменить статус задачи',
+        path: '/task/{id}/move-to-column',
+        summary: 'Переместить задачу в другую колонку',
         security: [['bearerAuth' => []]],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/ChangeTaskStatusRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/MoveTaskToColumnRequest')
         ),
         tags: ['tasks'],
         parameters: [
@@ -486,9 +494,9 @@ class TaskController extends BaseController
      * @throws NotFoundHttpException
      * @throws ServerErrorHttpException
      */
-    public function actionChangeStatus(int $id): ItemDto|ErrorDto|array
+    public function actionMoveToColumn(int $id): ItemDto|ErrorDto|array
     {
-        $request = new ChangeTaskStatusRequest();
+        $request = new MoveTaskToColumnRequest();
         $request->load(Yii::$app->request->post(), '');
         if (!$request->validate()) {
             return $this->error('Validation failed', 422, $request->getErrors());
@@ -499,19 +507,19 @@ class TaskController extends BaseController
             return $this->error('User not authenticated', 401);
         }
 
-        $command = new ChangeTaskStatusCommand(
+        $command = new MoveTaskToColumnCommand(
             id: $id,
-            statusId: $request->statusId,
-            changedBy: $userId
+            columnId: $request->columnId,
+            movedBy: $userId
         );
 
         try {
-            $taskDto = $this->changeTaskStatusHandler->handle($command);
+            $taskDto = $this->moveTaskToColumnHandler->handle($command);
         } catch (RuntimeException $e) {
             throw new NotFoundHttpException($e->getMessage());
         } catch (Throwable $e) {
             Yii::error($e->getMessage(), 'tasks');
-            throw new ServerErrorHttpException('Failed to change task status', 0, $e);
+            throw new ServerErrorHttpException('Failed to move task', 0, $e);
         }
 
         return $this->item($taskDto);
