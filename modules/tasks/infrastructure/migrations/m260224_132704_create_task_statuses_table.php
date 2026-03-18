@@ -19,21 +19,21 @@ class m260224_132704_create_task_statuses_table extends Migration
             'name' => $this->string(50)->notNull()->unique(),
             'label' => $this->string(255)->notNull(),
             'sort_order' => $this->integer()->notNull()->defaultValue(0),
-            'workflow_id' => $this->integer(),
+//            'workflow_id' => $this->integer(),
             'created_at' => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP'),
             'updated_at' => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
         ]);
 
         // CHECK THIS
-        $this->addForeignKey(
-            'fk-task_statuses-workflow_id',
-            '{{%task_statuses}}',
-            'workflow_id',
-            '{{%workflows}}',
-            'id',
-            'SET NULL',
-            'CASCADE'
-        );
+//        $this->addForeignKey(
+//            'fk-task_statuses-workflow_id',
+//            '{{%task_statuses}}',
+//            'workflow_id',
+//            '{{%workflows}}',
+//            'id',
+//            'SET NULL',
+//            'CASCADE'
+//        );
 
         $statuses = [
             ['to_work', 'К работе', 10],
@@ -59,7 +59,7 @@ class m260224_132704_create_task_statuses_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('fk-task_statuses-workflow_id', '{{%task_statuses}}');
+//        $this->dropForeignKey('fk-task_statuses-workflow_id', '{{%task_statuses}}');
         $this->dropTable('{{%task_statuses}}');
     }
 }
