@@ -404,3 +404,85 @@ class UserSchema {}
  * )
  */
 class TaskSchemas {}
+
+/**
+ * @OA\Schema(
+ *     schema="Project",
+ *     required={"id", "name", "type", "ownerId", "createdAt", "updatedAt"},
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="name", type="string", example="Мой проект"),
+ *     @OA\Property(property="type", type="string", enum={"personal","collaborative","corporate"}, example="collaborative"),
+ *     @OA\Property(property="ownerId", type="integer", example=42),
+ *     @OA\Property(property="settings", type="object", nullable=true, example={"some":"value"}),
+ *     @OA\Property(property="createdAt", type="string", format="date-time", example="2026-03-18 10:00:00"),
+ *     @OA\Property(property="updatedAt", type="string", format="date-time", example="2026-03-18 10:00:00")
+ * )
+ *
+ * @OA\Schema(
+ *     schema="Board",
+ *     required={"id", "projectId", "name", "createdBy", "createdAt", "updatedAt"},
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="projectId", type="integer", example=5),
+ *     @OA\Property(property="name", type="string", example="Основная доска"),
+ *     @OA\Property(property="description", type="string", nullable=true, example="Описание доски"),
+ *     @OA\Property(property="createdBy", type="integer", example=42),
+ *     @OA\Property(property="settings", type="object", nullable=true),
+ *     @OA\Property(property="createdAt", type="string", format="date-time", example="2026-03-18 10:00:00"),
+ *     @OA\Property(property="updatedAt", type="string", format="date-time", example="2026-03-18 10:00:00")
+ * )
+ *
+ * @OA\Schema(
+ *     schema="ProjectUser",
+ *     required={"projectId", "userId", "role", "joinedAt"},
+ *     @OA\Property(property="projectId", type="integer", example=5),
+ *     @OA\Property(property="userId", type="integer", example=42),
+ *     @OA\Property(property="role", type="string", enum={"admin","member"}, example="admin"),
+ *     @OA\Property(property="invitedBy", type="integer", nullable=true, example=1),
+ *     @OA\Property(property="invitedAt", type="string", format="date-time", nullable=true),
+ *     @OA\Property(property="acceptedAt", type="string", format="date-time", nullable=true),
+ *     @OA\Property(property="joinedAt", type="string", format="date-time", example="2026-03-18 10:00:00")
+ * )
+ *
+ * @OA\Schema(
+ *     schema="CreateProjectRequest",
+ *     required={"name", "type"},
+ *     @OA\Property(property="name", type="string", maxLength=255, example="Новый проект"),
+ *     @OA\Property(property="type", type="string", enum={"personal","collaborative","corporate"}, example="collaborative"),
+ *     @OA\Property(property="settings", type="object", nullable=true)
+ * )
+ *
+ * @OA\Schema(
+ *     schema="UpdateProjectRequest",
+ *     @OA\Property(property="name", type="string", maxLength=255, nullable=true),
+ *     @OA\Property(property="settings", type="object", nullable=true)
+ * )
+ *
+ * @OA\Schema(
+ *     schema="CreateBoardRequest",
+ *     required={"name"},
+ *     @OA\Property(property="name", type="string", maxLength=255, example="Новая доска"),
+ *     @OA\Property(property="description", type="string", nullable=true),
+ *     @OA\Property(property="settings", type="object", nullable=true)
+ * )
+ *
+ * @OA\Schema(
+ *     schema="UpdateBoardRequest",
+ *     @OA\Property(property="name", type="string", maxLength=255, nullable=true),
+ *     @OA\Property(property="description", type="string", nullable=true),
+ *     @OA\Property(property="settings", type="object", nullable=true)
+ * )
+ *
+ * @OA\Schema(
+ *     schema="AddProjectMemberRequest",
+ *     required={"userId", "role"},
+ *     @OA\Property(property="userId", type="integer", example=17),
+ *     @OA\Property(property="role", type="string", enum={"admin","member"}, example="member")
+ * )
+ *
+ * @OA\Schema(
+ *     schema="ChangeProjectMemberRoleRequest",
+ *     required={"role"},
+ *     @OA\Property(property="role", type="string", enum={"admin","member"}, example="admin")
+ * )
+ */
+class ProjectsSchemas {}
