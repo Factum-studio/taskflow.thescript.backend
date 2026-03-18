@@ -12,9 +12,10 @@ return [
         'class'=>'modules\tasks\Module',
         'controllerNamespace' => 'modules\tasks\presentation\controller',
     ],
-//    'projects'=>[
-//        'class'=>'modules\projects\Module',
-//    ],
+    'projects'=>[
+        'class'=>'modules\projects\Module',
+        'controllerNamespace' => 'modules\projects\presentation\controller',
+    ],
 //    'kanban'=>[
 //        'class'=>'modules\kanban\Module',
 //    ],
