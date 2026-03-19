@@ -37,3 +37,7 @@ tests/_support/_generated
 
 #vagrant folder
 /.vagrant
+
+scancore_output.txt
+
+stats*

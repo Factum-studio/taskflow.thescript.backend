@@ -98,6 +98,7 @@ $config = [
             'showScriptName' => false,
             'rules' => array_merge(
                 require __DIR__ . '/../modules/tasks/config/routing.php',
+                require __DIR__ . '/../modules/projects/config/routing.php',
                 [
                     // User routes
                     'GET user/me' => 'user/me',
