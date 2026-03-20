@@ -77,6 +77,11 @@ class DbProjectRepository implements IProjectRepository
         return ProjectAR::findOne($id->getValue());
     }
 
+    public function countByOwner(UserId $ownerId): int
+    {
+        return ProjectAR::find()->where(['owner_id' => $ownerId->getValue()])->count();
+    }
+
     private function mapEntityToAR(Project $project, ProjectAR $ar): void
     {
         $ar->name       = $project->getName();
