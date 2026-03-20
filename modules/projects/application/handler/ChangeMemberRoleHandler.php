@@ -3,7 +3,7 @@
 namespace modules\projects\application\handler;
 
 use modules\projects\application\assembler\ProjectUserDtoAssembler;
-use modules\projects\application\command\ChangeProjectMemberRoleCommand;
+use modules\projects\application\command\ChangeMemberRoleCommand;
 use modules\projects\application\dto\ProjectUserDto;
 use modules\projects\domain\repository\IProjectUserRepository;
 use modules\projects\domain\valueObject\ProjectId;
@@ -11,7 +11,7 @@ use modules\projects\domain\valueObject\UserId;
 use modules\projects\domain\valueObject\UserRole;
 use RuntimeException;
 
-class ChangeProjectMemberRoleHandler
+class ChangeMemberRoleHandler
 {
     private IProjectUserRepository $projectUserRepository;
     private ProjectUserDtoAssembler $projectUserDtoAssembler;
@@ -20,11 +20,11 @@ class ChangeProjectMemberRoleHandler
         IProjectUserRepository $projectUserRepository,
         ProjectUserDtoAssembler $projectUserDtoAssembler
     ) {
-        $this->projectUserRepository = $projectUserRepository;
-        $this->projectUserDtoAssembler = $projectUserDtoAssembler;
+        $this->projectUserRepository    = $projectUserRepository;
+        $this->projectUserDtoAssembler  = $projectUserDtoAssembler;
     }
 
-    public function handle(ChangeProjectMemberRoleCommand $command): ProjectUserDto
+    public function handle(ChangeMemberRoleCommand $command): ProjectUserDto
     {
         $projectId = new ProjectId($command->projectId);
         $userId = new UserId($command->userId);
