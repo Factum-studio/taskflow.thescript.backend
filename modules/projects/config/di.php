@@ -1,8 +1,10 @@
 <?php
 
+use modules\projects\application\port\IProjectAccess;
 use modules\projects\domain\repository\IProjectRepository;
 use modules\projects\domain\repository\IBoardRepository;
 use modules\projects\domain\repository\IProjectUserRepository;
+use modules\projects\infrastructure\access\ProjectAccess;
 use modules\projects\infrastructure\repository\DbProjectRepository;
 use modules\projects\infrastructure\repository\DbBoardRepository;
 use modules\projects\infrastructure\repository\DbProjectUserRepository;
@@ -41,6 +43,12 @@ Yii::$container->set(ProjectDtoAssembler::class);
 Yii::$container->set(BoardDtoAssembler::class);
 Yii::$container->set(ProjectUserDtoAssembler::class);
 
+Yii::$container->set(
+    IProjectAccess::class,
+    ProjectAccess::class
+);
+
+//Handlers
 Yii::$container->set(CreateProjectHandler::class, function (Container $container) {
     return new CreateProjectHandler(
         $container->get(IProjectRepository::class),

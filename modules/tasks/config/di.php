@@ -1,5 +1,6 @@
 <?php
 
+use modules\tasks\application\port\ITaskAccess;
 use modules\tasks\domain\event\CommentAddedEvent;
 use modules\tasks\domain\event\CommentUpdatedEvent;
 use modules\tasks\domain\event\IntervalLoggedEvent;
@@ -19,6 +20,7 @@ use modules\tasks\domain\repository\ITaskRepository;
 use modules\tasks\domain\event\IEventDispatcher;
 use modules\tasks\domain\repository\ITaskStickerRepository;
 use modules\tasks\domain\repository\ITimeIntervalRepository;
+use modules\tasks\infrastructure\access\TaskAccess;
 use modules\tasks\infrastructure\listener\AutoTimerListener;
 use modules\tasks\infrastructure\listener\PlannedIntervalListener;
 use modules\tasks\infrastructure\listener\TimeTrackingListener;
@@ -61,6 +63,11 @@ Yii::$container->set(ITimeIntervalRepository::class, function() {
 Yii::$container->set(IDailySummaryRepository::class, function() {
     return new DbDailySummaryRepository(Yii::$app->db);
 });
+
+Yii::$container->set(
+    ITaskAccess::class,
+    TaskAccess::class
+);
 
 Yii::$container->set(TaskLoggerListener::class);
 Yii::$container->set(TaskNotificationListener::class);
