@@ -3,6 +3,7 @@
 namespace modules\tasks\domain\repository;
 
 use modules\tasks\domain\entity\Task;
+use modules\tasks\domain\valueObject\ColumnId;
 use modules\tasks\domain\valueObject\TaskId;
 
 interface ITaskRepository
@@ -15,4 +16,5 @@ interface ITaskRepository
      */
     public function findAll(array $criteria = []): array;
     public function remove(Task $task): void;
+    public function countByColumn(ColumnId $columnId): int;
 }
