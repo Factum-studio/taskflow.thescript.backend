@@ -17,7 +17,7 @@ use modules\projects\application\handler\UpdateBoardHandler;
 use modules\projects\application\handler\DeleteBoardHandler;
 use modules\projects\application\handler\AddProjectMemberHandler;
 use modules\projects\application\handler\RemoveProjectMemberHandler;
-use modules\projects\application\handler\ChangeProjectMemberRoleHandler;
+use modules\projects\application\handler\ChangeMemberRoleHandler;
 use modules\projects\application\handler\GetProjectHandler;
 use modules\projects\application\handler\ListUserProjectsHandler;
 use modules\projects\application\handler\GetBoardHandler;
@@ -96,8 +96,8 @@ Yii::$container->set(RemoveProjectMemberHandler::class, function (Container $con
     );
 });
 
-Yii::$container->set(ChangeProjectMemberRoleHandler::class, function (Container $container) {
-    return new ChangeProjectMemberRoleHandler(
+Yii::$container->set(ChangeMemberRoleHandler::class, function (Container $container) {
+    return new ChangeMemberRoleHandler(
         $container->get(IProjectUserRepository::class),
         $container->get(ProjectUserDtoAssembler::class)
     );
