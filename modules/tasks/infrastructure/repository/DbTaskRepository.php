@@ -103,6 +103,13 @@ class DbTaskRepository implements ITaskRepository
         return TaskAR::findOne($id->getValue());
     }
 
+    public function countByColumn(ColumnId $columnId): int
+    {
+        return TaskAR::find()
+            ->where(['column_id' => $columnId->getValue(), 'deleted_at' => null])
+            ->count();
+    }
+
     private function mapEntityToAR(Task $task, TaskAR $ar): void
     {
         $ar->title          = $task->getTitle()->getValue();
