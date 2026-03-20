@@ -77,6 +77,11 @@ class DbBoardRepository implements IBoardRepository
         return BoardAR::findOne($id->getValue());
     }
 
+    public function countByProject(ProjectId $projectId): int
+    {
+        return BoardAR::find()->where(['project_id' => $projectId->getValue()])->count();
+    }
+
     private function mapEntityToAR(Board $board, BoardAR $ar): void
     {
         $ar->project_id     = $board->getProjectId()->getValue();

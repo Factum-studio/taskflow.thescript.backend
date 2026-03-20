@@ -18,4 +18,5 @@ interface IBoardRepository
     public function findByProject(ProjectId $projectId): array;
 
     public function remove(Board $board): void;
+    public function countByProject(ProjectId $projectId): int;
 }
