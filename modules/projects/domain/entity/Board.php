@@ -40,45 +40,14 @@ class Board
         $this->updatedAt    = $updatedAt ?? new DateTimeImmutable();
     }
 
-    public function getId(): BoardId
-    {
-        return $this->id;
-    }
-
-    public function getProjectId(): ProjectId
-    {
-        return $this->projectId;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function getCreatedBy(): UserId
-    {
-        return $this->createdBy;
-    }
-
-    public function getSettings(): Settings
-    {
-        return $this->settings;
-    }
-
-    public function getCreatedAt(): DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function getUpdatedAt(): DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
+    public function getId(): BoardId { return $this->id; }
+    public function getProjectId(): ProjectId { return $this->projectId; }
+    public function getName(): string { return $this->name; }
+    public function getDescription(): ?string { return $this->description; }
+    public function getCreatedBy(): UserId { return $this->createdBy; }
+    public function getSettings(): Settings { return $this->settings; }
+    public function getCreatedAt(): DateTimeImmutable { return $this->createdAt; }
+    public function getUpdatedAt(): DateTimeImmutable { return $this->updatedAt; }
 
     public function rename(string $newName): void
     {

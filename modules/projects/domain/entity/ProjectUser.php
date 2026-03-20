@@ -36,40 +36,13 @@ class ProjectUser
         $this->joinedAt     = $joinedAt ?? new DateTimeImmutable();
     }
 
-    public function getProjectId(): ProjectId
-    {
-        return $this->projectId;
-    }
-
-    public function getUserId(): UserId
-    {
-        return $this->userId;
-    }
-
-    public function getRole(): UserRole
-    {
-        return $this->role;
-    }
-
-    public function getInvitedBy(): ?UserId
-    {
-        return $this->invitedBy;
-    }
-
-    public function getInvitedAt(): ?DateTimeImmutable
-    {
-        return $this->invitedAt;
-    }
-
-    public function getAcceptedAt(): ?DateTimeImmutable
-    {
-        return $this->acceptedAt;
-    }
-
-    public function getJoinedAt(): DateTimeImmutable
-    {
-        return $this->joinedAt;
-    }
+    public function getProjectId(): ProjectId { return $this->projectId; }
+    public function getUserId(): UserId { return $this->userId; }
+    public function getRole(): UserRole { return $this->role; }
+    public function getInvitedBy(): ?UserId { return $this->invitedBy; }
+    public function getInvitedAt(): ?DateTimeImmutable { return $this->invitedAt; }
+    public function getAcceptedAt(): ?DateTimeImmutable { return $this->acceptedAt; }
+    public function getJoinedAt(): DateTimeImmutable { return $this->joinedAt; }
 
     public function changeRole(UserRole $newRole): void
     {

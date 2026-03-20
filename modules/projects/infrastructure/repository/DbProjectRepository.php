@@ -23,6 +23,9 @@ class DbProjectRepository implements IProjectRepository
         $this->db = $db;
     }
 
+    /**
+     * @throws \yii\db\Exception
+     */
     public function save(Project $project): Project
     {
         $ar = $this->findARById($project->getId()) ?? new ProjectAR();
@@ -39,6 +42,9 @@ class DbProjectRepository implements IProjectRepository
         return $project;
     }
 
+    /**
+     * @throws Exception
+     */
     public function findById(ProjectId $id): ?Project
     {
         $ar = $this->findARById($id);
@@ -73,10 +79,10 @@ class DbProjectRepository implements IProjectRepository
 
     private function mapEntityToAR(Project $project, ProjectAR $ar): void
     {
-        $ar->name = $project->getName();
-        $ar->type = $project->getType()->getValue();
-        $ar->owner_id = $project->getOwnerId()->getValue();
-        $ar->settings = $project->getSettings()->toArray();
+        $ar->name       = $project->getName();
+        $ar->type       = $project->getType()->getValue();
+        $ar->owner_id   = $project->getOwnerId()->getValue();
+        $ar->settings   = $project->getSettings()->toArray();
     }
 
     /**
