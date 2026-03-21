@@ -3,6 +3,7 @@
 namespace modules\tasks\application\handler;
 
 use modules\tasks\application\command\DeleteBoardColumnCommand;
+use modules\tasks\application\port\ITaskAccess;
 use modules\tasks\domain\repository\IBoardColumnRepository;
 use modules\tasks\domain\valueObject\ColumnId;
 use RuntimeException;
@@ -10,10 +11,14 @@ use RuntimeException;
 class DeleteBoardColumnHandler
 {
     private IBoardColumnRepository $columnRepository;
+    private ITaskAccess $taskAccess;
 
-    public function __construct(IBoardColumnRepository $columnRepository)
-    {
+    public function __construct(
+        IBoardColumnRepository $columnRepository,
+        ITaskAccess $taskAccess
+    ) {
         $this->columnRepository = $columnRepository;
+        $this->taskAccess       = $taskAccess;
     }
 
     public function handle(DeleteBoardColumnCommand $command): void
@@ -23,7 +28,9 @@ class DeleteBoardColumnHandler
         if (!$column) {
             throw new RuntimeException("Column with ID {$command->id} not found");
         }
-        // TODO: добавить проверку, что на колонку нет задач, иначе нельзя удалить
+        if (!$this->taskAccess->canDeleteColumn($command->deletedBy, $command->id)) {
+            throw new RuntimeException('You are not allowed to delete this column');
+        }
         $this->columnRepository->remove($column);
     }
 }

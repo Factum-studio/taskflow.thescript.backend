@@ -2,6 +2,7 @@
 
 namespace modules\tasks\application\handler;
 
+use modules\projects\application\port\IProjectAccess;
 use modules\tasks\application\assembler\StickerDtoAssembler;
 use modules\tasks\application\dto\StickerDto;
 use modules\tasks\application\query\ListStickersQuery;
@@ -12,13 +13,16 @@ class ListStickersHandler
 {
     private IStickerRepository $stickerRepository;
     private StickerDtoAssembler $stickerDtoAssembler;
+    private IProjectAccess $projectAccess;
 
     public function __construct(
         IStickerRepository $stickerRepository,
-        StickerDtoAssembler $stickerDtoAssembler
+        StickerDtoAssembler $stickerDtoAssembler,
+        IProjectAccess $projectAccess
     ) {
         $this->stickerRepository    = $stickerRepository;
         $this->stickerDtoAssembler  = $stickerDtoAssembler;
+        $this->projectAccess        = $projectAccess;
     }
 
     /**
@@ -27,15 +31,20 @@ class ListStickersHandler
     public function handle(ListStickersQuery $query): array
     {
         $type = $query->type ? new StickerType($query->type) : null;
-        if ($type && $type->isSystem()) {
-            $stickers = $this->stickerRepository->findSystemStickers();
-        } elseif ($type && $type->isUser() && $query->projectId !== null) {
+        if ($query->projectId !== null) {
+            if (!$this->projectAccess->canViewProject($query->userId, $query->projectId)) {
+                return [];
+            }
+        }
+        // Если указан type=user и projectId, то берём стикеры проекта
+        if ($type && $type->isUser() && $query->projectId !== null) {
             $stickers = $this->stickerRepository->findByProject($query->projectId, $type);
+        } elseif ($type && $type->isSystem()) {
+            $stickers = $this->stickerRepository->findSystemStickers();
         } else {
-            // Если нет фильтров, возвращаем только системные
+            // По умолчанию возвращаем системные стикеры
             $stickers = $this->stickerRepository->findSystemStickers();
         }
-        // TODO: можно расширить репозиторий
         if ($query->createdBy !== null) {
             $stickers = array_filter($stickers, fn($s) => $s->getCreatedBy()->getValue() === $query->createdBy);
         }
