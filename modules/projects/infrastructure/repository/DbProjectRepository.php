@@ -11,8 +11,10 @@ use modules\projects\domain\valueObject\ProjectType;
 use modules\projects\domain\valueObject\Settings;
 use modules\projects\infrastructure\persistence\ProjectAR;
 use RuntimeException;
+use Throwable;
 use yii\db\Connection;
 use Exception;
+use yii\db\StaleObjectException;
 
 class DbProjectRepository implements IProjectRepository
 {
@@ -80,6 +82,16 @@ class DbProjectRepository implements IProjectRepository
     public function countByOwner(UserId $ownerId): int
     {
         return ProjectAR::find()->where(['owner_id' => $ownerId->getValue()])->count();
+    }
+
+    /**
+     * @throws Throwable
+     * @throws StaleObjectException
+     */
+    public function remove(Project $project): void
+    {
+        $ar = $this->findARById($project->getId());
+        $ar?->delete();
     }
 
     private function mapEntityToAR(Project $project, ProjectAR $ar): void
