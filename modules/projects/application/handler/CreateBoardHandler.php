@@ -5,6 +5,7 @@ namespace modules\projects\application\handler;
 use modules\projects\application\assembler\BoardDtoAssembler;
 use modules\projects\application\command\CreateBoardCommand;
 use modules\projects\application\dto\BoardDto;
+use modules\projects\application\port\IProjectAccess;
 use modules\projects\domain\entity\Board;
 use modules\projects\domain\repository\IBoardRepository;
 use modules\projects\domain\repository\IProjectRepository;
@@ -20,15 +21,18 @@ class CreateBoardHandler
     private IBoardRepository $boardRepository;
     private IProjectRepository $projectRepository;
     private BoardDtoAssembler $boardDtoAssembler;
+    private IProjectAccess $projectAccess;
 
     public function __construct(
         IBoardRepository $boardRepository,
         IProjectRepository $projectRepository,
-        BoardDtoAssembler $boardDtoAssembler
+        BoardDtoAssembler $boardDtoAssembler,
+        IProjectAccess $projectAccess
     ) {
-        $this->boardRepository = $boardRepository;
-        $this->projectRepository = $projectRepository;
-        $this->boardDtoAssembler = $boardDtoAssembler;
+        $this->boardRepository      = $boardRepository;
+        $this->projectRepository    = $projectRepository;
+        $this->boardDtoAssembler    = $boardDtoAssembler;
+        $this->projectAccess        = $projectAccess;
     }
 
     public function handle(CreateBoardCommand $command): BoardDto
@@ -40,8 +44,9 @@ class CreateBoardHandler
             throw new RuntimeException("Project with ID {$command->projectId} not found");
         }
 
-        // Проверка прав: только админ проекта может создавать доски
-        // TODO: добавить проверку через ProjectUserRepository
+        if (!$this->projectAccess->canCreateBoard($command->createdBy, $command->projectId)) {
+            throw new RuntimeException('You are not allowed to create a board in this project');
+        }
 
         $board = new Board(
             new BoardId(0),
