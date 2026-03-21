@@ -29,6 +29,7 @@ use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 use OpenApi\Attributes as OA;
+use yii\web\UnauthorizedHttpException;
 
 #[OA\Tag(
     name: 'board-columns',
@@ -87,9 +88,19 @@ class BoardColumnController extends BaseController
             new OA\Response(response: 401, description: 'Требуется авторизация')
         ]
     )]
+    /**
+     * @throws UnauthorizedHttpException
+     */
     public function actionIndex(int $boardId): CollectionDto|array
     {
-        $query = new GetBoardColumnsQuery($boardId);
+        $userId = $this->getUserId();
+        if (!$userId) {
+            throw new UnauthorizedHttpException('User not authenticated');
+        }
+        $query = new GetBoardColumnsQuery(
+            boardId: $boardId,
+            userId: $userId
+        );
         $columns = $this->getListHandler->handle($query);
         return $this->collection($columns);
     }
@@ -128,10 +139,18 @@ class BoardColumnController extends BaseController
     )]
     /**
      * @throws NotFoundHttpException
+     * @throws UnauthorizedHttpException
      */
     public function actionView(int $id): ItemDto|array
     {
-        $query = new GetBoardColumnQuery($id);
+        $userId = $this->getUserId();
+        if (!$userId) {
+            throw new UnauthorizedHttpException('User not authenticated');
+        }
+        $query = new GetBoardColumnQuery(
+            id: $id,
+            userId: $userId
+        );
         try {
             $column = $this->getOneHandler->handle($query);
         } catch (RuntimeException $e) {
@@ -197,11 +216,11 @@ class BoardColumnController extends BaseController
             name: $request->name,
             label: $request->label,
             sortOrder: $request->sortOrder ?? 0,
+            createdBy: $userId,
             isActive: $request->isActive ?? true,
             isFinal: $request->isFinal ?? false,
             color: $request->color,
-            workflowId: $request->workflowId,
-            createdBy: $userId
+            workflowId: $request->workflowId
         );
 
         try {
