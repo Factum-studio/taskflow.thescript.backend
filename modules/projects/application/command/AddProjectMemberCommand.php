@@ -14,11 +14,13 @@ class AddProjectMemberCommand
         int $projectId,
         int $userId,
         string $role,
-        int $addedBy
+        int $addedBy,
+        string $jwtToken
     ) {
         $this->projectId    = $projectId;
         $this->userId       = $userId;
         $this->role         = $role;
         $this->addedBy      = $addedBy;
+        $this->jwtToken     = $jwtToken;
     }
 }
