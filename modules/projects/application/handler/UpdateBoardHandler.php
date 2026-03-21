@@ -5,6 +5,7 @@ namespace modules\projects\application\handler;
 use modules\projects\application\assembler\BoardDtoAssembler;
 use modules\projects\application\command\UpdateBoardCommand;
 use modules\projects\application\dto\BoardDto;
+use modules\projects\application\port\IProjectAccess;
 use modules\projects\domain\repository\IBoardRepository;
 use modules\projects\domain\valueObject\BoardId;
 use RuntimeException;
@@ -13,13 +14,16 @@ class UpdateBoardHandler
 {
     private IBoardRepository $boardRepository;
     private BoardDtoAssembler $boardDtoAssembler;
+    private IProjectAccess $projectAccess;
 
     public function __construct(
         IBoardRepository $boardRepository,
-        BoardDtoAssembler $boardDtoAssembler
+        BoardDtoAssembler $boardDtoAssembler,
+        IProjectAccess $projectAccess
     ) {
-        $this->boardRepository = $boardRepository;
-        $this->boardDtoAssembler = $boardDtoAssembler;
+        $this->boardRepository      = $boardRepository;
+        $this->boardDtoAssembler    = $boardDtoAssembler;
+        $this->projectAccess        = $projectAccess;
     }
 
     public function handle(UpdateBoardCommand $command): BoardDto
@@ -31,7 +35,9 @@ class UpdateBoardHandler
             throw new RuntimeException("Board with ID {$command->id} not found");
         }
 
-        // TODO: проверка прав (админ проекта или, возможно, создатель доски)
+        if (!$this->projectAccess->canManageBoard($command->updatedBy, $command->id)) {
+            throw new RuntimeException('You are not allowed to update this board');
+        }
 
         if ($command->name !== null) {
             $board->rename($command->name);
