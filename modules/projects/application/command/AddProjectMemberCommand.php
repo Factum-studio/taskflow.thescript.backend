@@ -8,6 +8,7 @@ class AddProjectMemberCommand
     public int $userId;
     public string $role;
     public int $addedBy;
+    public string $jwtToken;
 
     public function __construct(
         int $projectId,

@@ -2,9 +2,13 @@
 
 namespace modules\projects\application\handler;
 
+use core\application\port\IUserRepository;
+use core\domain\valueObject\Identify;
+use core\domain\valueObject\JwtToken;
 use modules\projects\application\assembler\ProjectUserDtoAssembler;
 use modules\projects\application\command\AddProjectMemberCommand;
 use modules\projects\application\dto\ProjectUserDto;
+use modules\projects\application\port\IProjectAccess;
 use modules\projects\domain\entity\ProjectUser;
 use modules\projects\domain\repository\IProjectRepository;
 use modules\projects\domain\repository\IProjectUserRepository;
@@ -18,15 +22,21 @@ class AddProjectMemberHandler
     private IProjectUserRepository $projectUserRepository;
     private IProjectRepository $projectRepository;
     private ProjectUserDtoAssembler $projectUserDtoAssembler;
+    private IProjectAccess $projectAccess;
+    private IUserRepository $userRepository;
 
     public function __construct(
         IProjectUserRepository $projectUserRepository,
         IProjectRepository $projectRepository,
-        ProjectUserDtoAssembler $projectUserDtoAssembler
+        ProjectUserDtoAssembler $projectUserDtoAssembler,
+        IProjectAccess $projectAccess,
+        IUserRepository $userRepository
     ) {
-        $this->projectUserRepository = $projectUserRepository;
-        $this->projectRepository = $projectRepository;
-        $this->projectUserDtoAssembler = $projectUserDtoAssembler;
+        $this->projectUserRepository    = $projectUserRepository;
+        $this->projectRepository        = $projectRepository;
+        $this->projectUserDtoAssembler  = $projectUserDtoAssembler;
+        $this->projectAccess            = $projectAccess;
+        $this->userRepository           = $userRepository;
     }
 
     public function handle(AddProjectMemberCommand $command): ProjectUserDto
@@ -38,10 +48,17 @@ class AddProjectMemberHandler
             throw new RuntimeException("Project with ID {$command->projectId} not found");
         }
 
-        // Проверка прав: только админ проекта может добавлять участников
-        // TODO: проверить, что $command->addedBy является админом
+        if (!$this->projectAccess->canInviteUser($command->addedBy, $command->projectId)) {
+            throw new RuntimeException('You are not allowed to invite users to this project');
+        }
 
-        // Проверяем, не участник ли уже
+        $jwtToken = new JwtToken($command->jwtToken);
+        $userId = Identify::fromString((string)$command->userId);
+        $user = $this->userRepository->findById($userId, $jwtToken);
+        if ($user === null) {
+            throw new RuntimeException("User with ID {$command->userId} not found");
+        }
+
         $existing = $this->projectUserRepository->find($projectId, new UserId($command->userId));
         if ($existing !== null) {
             throw new RuntimeException("User is already a member of this project");
@@ -52,9 +69,9 @@ class AddProjectMemberHandler
             new UserId($command->userId),
             new UserRole($command->role),
             new UserId($command->addedBy),
-            new \DateTimeImmutable(), // invitedAt
-            null, // acceptedAt (пока без подтверждения)
-            new \DateTimeImmutable() // joinedAt
+            new \DateTimeImmutable(),
+            null,
+            new \DateTimeImmutable()
         );
 
         $this->projectUserRepository->save($projectUser);
