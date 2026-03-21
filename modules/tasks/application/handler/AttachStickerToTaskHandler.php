@@ -4,6 +4,7 @@ namespace modules\tasks\application\handler;
 
 use InvalidArgumentException;
 use modules\tasks\application\command\AttachStickerToTaskCommand;
+use modules\tasks\application\port\ITaskAccess;
 use modules\tasks\domain\event\IEventDispatcher;
 use modules\tasks\domain\event\StickerAttachedToTaskEvent;
 use modules\tasks\domain\repository\IStickerRepository;
@@ -19,17 +20,20 @@ class AttachStickerToTaskHandler
     private ITaskRepository $taskRepository;
     private IStickerRepository $stickerRepository;
     private IEventDispatcher $eventDispatcher;
+    private ITaskAccess $taskAccess;
 
     public function __construct(
         ITaskStickerRepository $taskStickerRepository,
         ITaskRepository $taskRepository,
         IStickerRepository $stickerRepository,
-        IEventDispatcher $eventDispatcher
+        IEventDispatcher $eventDispatcher,
+        ITaskAccess $taskAccess
     ) {
         $this->taskStickerRepository    = $taskStickerRepository;
         $this->taskRepository           = $taskRepository;
         $this->stickerRepository        = $stickerRepository;
         $this->eventDispatcher          = $eventDispatcher;
+        $this->taskAccess               = $taskAccess;
     }
 
     public function handle(AttachStickerToTaskCommand $command): void
@@ -41,6 +45,10 @@ class AttachStickerToTaskHandler
         }
         if ($task->getDeletedAt() !== null) {
             throw new InvalidArgumentException('Cannot attach sticker to deleted task');
+        }
+
+        if (!$this->taskAccess->canAddStickerToTask($command->attachedBy, $command->taskId)) {
+            throw new RuntimeException('You are not allowed to attach stickers to this task');
         }
 
         $stickerId = new StickerId($command->stickerId);

@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use modules\tasks\application\assembler\CommentDtoAssembler;
 use modules\tasks\application\command\UpdateCommentCommand;
 use modules\tasks\application\dto\CommentDto;
+use modules\tasks\application\port\ITaskAccess;
 use modules\tasks\domain\event\CommentUpdatedEvent;
 use modules\tasks\domain\event\IEventDispatcher;
 use modules\tasks\domain\repository\ICommentRepository;
@@ -17,15 +18,18 @@ class UpdateCommentHandler
     private ICommentRepository $commentRepository;
     private CommentDtoAssembler $commentDtoAssembler;
     private IEventDispatcher $eventDispatcher;
+    private ITaskAccess $taskAccess;
 
     public function __construct(
         ICommentRepository $commentRepository,
         CommentDtoAssembler $commentDtoAssembler,
-        IEventDispatcher $eventDispatcher
+        IEventDispatcher $eventDispatcher,
+        ITaskAccess $taskAccess
     ) {
         $this->commentRepository    = $commentRepository;
         $this->commentDtoAssembler  = $commentDtoAssembler;
         $this->eventDispatcher      = $eventDispatcher;
+        $this->taskAccess           = $taskAccess;
     }
 
     public function handle(UpdateCommentCommand $command): CommentDto
@@ -36,9 +40,13 @@ class UpdateCommentHandler
             throw new RuntimeException("Comment with ID {$command->commentId} not found.");
         }
 
-        // Я вам запрещаю редактировать чужие комментарии
+        // Я вам запрещаю редактировать чужие комментарии TODO: унифицировать через интерфейс
         if ($comment->getUserId()->getValue() !== $command->userId) {
             throw new InvalidArgumentException("You are not allowed to edit this comment.");
+        }
+
+        if (!$this->taskAccess->canCommentOnTask($command->userId, $comment->getTaskId()->getValue())) {
+            throw new RuntimeException('You are not allowed to edit comments on this task');
         }
 
         $comment->changeContent($command->content);
