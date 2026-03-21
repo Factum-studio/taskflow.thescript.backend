@@ -150,11 +150,15 @@ class ProjectMemberController extends BaseController
             return $this->error('User not authenticated', 401);
         }
 
+        $identity = $this->getUserIdentity();
+        $jwtToken = $identity?->getJwtToken()?->value() ?? '';
+
         $command = new AddProjectMemberCommand(
             projectId: $projectId,
             userId: $request->userId,
             role: $request->role,
-            addedBy: $userId
+            addedBy: $userId,
+            jwtToken: $jwtToken
         );
 
         try {
