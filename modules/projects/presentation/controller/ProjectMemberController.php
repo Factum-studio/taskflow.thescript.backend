@@ -8,10 +8,10 @@ use core\application\dto\ItemDto;
 use core\application\dto\SuccessDto;
 use core\presentation\controller\BaseController;
 use modules\projects\application\command\AddProjectMemberCommand;
-use modules\projects\application\command\ChangeProjectMemberRoleCommand;
+use modules\projects\application\command\ChangeMemberRoleCommand;
 use modules\projects\application\command\RemoveProjectMemberCommand;
 use modules\projects\application\handler\AddProjectMemberHandler;
-use modules\projects\application\handler\ChangeProjectMemberRoleHandler;
+use modules\projects\application\handler\ChangeMemberRoleHandler;
 use modules\projects\application\handler\ListProjectMembersHandler;
 use modules\projects\application\handler\RemoveProjectMemberHandler;
 use modules\projects\application\query\ListProjectMembersQuery;
@@ -23,6 +23,7 @@ use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 use OpenApi\Attributes as OA;
+use yii\web\UnauthorizedHttpException;
 
 #[OA\Tag(
     name: 'project-members',
@@ -31,13 +32,13 @@ use OpenApi\Attributes as OA;
 class ProjectMemberController extends BaseController
 {
     public function __construct(
-        $id,
-        $module,
-        private readonly AddProjectMemberHandler $addMemberHandler,
+                                                    $id,
+                                                    $module,
+        private readonly AddProjectMemberHandler    $addMemberHandler,
         private readonly RemoveProjectMemberHandler $removeMemberHandler,
-        private readonly ChangeProjectMemberRoleHandler $changeRoleHandler,
-        private readonly ListProjectMembersHandler $listMembersHandler,
-        $config = []
+        private readonly ChangeMemberRoleHandler    $changeRoleHandler,
+        private readonly ListProjectMembersHandler  $listMembersHandler,
+                                                    $config = []
     ) {
         parent::__construct($id, $module, $config);
     }
@@ -82,10 +83,15 @@ class ProjectMemberController extends BaseController
     )]
     /**
      * @throws NotFoundHttpException
+     * @throws UnauthorizedHttpException
      */
     public function actionIndex(int $projectId): CollectionDto|array
     {
-        $query = new ListProjectMembersQuery($projectId);
+        $userId = $this->getUserId();
+        if (!$userId) {
+            throw new UnauthorizedHttpException('User not authenticated');
+        }
+        $query = new ListProjectMembersQuery($projectId, $userId);
         try {
             $members = $this->listMembersHandler->handle($query);
         } catch (RuntimeException $e) {
@@ -150,11 +156,15 @@ class ProjectMemberController extends BaseController
             return $this->error('User not authenticated', 401);
         }
 
+        $identity = $this->getUserIdentity();
+        $jwtToken = $identity?->getJwtToken()?->value() ?? '';
+
         $command = new AddProjectMemberCommand(
             projectId: $projectId,
             userId: $request->userId,
             role: $request->role,
-            addedBy: $userId
+            addedBy: $userId,
+            jwtToken: $jwtToken
         );
 
         try {
@@ -237,7 +247,7 @@ class ProjectMemberController extends BaseController
             return $this->error('User not authenticated', 401);
         }
 
-        $command = new ChangeProjectMemberRoleCommand(
+        $command = new ChangeMemberRoleCommand(
             projectId: $projectId,
             userId: $userId,
             newRole: $request->role,
@@ -247,7 +257,7 @@ class ProjectMemberController extends BaseController
         try {
             $memberDto = $this->changeRoleHandler->handle($command);
         } catch (RuntimeException $e) {
-            if (str_contains($e->getMessage(), 'not found') || strpos($e->getMessage(), 'not a member') !== false) {
+            if (str_contains($e->getMessage(), 'not found') || str_contains($e->getMessage(), 'not a member')) {
                 throw new NotFoundHttpException($e->getMessage());
             }
             if (str_contains($e->getMessage(), 'not allowed')) {

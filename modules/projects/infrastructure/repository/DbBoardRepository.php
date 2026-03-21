@@ -25,6 +25,9 @@ class DbBoardRepository implements IBoardRepository
         $this->db = $db;
     }
 
+    /**
+     * @throws \yii\db\Exception
+     */
     public function save(Board $board): Board
     {
         $ar = $this->findARById($board->getId()) ?? new BoardAR();
@@ -41,6 +44,9 @@ class DbBoardRepository implements IBoardRepository
         return $board;
     }
 
+    /**
+     * @throws Exception
+     */
     public function findById(BoardId $id): ?Board
     {
         $ar = $this->findARById($id);
@@ -71,13 +77,18 @@ class DbBoardRepository implements IBoardRepository
         return BoardAR::findOne($id->getValue());
     }
 
+    public function countByProject(ProjectId $projectId): int
+    {
+        return BoardAR::find()->where(['project_id' => $projectId->getValue()])->count();
+    }
+
     private function mapEntityToAR(Board $board, BoardAR $ar): void
     {
-        $ar->project_id = $board->getProjectId()->getValue();
-        $ar->name = $board->getName();
-        $ar->description = $board->getDescription();
-        $ar->created_by = $board->getCreatedBy()->getValue();
-        $ar->settings = $board->getSettings()->toArray();
+        $ar->project_id     = $board->getProjectId()->getValue();
+        $ar->name           = $board->getName();
+        $ar->description    = $board->getDescription();
+        $ar->created_by     = $board->getCreatedBy()->getValue();
+        $ar->settings       = $board->getSettings()->toArray();
     }
 
     /**

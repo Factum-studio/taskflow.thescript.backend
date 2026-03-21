@@ -5,6 +5,7 @@ namespace modules\projects\application\handler;
 use modules\projects\application\assembler\ProjectDtoAssembler;
 use modules\projects\application\command\UpdateProjectCommand;
 use modules\projects\application\dto\ProjectDto;
+use modules\projects\application\port\IProjectAccess;
 use modules\projects\domain\repository\IProjectRepository;
 use modules\projects\domain\valueObject\ProjectId;
 use modules\projects\domain\valueObject\UserId;
@@ -14,13 +15,16 @@ class UpdateProjectHandler
 {
     private IProjectRepository $projectRepository;
     private ProjectDtoAssembler $projectDtoAssembler;
+    private IProjectAccess $projectAccess;
 
     public function __construct(
         IProjectRepository $projectRepository,
-        ProjectDtoAssembler $projectDtoAssembler
+        ProjectDtoAssembler $projectDtoAssembler,
+        IProjectAccess $projectAccess
     ) {
-        $this->projectRepository = $projectRepository;
-        $this->projectDtoAssembler = $projectDtoAssembler;
+        $this->projectRepository    = $projectRepository;
+        $this->projectDtoAssembler  = $projectDtoAssembler;
+        $this->projectAccess        = $projectAccess;
     }
 
     public function handle(UpdateProjectCommand $command): ProjectDto
@@ -32,10 +36,8 @@ class UpdateProjectHandler
             throw new RuntimeException("Project with ID {$command->id} not found");
         }
 
-        // Проверка прав: только владелец или админ проекта
-        if (!$project->isOwner(new UserId($command->updatedBy))) {
-            // TODO: также проверять, является ли пользователь админом проекта (через репозиторий ProjectUser)
-            throw new RuntimeException("You are not allowed to update this project");
+        if (!$this->projectAccess->canManageProject($command->updatedBy, $command->id)) {
+            throw new RuntimeException('You are not allowed to update this project');
         }
 
         if ($command->name !== null) {

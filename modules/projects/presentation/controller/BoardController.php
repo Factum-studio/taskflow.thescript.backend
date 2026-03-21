@@ -25,6 +25,7 @@ use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 use OpenApi\Attributes as OA;
+use yii\web\UnauthorizedHttpException;
 
 #[OA\Tag(
     name: 'boards',
@@ -85,10 +86,15 @@ class BoardController extends BaseController
     )]
     /**
      * @throws NotFoundHttpException
+     * @throws UnauthorizedHttpException
      */
     public function actionIndex(int $projectId): CollectionDto|array
     {
-        $query = new ListProjectBoardsQuery($projectId);
+        $userId = $this->getUserId();
+        if (!$userId) {
+            throw new UnauthorizedHttpException('User not authenticated');
+        }
+        $query = new ListProjectBoardsQuery($projectId, $userId);
         try {
             $boards = $this->listBoardsHandler->handle($query);
         } catch (RuntimeException $e) {
@@ -132,10 +138,15 @@ class BoardController extends BaseController
     )]
     /**
      * @throws NotFoundHttpException
+     * @throws UnauthorizedHttpException
      */
     public function actionView(int $id): ItemDto|array
     {
-        $query = new GetBoardQuery($id);
+        $userId = $this->getUserId();
+        if (!$userId) {
+            throw new UnauthorizedHttpException('User not authenticated');
+        }
+        $query = new GetBoardQuery($id, $userId);
         try {
             $board = $this->getBoardHandler->handle($query);
         } catch (RuntimeException $e) {

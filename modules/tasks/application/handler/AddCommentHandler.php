@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use modules\tasks\application\assembler\CommentDtoAssembler;
 use modules\tasks\application\command\AddCommentCommand;
 use modules\tasks\application\dto\CommentDto;
+use modules\tasks\application\port\ITaskAccess;
 use modules\tasks\domain\entity\Comment;
 use modules\tasks\domain\event\CommentAddedEvent;
 use modules\tasks\domain\event\IEventDispatcher;
@@ -14,6 +15,7 @@ use modules\tasks\domain\repository\ITaskRepository;
 use modules\tasks\domain\valueObject\CommentId;
 use modules\tasks\domain\valueObject\TaskId;
 use modules\tasks\domain\valueObject\UserId;
+use RuntimeException;
 
 class AddCommentHandler
 {
@@ -21,17 +23,20 @@ class AddCommentHandler
     private ITaskRepository $taskRepository;
     private CommentDtoAssembler $commentDtoAssembler;
     private IEventDispatcher $eventDispatcher;
+    private ITaskAccess $taskAccess;
 
     public function __construct(
         ICommentRepository $commentRepository,
         ITaskRepository $taskRepository,
         CommentDtoAssembler $commentDtoAssembler,
-        IEventDispatcher $eventDispatcher
+        IEventDispatcher $eventDispatcher,
+        ITaskAccess $taskAccess
     ) {
         $this->commentRepository    = $commentRepository;
         $this->taskRepository       = $taskRepository;
         $this->commentDtoAssembler  = $commentDtoAssembler;
         $this->eventDispatcher      = $eventDispatcher;
+        $this->taskAccess           = $taskAccess;
     }
 
     public function handle(AddCommentCommand $command): CommentDto
@@ -41,7 +46,10 @@ class AddCommentHandler
         if (!$task) {
             throw new InvalidArgumentException("Task with ID {$command->taskId} does not exist.");
         }
-        // Я вам запрещаю оставлять комментарии удалённым задачам
+        if (!$this->taskAccess->canCommentOnTask($command->userId, $command->taskId)) {
+            throw new RuntimeException('You are not allowed to comment on this task');
+        }
+        // Я вам запрещаю оставлять комментарии удалённым задачам TODO: унифицировать через интерфейс
         if ($task->getDeletedAt() !== null) {
             throw new InvalidArgumentException("Cannot comment on deleted task.");
         }

@@ -11,8 +11,10 @@ use modules\projects\domain\valueObject\ProjectType;
 use modules\projects\domain\valueObject\Settings;
 use modules\projects\infrastructure\persistence\ProjectAR;
 use RuntimeException;
+use Throwable;
 use yii\db\Connection;
 use Exception;
+use yii\db\StaleObjectException;
 
 class DbProjectRepository implements IProjectRepository
 {
@@ -23,6 +25,9 @@ class DbProjectRepository implements IProjectRepository
         $this->db = $db;
     }
 
+    /**
+     * @throws \yii\db\Exception
+     */
     public function save(Project $project): Project
     {
         $ar = $this->findARById($project->getId()) ?? new ProjectAR();
@@ -39,6 +44,9 @@ class DbProjectRepository implements IProjectRepository
         return $project;
     }
 
+    /**
+     * @throws Exception
+     */
     public function findById(ProjectId $id): ?Project
     {
         $ar = $this->findARById($id);
@@ -71,12 +79,27 @@ class DbProjectRepository implements IProjectRepository
         return ProjectAR::findOne($id->getValue());
     }
 
+    public function countByOwner(UserId $ownerId): int
+    {
+        return ProjectAR::find()->where(['owner_id' => $ownerId->getValue()])->count();
+    }
+
+    /**
+     * @throws Throwable
+     * @throws StaleObjectException
+     */
+    public function remove(Project $project): void
+    {
+        $ar = $this->findARById($project->getId());
+        $ar?->delete();
+    }
+
     private function mapEntityToAR(Project $project, ProjectAR $ar): void
     {
-        $ar->name = $project->getName();
-        $ar->type = $project->getType()->getValue();
-        $ar->owner_id = $project->getOwnerId()->getValue();
-        $ar->settings = $project->getSettings()->toArray();
+        $ar->name       = $project->getName();
+        $ar->type       = $project->getType()->getValue();
+        $ar->owner_id   = $project->getOwnerId()->getValue();
+        $ar->settings   = $project->getSettings()->toArray();
     }
 
     /**

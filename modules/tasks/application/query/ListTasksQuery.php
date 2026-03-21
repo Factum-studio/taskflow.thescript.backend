@@ -11,9 +11,11 @@ class ListTasksQuery
     public ?int $parentId = null;
     public ?bool $onlyOverdue = null;
     public ?bool $includeDeleted = null;
+    public int $userId;
 
-    public function __construct(array $filters = [])
+    public function __construct(int $userId, array $filters = [])
     {
+        $this->userId = $userId;
         foreach ($filters as $key => $value) {
             if (property_exists($this, $key)) {
                 $this->$key = $value;

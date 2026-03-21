@@ -37,40 +37,13 @@ class Project
         $this->updatedAt    = $updatedAt ?? new DateTimeImmutable();
     }
 
-    public function getId(): ProjectId
-    {
-        return $this->id;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function getType(): ProjectType
-    {
-        return $this->type;
-    }
-
-    public function getOwnerId(): UserId
-    {
-        return $this->ownerId;
-    }
-
-    public function getSettings(): Settings
-    {
-        return $this->settings;
-    }
-
-    public function getCreatedAt(): DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function getUpdatedAt(): DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
+    public function getId(): ProjectId { return $this->id; }
+    public function getName(): string { return $this->name; }
+    public function getType(): ProjectType { return $this->type; }
+    public function getOwnerId(): UserId { return $this->ownerId; }
+    public function getSettings(): Settings { return $this->settings; }
+    public function getCreatedAt(): DateTimeImmutable { return $this->createdAt; }
+    public function getUpdatedAt(): DateTimeImmutable { return $this->updatedAt; }
 
     public function rename(string $newName): void
     {

@@ -21,4 +21,6 @@ interface IProjectRepository
      * @return Project[]
      */
     public function findByUser(UserId $userId): array; // проекты, где пользователь участник (включая владельца)
+    public function countByOwner(UserId $ownerId): int;
+    public function remove(Project $project): void;
 }

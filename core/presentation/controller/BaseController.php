@@ -2,6 +2,7 @@
 
 namespace core\presentation\controller;
 
+use core\security\YiiIdentity;
 use yii\rest\Controller;
 use core\domain\valueObject\IdRange;
 
@@ -48,6 +49,11 @@ abstract class BaseController extends Controller
     protected function getUserId(): ?int
     {
         return \Yii::$app->user->id ?? null;
+    }
+
+    protected function getUserIdentity(): ?YiiIdentity
+    {
+        return \Yii::$app->user->identity ?? null;
     }
 
     protected function getLimit(): int
