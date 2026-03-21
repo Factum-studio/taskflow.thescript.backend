@@ -25,6 +25,7 @@ use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 use OpenApi\Attributes as OA;
+use yii\web\UnauthorizedHttpException;
 
 #[OA\Tag(
     name: 'projects',
@@ -120,10 +121,15 @@ class ProjectController extends BaseController
     )]
     /**
      * @throws NotFoundHttpException
+     * @throws UnauthorizedHttpException
      */
     public function actionView(int $id): ItemDto|array
     {
-        $query = new GetProjectQuery($id);
+        $userId = $this->getUserId();
+        if (!$userId) {
+            throw new UnauthorizedHttpException('User not authenticated');
+        }
+        $query = new GetProjectQuery($id, $userId);
         try {
             $project = $this->getProjectHandler->handle($query);
         } catch (RuntimeException $e) {

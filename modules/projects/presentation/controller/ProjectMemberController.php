@@ -23,6 +23,7 @@ use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 use OpenApi\Attributes as OA;
+use yii\web\UnauthorizedHttpException;
 
 #[OA\Tag(
     name: 'project-members',
@@ -82,10 +83,15 @@ class ProjectMemberController extends BaseController
     )]
     /**
      * @throws NotFoundHttpException
+     * @throws UnauthorizedHttpException
      */
     public function actionIndex(int $projectId): CollectionDto|array
     {
-        $query = new ListProjectMembersQuery($projectId);
+        $userId = $this->getUserId();
+        if (!$userId) {
+            throw new UnauthorizedHttpException('User not authenticated');
+        }
+        $query = new ListProjectMembersQuery($projectId, $userId);
         try {
             $members = $this->listMembersHandler->handle($query);
         } catch (RuntimeException $e) {
