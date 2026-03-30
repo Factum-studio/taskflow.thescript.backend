@@ -24,7 +24,7 @@
         "yiisoft/yii2-httpclient": "^2.0",
         "firebase/php-jwt": "^7.0",
         "ext-redis": "*",
-        "yiisoft/yii2-redis": "*"
+        "yiisoft/yii2-redis": "^2.1"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
