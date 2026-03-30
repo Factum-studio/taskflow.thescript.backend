@@ -2,6 +2,7 @@
 
 namespace core\presentation\controller;
 
+use core\application\dto\ErrorDto;
 use core\application\dto\ItemDto;
 use core\application\dto\UserDto;
 use core\application\handler\GetCurrentUserQueryHandler;
@@ -11,6 +12,8 @@ use OpenApi\Attributes as OA;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;
+//TODO убрать, это временное решение
+use yii\httpclient\Client;
 
 #[OA\Tag(
     name: 'users',
@@ -68,6 +71,43 @@ final class UserController extends BaseController
 
         } catch (UserNotFoundException $e) {
             throw new NotFoundHttpException('User not found');
+        }
+    }
+
+    public function actionLogin(): ErrorDto|array
+    {
+        $request = Yii::$app->request;
+
+        $login = $request->post('login');
+        $password = $request->post('password');
+
+        if (empty($login) || empty($password)) {
+            return $this->error('Login and password are required', 422);
+        }
+
+        $httpClient = new Client();
+
+        try {
+            $response = $httpClient->createRequest()
+                ->setMethod('POST')
+                ->setUrl('https://resume.thescript.agency/api/passport/v1/auth/login')
+                ->setData([
+                    'login' => $login,
+                    'password' => $password,
+                ])
+                ->setFormat(Client::FORMAT_JSON)
+                ->send();
+
+            $statusCode = $response->getStatusCode();
+            $data = $response->getData();
+
+            Yii::$app->response->statusCode = $statusCode;
+
+            return $data;
+
+        } catch (\Exception $e) {
+            Yii::error('Passport login failed: ' . $e->getMessage(), 'auth');
+            return $this->error('Authentication service unavailable', 503);
         }
     }
 }
