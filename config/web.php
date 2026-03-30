@@ -69,8 +69,10 @@ $config = [
         'mailer' => [
             'class' => Mailer::class,
             'viewPath' => '@app/mail',
-            // send all mails to a file by default.
-            'useFileTransport' => true,
+            'useFileTransport' => false,
+            'transport' => [
+                'dsn' => $_ENV['MAILER_DSN'],
+            ],
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 1 : 0,
