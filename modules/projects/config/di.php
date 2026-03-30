@@ -1,12 +1,14 @@
 <?php
 
 use modules\projects\application\port\IProjectAccess;
+use core\application\port\IEventDispatcher as GlobalEventDispatcher;
 use modules\projects\domain\event\IEventDispatcher as ProjectEventDispatcher;
 use modules\projects\domain\event\ProjectCreatedEvent;
 use modules\projects\domain\repository\IProjectRepository;
 use modules\projects\domain\repository\IBoardRepository;
 use modules\projects\domain\repository\IProjectUserRepository;
 use modules\projects\infrastructure\access\ProjectAccess;
+use modules\projects\infrastructure\event\DispatchingEventDecorator;
 use modules\projects\infrastructure\listener\AddOwnerAsMemberListener;
 use modules\projects\infrastructure\repository\DbProjectRepository;
 use modules\projects\infrastructure\repository\DbBoardRepository;
@@ -51,5 +53,17 @@ Yii::$container->set(ModuleEventDispatcher::class, function (Container $containe
     ];
 
     return new ModuleEventDispatcher($listeners);
+});
+
+$forwardEvents = [
+    ProjectCreatedEvent::class,
+];
+
+Yii::$container->set(ProjectEventDispatcher::class, function (Container $container) use ($forwardEvents) {
+    return new DispatchingEventDecorator(
+        $container->get(ModuleEventDispatcher::class),
+        $container->get(GlobalEventDispatcher::class),
+        $forwardEvents
+    );
 });
 
