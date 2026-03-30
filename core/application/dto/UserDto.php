@@ -33,6 +33,7 @@ class UserDto implements \JsonSerializable
             'name' => $user->getName(),
             'patronymic' => $user->getPatronymic(),
             'ui_name' => $user->getUiName(),
+            'full_name' => $user->getFullName(),
             'dob' => $user->getDob(),
             'contacts' => $contacts,
             'post' => $post,
