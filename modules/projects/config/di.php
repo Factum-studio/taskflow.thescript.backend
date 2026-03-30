@@ -1,5 +1,6 @@
 <?php
 
+use core\domain\event\UserFirstLoginEvent;
 use modules\projects\application\port\IProjectAccess;
 use core\application\port\IEventDispatcher as GlobalEventDispatcher;
 use modules\projects\domain\event\IEventDispatcher as ProjectEventDispatcher;
@@ -10,6 +11,7 @@ use modules\projects\domain\repository\IProjectUserRepository;
 use modules\projects\infrastructure\access\ProjectAccess;
 use modules\projects\infrastructure\event\DispatchingEventDecorator;
 use modules\projects\infrastructure\listener\AddOwnerAsMemberListener;
+use modules\projects\infrastructure\listener\CreatePersonalProjectOnUserFirstLogin;
 use modules\projects\infrastructure\repository\DbProjectRepository;
 use modules\projects\infrastructure\repository\DbBoardRepository;
 use modules\projects\infrastructure\repository\DbProjectUserRepository;
@@ -67,3 +69,5 @@ Yii::$container->set(ProjectEventDispatcher::class, function (Container $contain
     );
 });
 
+$globalDispatcher = Yii::$container->get(GlobalEventDispatcher::class);
+$globalDispatcher->addListener(UserFirstLoginEvent::class, CreatePersonalProjectOnUserFirstLogin::class);
