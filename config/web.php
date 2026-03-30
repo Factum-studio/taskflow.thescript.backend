@@ -137,6 +137,7 @@ $config = [
 
                     // User routes
                     'GET user/me' => 'user/me',
+                    'GET user/login' => 'user/login',
 
                     // Swagger documentation
                     'docs/swagger/json' => 'swagger/json',
