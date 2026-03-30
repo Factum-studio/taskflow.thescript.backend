@@ -125,6 +125,11 @@ class PostSchema {}
  *         description="Отчество"
  *     ),
  *     @OA\Property(
+ *         property="ui_name",
+ *         type="string",
+ *         description="Интерфейсоное имя (Имя Отчество или Фамилия Имя при отсутствии отчества)"
+ *     ),
+ *     @OA\Property(
  *         property="full_name",
  *         type="string",
  *         description="Полное имя (Фамилия Имя Отчество)"
