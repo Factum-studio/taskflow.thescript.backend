@@ -148,8 +148,13 @@ class TaskController extends BaseController
             )
         ]
     )]
-    public function actionIndex(): CollectionDto
+    public function actionIndex(): ErrorDto|CollectionDto
     {
+        $userId = $this->getUserId();
+        if (!$userId) {
+            return $this->error('User not authenticated', 401);
+        }
+
         $request = Yii::$app->request;
 
         $filters = [];
@@ -188,7 +193,7 @@ class TaskController extends BaseController
         if ($includeDeleted !== null) {
             $filters['includeDeleted'] = $includeDeleted === '1' || $includeDeleted === 'true';
         }
-        $query = new ListTasksQuery($filters);
+        $query = new ListTasksQuery($userId, $filters);
         $tasks = $this->listTasksHandler->handle($query);
 
         return $this->collection($tasks);
@@ -237,9 +242,13 @@ class TaskController extends BaseController
     /**
      * @throws NotFoundHttpException
      */
-    public function actionView(int $id): ItemDto
+    public function actionView(int $id): ErrorDto|ItemDto
     {
-        $query = new GetTaskQuery($id);
+        $userId = $this->getUserId();
+        if (!$userId) {
+            return $this->error('User not authenticated', 401);
+        }
+        $query = new GetTaskQuery($id, $userId);
         try {
             $task = $this->getTaskHandler->handle($query);
         } catch (RuntimeException $e) {
