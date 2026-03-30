@@ -186,7 +186,7 @@ class ProjectController extends BaseController
             name: $request->name,
             type: $request->type,
             ownerId: $userId,
-            settings: $request->settings
+            settings: $request->settings ?? []
         );
 
         try {
