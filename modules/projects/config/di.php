@@ -2,10 +2,12 @@
 
 use modules\projects\application\port\IProjectAccess;
 use modules\projects\domain\event\IEventDispatcher as ProjectEventDispatcher;
+use modules\projects\domain\event\ProjectCreatedEvent;
 use modules\projects\domain\repository\IProjectRepository;
 use modules\projects\domain\repository\IBoardRepository;
 use modules\projects\domain\repository\IProjectUserRepository;
 use modules\projects\infrastructure\access\ProjectAccess;
+use modules\projects\infrastructure\listener\AddOwnerAsMemberListener;
 use modules\projects\infrastructure\repository\DbProjectRepository;
 use modules\projects\infrastructure\repository\DbBoardRepository;
 use modules\projects\infrastructure\repository\DbProjectUserRepository;
@@ -36,8 +38,16 @@ Yii::$container->set(
     ProjectAccess::class
 );
 
+Yii::$container->set(AddOwnerAsMemberListener::class);
+
 Yii::$container->set(ModuleEventDispatcher::class, function (Container $container) {
+    /** @var AddOwnerAsMemberListener $listener */
+    $listener = $container->get(AddOwnerAsMemberListener::class);
+
     $listeners = [
+        ProjectCreatedEvent::class => [
+            [$listener, 'handleProjectCreated'],
+        ],
     ];
 
     return new ModuleEventDispatcher($listeners);

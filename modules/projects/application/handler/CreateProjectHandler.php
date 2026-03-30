@@ -7,6 +7,8 @@ use modules\projects\application\command\CreateProjectCommand;
 use modules\projects\application\dto\ProjectDto;
 use modules\projects\application\port\IProjectAccess;
 use modules\projects\domain\entity\Project;
+use modules\projects\domain\event\IEventDispatcher;
+use modules\projects\domain\event\ProjectCreatedEvent;
 use modules\projects\domain\repository\IProjectRepository;
 use modules\projects\domain\valueObject\ProjectId;
 use modules\projects\domain\valueObject\ProjectType;
@@ -20,15 +22,18 @@ class CreateProjectHandler
     private IProjectRepository $projectRepository;
     private ProjectDtoAssembler $projectDtoAssembler;
     private IProjectAccess $projectAccess;
+    private IEventDispatcher $eventDispatcher;
 
     public function __construct(
         IProjectRepository $projectRepository,
         ProjectDtoAssembler $projectDtoAssembler,
-        IProjectAccess $projectAccess
+        IProjectAccess $projectAccess,
+        IEventDispatcher $eventDispatcher
     ) {
         $this->projectRepository    = $projectRepository;
         $this->projectDtoAssembler  = $projectDtoAssembler;
         $this->projectAccess        = $projectAccess;
+        $this->eventDispatcher      = $eventDispatcher;
     }
 
     public function handle(CreateProjectCommand $command): ProjectDto
@@ -48,6 +53,8 @@ class CreateProjectHandler
         );
 
         $savedProject = $this->projectRepository->save($project);
+
+        $this->eventDispatcher->dispatch(new ProjectCreatedEvent($savedProject));
 
         return $this->projectDtoAssembler->toDto($savedProject);
     }
