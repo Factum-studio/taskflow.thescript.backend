@@ -4,11 +4,15 @@ use core\security\JwtMiddleware;
 use core\security\YiiIdentity;
 use yii\symfonymailer\Mailer;
 
-$params = require __DIR__ . '/params.php';
-$db = require __DIR__ . '/db.php';
-$modules = require __DIR__ . '/modules.php';
+$params             = require __DIR__ . '/params.php';
+$db                 = require __DIR__ . '/db.php';
+$modules            = require __DIR__ . '/modules.php';
 $passportHttpClient = require __DIR__ . '/passport_http_client.php';
-$container = __DIR__ . '/container.php';
+$container          = __DIR__ . '/container.php';
+$diConfigs          = [
+    __DIR__ . '/../modules/projects/config/di.php',
+    __DIR__ . '/../modules/tasks/config/di.php',
+];
 
 $config = [
     'id' => $_ENV['APP_NAME'],
@@ -117,6 +121,12 @@ $config = [
 ];
 
 require $container;
+
+foreach ($diConfigs as $diConfig) {
+    if (file_exists($diConfig)) {
+        require $diConfig;
+    }
+}
 
 if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment
