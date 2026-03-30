@@ -10,15 +10,21 @@ $config = [
     'bootstrap' => ['log'],
     'controllerNamespace' => 'app\commands',
     'aliases' => [
-        '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
-        '@tests' => '@app/tests',
-        '@core' => dirname(__DIR__) . '/core',
-        '@modules' => dirname(__DIR__) . '/modules',
+        '@bower'    => '@vendor/bower-asset',
+        '@npm'      => '@vendor/npm-asset',
+        '@tests'    => '@app/tests',
+        '@core'     => dirname(__DIR__) . '/core',
+        '@modules'  => dirname(__DIR__) . '/modules',
     ],
     'components' => [
         'cache' => [
-            'class' => 'yii\caching\FileCache',
+            'class' => 'yii\redis\Cache',
+            'redis' => [
+                'hostname' => $_ENV['REDIS_HOST'],
+                'port' => $_ENV['REDIS_PORT'],
+                'password' => $_ENV['REDIS_PASSWORD'],
+                'database' => 0,
+            ],
         ],
         'log' => [
             'targets' => [
