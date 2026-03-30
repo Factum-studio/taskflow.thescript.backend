@@ -9,6 +9,7 @@ $db                 = require __DIR__ . '/db.php';
 $modules            = require __DIR__ . '/modules.php';
 $passportHttpClient = require __DIR__ . '/passport_http_client.php';
 $container          = __DIR__ . '/container.php';
+$ignoreConfig       = require __DIR__ . '/ignore_routes.php';
 $diConfigs          = [
     __DIR__ . '/../modules/projects/config/di.php',
     __DIR__ . '/../modules/tasks/config/di.php',
@@ -20,16 +21,19 @@ $config = [
     'controllerNamespace' => 'core\presentation\controller',
     'bootstrap' => ['log'],
     'on beforeRequest' => function () {
+        global $ignoreConfig;
         $request = Yii::$app->request;
+        $currentPath = $request->getPathInfo();
 
-        if (strpos($request->getPathInfo(), 'docs/') === 0) {
-            return;
-        }
+        if (in_array($currentPath, $ignoreConfig['ignoreRoutes']['exact'])) return;
+        foreach ($ignoreConfig['ignoreRoutes']['startsWith'] as $prefix)
+            if (str_starts_with($currentPath, $prefix)) return;
+        foreach ($ignoreConfig['ignoreRoutes']['regex'] as $pattern)
+            if (preg_match($pattern, $currentPath)) return;
 
         $middleware = Yii::$container->get(
             JwtMiddleware::class
         );
-
         $middleware->handle();
     },
     'aliases' => [
