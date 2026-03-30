@@ -78,7 +78,9 @@ $container->set(ILocalUserRepository::class, function() {
 $container->setSingleton(GetAuthenticatedUserUseCase::class, function() use ($container) {
     return new GetAuthenticatedUserUseCase(
         $container->get(AuthenticateByJwtUseCase::class),
-        $container->get(IUserRepository::class)
+        $container->get(IUserRepository::class),
+        $container->get(ILocalUserRepository::class),
+        $container->get(IEventDispatcher::class)
     );
 });
 
