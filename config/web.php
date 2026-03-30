@@ -56,7 +56,13 @@ $config = [
             'charset' => 'UTF-8',
         ],
         'cache' => [
-            'class' => 'yii\caching\FileCache',
+            'class' => 'yii\redis\Cache',
+            'redis' => [
+                'hostname' => $_ENV['REDIS_HOST'],
+                'port' => $_ENV['REDIS_PORT'],
+                'password' => $_ENV['REDIS_PASSWORD'],
+                'database' => 0,
+            ],
         ],
         'user' => [
             'identityClass' => YiiIdentity::class,
