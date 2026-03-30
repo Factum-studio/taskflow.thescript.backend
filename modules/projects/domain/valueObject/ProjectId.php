@@ -10,7 +10,7 @@ final class ProjectId
 
     public function __construct(int $value)
     {
-        if ($value <= 0) {
+        if ($value < 0) {
             throw new InvalidArgumentException('Project ID must be positive integer');
         }
         $this->value = $value;
