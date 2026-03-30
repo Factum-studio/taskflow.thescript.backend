@@ -82,6 +82,21 @@ $config = [
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error'],
+                    'categories' => ['projects'],
+                    'logFile' => '@app/runtime/logs/projects-error.log',
+                    'logVars' => [],
+                ],
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['info'],
+                    'categories' => ['tasks'],
+                    'logFile' => '@app/runtime/logs/projects-info.log',
+                    'logVars' => [],
+                    'enabled' => YII_DEBUG,
+                ],
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['error'],
                     'categories' => ['tasks'],
                     'logFile' => '@app/runtime/logs/tasks-error.log',
                     'logVars' => [],
