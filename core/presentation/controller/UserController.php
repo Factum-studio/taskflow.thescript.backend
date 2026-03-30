@@ -74,6 +74,46 @@ final class UserController extends BaseController
         }
     }
 
+    #[OA\Post(
+        path: '/user/login',
+        description: 'Аутентификация пользователя через Passport',
+        summary: 'Вход в систему',
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ['login', 'password'],
+                properties: [
+                    new OA\Property(property: 'login', type: 'string', example: 'user@example.com'),
+                    new OA\Property(property: 'password', type: 'string', example: 'password123'),
+                ],
+                type: 'object'
+            )
+        ),
+        tags: ['users'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Успешная аутентификация',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'token', type: 'string', example: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...'),
+                        new OA\Property(property: 'expires_in', type: 'integer', example: 3600),
+                    ],
+                    type: 'object'
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Неверные учетные данные',
+                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+            ),
+            new OA\Response(
+                response: 422,
+                description: 'Ошибка валидации',
+                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+            )
+        ]
+    )]
     public function actionLogin(): ErrorDto|array
     {
         $request = Yii::$app->request;
