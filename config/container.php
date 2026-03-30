@@ -5,6 +5,7 @@ use core\application\notification\channel\EmailChannel;
 use core\application\notification\channel\PushChannel;
 use core\application\notification\channel\TelegramChannel;
 use core\application\notification\NotificationHub;
+use core\application\port\ILocalUserRepository;
 use core\application\port\IPassportGateway;
 use core\application\port\IJwtValidator;
 use core\application\port\IUrlBuilder;
@@ -15,6 +16,7 @@ use core\infrastructure\http\ApiUrlBuilder;
 use core\infrastructure\http\config\ApiEndpointConfig;
 use core\infrastructure\passport\HttpPassportGateway;
 use core\infrastructure\jwt\JwtValidator;
+use core\infrastructure\repository\DbLocalUserRepository;
 use core\infrastructure\repository\PassportUserRepository;
 use core\presentation\controller\UserController;
 use core\security\JwtMiddleware;
@@ -65,6 +67,10 @@ $container->setSingleton(IUserRepository::class, function() use ($container) {
         Yii::$app->cache,
         3600
     );
+});
+
+$container->set(ILocalUserRepository::class, function() {
+    return new DbLocalUserRepository();
 });
 
 $container->setSingleton(GetAuthenticatedUserUseCase::class, function() use ($container) {
