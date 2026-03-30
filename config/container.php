@@ -5,6 +5,7 @@ use core\application\notification\channel\EmailChannel;
 use core\application\notification\channel\PushChannel;
 use core\application\notification\channel\TelegramChannel;
 use core\application\notification\NotificationHub;
+use core\application\port\IEventDispatcher;
 use core\application\port\ILocalUserRepository;
 use core\application\port\IPassportGateway;
 use core\application\port\IJwtValidator;
@@ -12,6 +13,7 @@ use core\application\port\IUrlBuilder;
 use core\application\port\IUserRepository;
 use core\application\useCase\AuthenticateByJwtUseCase;
 use core\application\useCase\GetAuthenticatedUserUseCase;
+use core\infrastructure\event\GlobalEventDispatcher;
 use core\infrastructure\http\ApiUrlBuilder;
 use core\infrastructure\http\config\ApiEndpointConfig;
 use core\infrastructure\passport\HttpPassportGateway;
@@ -119,3 +121,6 @@ $container->set(NotificationHub::class, function ($container) {
     );
 });
 
+$container->set(IEventDispatcher::class, function ($container) {
+    return new GlobalEventDispatcher($container, []);
+});
