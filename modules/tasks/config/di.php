@@ -133,7 +133,7 @@ Yii::$container->set(ModuleEventDispatcher::class, function (Container $containe
         ],
         IntervalLoggedEvent::class => [
             [$logger, 'handleIntervalLogged'],
-        ]
+        ],
     ];
 
     return new ModuleEventDispatcher($listeners);
@@ -141,6 +141,17 @@ Yii::$container->set(ModuleEventDispatcher::class, function (Container $containe
 
 $forwardEvents = [
     TaskCreatedEvent::class,
+    TaskAssignedEvent::class,
+    TaskMovedToColumnEvent::class,
+    TaskUpdatedEvent::class,
+    TaskSoftDeletedEvent::class,
+    TaskRestoredEvent::class,
+    CommentAddedEvent::class,
+    CommentUpdatedEvent::class,
+    StickerAttachedToTaskEvent::class,
+    TimerStartedEvent::class,
+    TimerStoppedEvent::class,
+    IntervalLoggedEvent::class,
 ];
 
 Yii::$container->set(TaskEventDispatcher::class, function (Container $container) use ($forwardEvents) {
