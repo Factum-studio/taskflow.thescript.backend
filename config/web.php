@@ -7,6 +7,7 @@ use yii\symfonymailer\Mailer;
 $params             = require __DIR__ . '/params.php';
 $db                 = require __DIR__ . '/db.php';
 $modules            = require __DIR__ . '/modules.php';
+$redis              = require __DIR__ . '/redis.php';
 $passportHttpClient = require __DIR__ . '/passport_http_client.php';
 $container          = __DIR__ . '/container.php';
 $ignoreConfig       = require __DIR__ . '/ignore_routes.php';
@@ -55,14 +56,10 @@ $config = [
             'format' => yii\web\Response::FORMAT_JSON,
             'charset' => 'UTF-8',
         ],
+        'redis'=> $redis,
         'cache' => [
             'class' => 'yii\redis\Cache',
-            'redis' => [
-                'hostname' => $_ENV['REDIS_HOST'],
-                'port' => $_ENV['REDIS_PORT'],
-                'password' => $_ENV['REDIS_PASSWORD'],
-                'database' => 0,
-            ],
+            'redis' => 'redis',
         ],
         'user' => [
             'identityClass' => YiiIdentity::class,
@@ -142,6 +139,10 @@ $config = [
                     // Swagger documentation
                     'docs/swagger/json' => 'swagger/json',
                     'docs/swagger' => 'swagger/ui',
+
+                    // Project documentation
+                    'docs/<page:[\w\/\-]+>' => 'docs/ui',
+                    'docs' => 'docs/ui',
 
                     // Дефолтный маршрут для OPTIONS (CORS)
                     'OPTIONS <any:.*>' => 'site/options',

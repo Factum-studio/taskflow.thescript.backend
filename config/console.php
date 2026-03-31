@@ -1,8 +1,9 @@
 <?php
 
-$params = require __DIR__ . '/params.php';
-$db = require __DIR__ . '/db.php';
-$migrationNamespaces = require __DIR__ . '/migration_namespaces.php';
+$params                 = require __DIR__ . '/params.php';
+$db                     = require __DIR__ . '/db.php';
+$redis                  = require __DIR__ . '/redis.php';
+$migrationNamespaces    = require __DIR__ . '/migration_namespaces.php';
 
 $config = [
     'id' => $_ENV['APP_NAME'],
@@ -17,14 +18,10 @@ $config = [
         '@modules'  => dirname(__DIR__) . '/modules',
     ],
     'components' => [
+        'redis'=> $redis,
         'cache' => [
             'class' => 'yii\redis\Cache',
-            'redis' => [
-                'hostname' => $_ENV['REDIS_HOST'],
-                'port' => $_ENV['REDIS_PORT'],
-                'password' => $_ENV['REDIS_PASSWORD'],
-                'database' => 0,
-            ],
+            'redis' => 'redis',
         ],
         'log' => [
             'targets' => [
