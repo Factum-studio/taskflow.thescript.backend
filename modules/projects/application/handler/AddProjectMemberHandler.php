@@ -10,6 +10,8 @@ use modules\projects\application\command\AddProjectMemberCommand;
 use modules\projects\application\dto\ProjectUserDto;
 use modules\projects\application\port\IProjectAccess;
 use modules\projects\domain\entity\ProjectUser;
+use modules\projects\domain\event\IEventDispatcher;
+use modules\projects\domain\event\ProjectMemberAddedEvent;
 use modules\projects\domain\repository\IProjectRepository;
 use modules\projects\domain\repository\IProjectUserRepository;
 use modules\projects\domain\valueObject\ProjectId;
@@ -24,19 +26,22 @@ class AddProjectMemberHandler
     private ProjectUserDtoAssembler $projectUserDtoAssembler;
     private IProjectAccess $projectAccess;
     private IUserRepository $userRepository;
+    private IEventDispatcher $eventDispatcher;
 
     public function __construct(
         IProjectUserRepository $projectUserRepository,
         IProjectRepository $projectRepository,
         ProjectUserDtoAssembler $projectUserDtoAssembler,
         IProjectAccess $projectAccess,
-        IUserRepository $userRepository
+        IUserRepository $userRepository,
+        IEventDispatcher $eventDispatcher
     ) {
         $this->projectUserRepository    = $projectUserRepository;
         $this->projectRepository        = $projectRepository;
         $this->projectUserDtoAssembler  = $projectUserDtoAssembler;
         $this->projectAccess            = $projectAccess;
         $this->userRepository           = $userRepository;
+        $this->eventDispatcher          = $eventDispatcher;
     }
 
     public function handle(AddProjectMemberCommand $command): ProjectUserDto
@@ -75,6 +80,8 @@ class AddProjectMemberHandler
         );
 
         $this->projectUserRepository->save($projectUser);
+
+        $this->eventDispatcher->dispatch(new ProjectMemberAddedEvent($projectUser, $command->addedBy));
 
         return $this->projectUserDtoAssembler->toDto($projectUser);
     }
