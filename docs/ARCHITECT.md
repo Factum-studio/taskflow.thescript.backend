@@ -52,6 +52,7 @@ core/
 | `BaseController`             | Базовый контроллер с общей логикой   |
 | `JsonErrorHandler`           | Централизованная обработка ошибок    |
 | `Identity`, `JwtToken`       | Value Objects для идентификации      |
+
 ---
 
 ## Структура modules (Бизнес-модули)
@@ -112,6 +113,7 @@ modules/
 | `passport_http_client.php` | Настройки HTTP клиента для Passport   |
 | `migration_namespaces.php` | Пространства имён миграций            |
 | `test.php`, `test_db.php`  | Конфигурация для тестирования         |
+
 ---
 
 ## Архитектурные диаграммы
