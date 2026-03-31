@@ -52,6 +52,7 @@ TASKFLOW CRM разработана с учётом специфики рабо�
 | **Nginx**, **Apache** | Веб-сервер(а)              |
 | **GitHub Actions**    | CI/CD пайплайны            |
 | **Composer**          | Управление зависимостями   |
+
 ---
 
 ## Процесс развёртывания (Deploy)
@@ -129,7 +130,7 @@ vendor/bin/codecept run <test_type> tests/api/ClientsCest
 - Правила именования веток
 - Работу с pull request'ами
 
-[Перейти к руководству](./docs/REPOSITORY.md)
+[Перейти к руководству](./docs/contribute.md)
 
 ## Лицензия
 
@@ -141,10 +142,10 @@ vendor/bin/codecept run <test_type> tests/api/ClientsCest
 
 ## Архитектура проекта
 
-Подробное описание архитектуры доступно в [архитектурная документация](./docs/ARCHITECT.md)
+Подробное описание архитектуры доступно в [архитектурная документация](./docs/architect.md)
 
 ### Ключевые диаграммы
-- [Компонентная архитектура](./docs/ARCHITECT.md#архитектурные-диаграммы)
-- [Структура модуля](./docs/ARCHITECT.md#структура-modules-бизнес-модули)
+- [Компонентная архитектура](./docs/architect.md#архитектурные-диаграммы)
+- [Структура модуля](./docs/architect.md#структура-modules-бизнес-модули)
 
-- [CQRS поток](./docs/ARCHITECT.md#архитектурные-принципы)
+- [CQRS поток](./docs/architect.md#архитектурные-принципы)
