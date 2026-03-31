@@ -19,4 +19,5 @@ interface IPassportGateway
     public function getContactData(JwtToken $token, ?QueryParams $params = null): array;
     public function getCityData(JwtToken $token, ?QueryParams $params = null): array;
     public function getPostData(JwtToken $token, ?QueryParams $params = null): array;
+    public function findUserByEmail(string $email, JwtToken $token): ?array;
 }

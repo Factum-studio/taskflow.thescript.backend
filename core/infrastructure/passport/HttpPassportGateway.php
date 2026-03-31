@@ -93,4 +93,13 @@ final class HttpPassportGateway implements IPassportGateway
             'total' => $data['_meta']['totalCount'] ?? 0,
         ];
     }
+
+    public function findUserByEmail(string $email, JwtToken $token): ?array
+    {
+        $params = QueryParams::fromArray(['email' => $email, 'expand' => 'contacts,post']);
+        $url = $this->urlBuilder->build($this->endpointConfig->get('user'), $params);
+        $data = $this->executeRequest($url, $token);
+        $items = $data['items'] ?? [];
+        return !empty($items) ? $items[0] : null;
+    }
 }
