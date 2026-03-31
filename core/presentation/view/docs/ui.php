@@ -37,6 +37,10 @@ use yii\helpers\Html;
             </div>
 
             <div class="doc-toc">
+                <ul class="nav-pills">
+                    <li class=""><a href="/docs/swagger">Swagger документация</a></li>
+                </ul>
+
                 <?= $menu ?>
             </div>
         </aside>
