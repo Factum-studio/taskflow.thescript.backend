@@ -14,12 +14,39 @@
 **Обработчики**:
 - `CreatePersonalProjectOnUserFirstLogin` (модуль Projects) – создаёт личный проект.
 
+## Форвардимые события из модулей
+
+### Модуль Projects
+- `ProjectCreatedEvent`
+- `ProjectMemberAddedEvent`
+- `ProjectMemberRemovedEvent`
+- `BoardCreatedEvent`
+- `InvitationCreatedEvent`
+- `InvitationAcceptedEvent`
+- `InvitationCancelledEvent`
+
+### Модуль Tasks
+- `TaskCreatedEvent`
+- `TaskAssignedEvent`
+- `TaskMovedToColumnEvent`
+- `TaskUpdatedEvent`
+- `TaskSoftDeletedEvent`
+- `TaskRestoredEvent`
+- `CommentAddedEvent`
+- `CommentUpdatedEvent`
+- `StickerAttachedToTaskEvent`
+- `TimerStartedEvent`
+- `TimerStoppedEvent`
+- `IntervalLoggedEvent`
+
 ## Как подписаться на событие
 
 В конфигурации DI (например, `config/container.php`):
 
+```php
 $globalDispatcher = Yii::$container->get(GlobalEventDispatcher::class);
-$globalDispatcher->addListener(UserFirstLoginEvent::class, YourListener::class);
+$globalDispatcher->addListener(YourEvent::class, YourListener::class);
+```
 
 Где `YourListener` должен иметь метод `handle($event)`.
 
