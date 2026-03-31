@@ -1,30 +1,24 @@
 <?php
 
+use core\domain\event\UserFirstLoginEvent;
 use modules\projects\application\port\IProjectAccess;
+use core\application\port\IEventDispatcher as GlobalEventDispatcher;
+use modules\projects\domain\event\IEventDispatcher as ProjectEventDispatcher;
+use modules\projects\domain\event\ProjectCreatedEvent;
 use modules\projects\domain\repository\IProjectRepository;
 use modules\projects\domain\repository\IBoardRepository;
 use modules\projects\domain\repository\IProjectUserRepository;
 use modules\projects\infrastructure\access\ProjectAccess;
+use modules\projects\infrastructure\event\DispatchingEventDecorator;
+use modules\projects\infrastructure\listener\AddOwnerAsMemberListener;
+use modules\projects\infrastructure\listener\CreatePersonalProjectOnUserFirstLogin;
 use modules\projects\infrastructure\repository\DbProjectRepository;
 use modules\projects\infrastructure\repository\DbBoardRepository;
 use modules\projects\infrastructure\repository\DbProjectUserRepository;
 use modules\projects\application\assembler\ProjectDtoAssembler;
 use modules\projects\application\assembler\BoardDtoAssembler;
+use modules\projects\infrastructure\event\ModuleEventDispatcher;
 use modules\projects\application\assembler\ProjectUserDtoAssembler;
-use modules\projects\application\handler\CreateProjectHandler;
-use modules\projects\application\handler\UpdateProjectHandler;
-use modules\projects\application\handler\DeleteProjectHandler;
-use modules\projects\application\handler\CreateBoardHandler;
-use modules\projects\application\handler\UpdateBoardHandler;
-use modules\projects\application\handler\DeleteBoardHandler;
-use modules\projects\application\handler\AddProjectMemberHandler;
-use modules\projects\application\handler\RemoveProjectMemberHandler;
-use modules\projects\application\handler\ChangeMemberRoleHandler;
-use modules\projects\application\handler\GetProjectHandler;
-use modules\projects\application\handler\ListUserProjectsHandler;
-use modules\projects\application\handler\GetBoardHandler;
-use modules\projects\application\handler\ListProjectBoardsHandler;
-use modules\projects\application\handler\ListProjectMembersHandler;
 use yii\di\Container;
 
 Yii::$container->set(IProjectRepository::class, function () {
@@ -47,3 +41,33 @@ Yii::$container->set(
     IProjectAccess::class,
     ProjectAccess::class
 );
+
+Yii::$container->set(AddOwnerAsMemberListener::class);
+
+Yii::$container->set(ModuleEventDispatcher::class, function (Container $container) {
+    /** @var AddOwnerAsMemberListener $listener */
+    $listener = $container->get(AddOwnerAsMemberListener::class);
+
+    $listeners = [
+        ProjectCreatedEvent::class => [
+            [$listener, 'handleProjectCreated'],
+        ],
+    ];
+
+    return new ModuleEventDispatcher($listeners);
+});
+
+$forwardEvents = [
+    ProjectCreatedEvent::class,
+];
+
+Yii::$container->set(ProjectEventDispatcher::class, function (Container $container) use ($forwardEvents) {
+    return new DispatchingEventDecorator(
+        $container->get(ModuleEventDispatcher::class),
+        $container->get(GlobalEventDispatcher::class),
+        $forwardEvents
+    );
+});
+
+$globalDispatcher = Yii::$container->get(GlobalEventDispatcher::class);
+$globalDispatcher->addListener(UserFirstLoginEvent::class, CreatePersonalProjectOnUserFirstLogin::class);

@@ -46,7 +46,7 @@ class User
     public function getUiName(): string
     {
         return isset($this->patronymic) ?
-            trim($this->patronymic . ' ' . $this->name) :
+            trim($this->name . ' ' . $this->patronymic) :
             trim($this->surname . ' ' . $this->name);
     }
 

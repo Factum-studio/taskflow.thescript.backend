@@ -22,7 +22,10 @@
         "zircote/swagger-php": "^5.8",
         "doctrine/annotations": "^2.0",
         "yiisoft/yii2-httpclient": "^2.0",
-        "firebase/php-jwt": "^7.0"
+        "firebase/php-jwt": "^7.0",
+        "ext-redis": "*",
+        "yiisoft/yii2-redis": "^2.1",
+        "cebe/markdown": "^1.2"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
@@ -35,8 +38,7 @@
         "codeception/module-filesystem": "^3.0 || ^2.0 || ^1.1",
         "codeception/verify": "^3.0 || ^2.2",
         "fakerphp/faker": "^1.24",
-        "doctordanila/scancore": "~1.0.6",
-        "cebe/markdown": "^1.2"
+        "doctordanila/scancore": "~1.0.6"
     },
     "autoload": {
         "psr-4": {

@@ -5,7 +5,7 @@
  */
 
 return [
-//    'core\infrastructure\migrations',
+    'core\infrastructure\migrations',
 //    'modules\clients\infrastructure\migrations',
     'modules\projects\infrastructure\migrations',
     'modules\tasks\infrastructure\migrations',

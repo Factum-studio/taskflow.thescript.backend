@@ -125,6 +125,11 @@ class PostSchema {}
  *         description="Отчество"
  *     ),
  *     @OA\Property(
+ *         property="ui_name",
+ *         type="string",
+ *         description="Интерфейсоное имя (Имя Отчество или Фамилия Имя при отсутствии отчества)"
+ *     ),
+ *     @OA\Property(
  *         property="full_name",
  *         type="string",
  *         description="Полное имя (Фамилия Имя Отчество)"
@@ -486,3 +491,12 @@ class TaskSchemas {}
  * )
  */
 class ProjectsSchemas {}
+
+/**
+ * @OA\Schema(
+ *     schema="SseTokenResponse",
+ *     required={"token"},
+ *     @OA\Property(property="token", type="string", description="JWT токен для подключения к SSE потоку")
+ * )
+ */
+class SseTokenSchema {}

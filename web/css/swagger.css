@@ -241,3 +241,17 @@ code {
     line-height: 200%;
     border-radius: 13px;
 }
+/* modules group */
+#operations-tag-users > a,
+#operations-tag-stream > a {
+    color: lightblue !important;
+}
+#operations-tag-time-intervals > a,
+#operations-tag-task-stickers > a,
+#operations-tag-tasks > a,
+#operations-tag-stickers > a,
+#operations-tag-task-priorities > a,
+#operations-tag-comments > a,
+#operations-tag-board-columns > a {
+    color: lightgreen !important;
+}
