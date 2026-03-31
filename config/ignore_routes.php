@@ -7,7 +7,7 @@ return [
             '/events',
         ],
         'startsWith' => [
-            'docs/',
+            'docs',
         ],
         'regex' => [
         ],
