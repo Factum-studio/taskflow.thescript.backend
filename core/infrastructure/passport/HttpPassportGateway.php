@@ -79,4 +79,18 @@ final class HttpPassportGateway implements IPassportGateway
 
         return $response->data;
     }
+
+    public function getAllUsers(JwtToken $token, ?QueryParams $params = null): array
+    {
+        $url = $this->urlBuilder->build(
+            $this->endpointConfig->get('user'),
+            $params
+        );
+        $data = $this->executeRequest($url, $token);
+
+        return [
+            'items' => $data['items'] ?? [],
+            'total' => $data['_meta']['totalCount'] ?? 0,
+        ];
+    }
 }
