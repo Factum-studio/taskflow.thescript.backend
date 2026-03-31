@@ -3,8 +3,11 @@
 use core\domain\event\UserFirstLoginEvent;
 use modules\projects\application\port\IProjectAccess;
 use core\application\port\IEventDispatcher as GlobalEventDispatcher;
+use modules\projects\domain\event\BoardCreatedEvent;
 use modules\projects\domain\event\IEventDispatcher as ProjectEventDispatcher;
 use modules\projects\domain\event\ProjectCreatedEvent;
+use modules\projects\domain\event\ProjectMemberAddedEvent;
+use modules\projects\domain\event\ProjectMemberRemovedEvent;
 use modules\projects\domain\repository\IProjectRepository;
 use modules\projects\domain\repository\IBoardRepository;
 use modules\projects\domain\repository\IProjectUserRepository;
@@ -12,6 +15,7 @@ use modules\projects\infrastructure\access\ProjectAccess;
 use modules\projects\infrastructure\event\DispatchingEventDecorator;
 use modules\projects\infrastructure\listener\AddOwnerAsMemberListener;
 use modules\projects\infrastructure\listener\CreatePersonalProjectOnUserFirstLogin;
+use modules\projects\infrastructure\listener\ProjectLoggerListener;
 use modules\projects\infrastructure\repository\DbProjectRepository;
 use modules\projects\infrastructure\repository\DbBoardRepository;
 use modules\projects\infrastructure\repository\DbProjectUserRepository;
@@ -46,11 +50,23 @@ Yii::$container->set(AddOwnerAsMemberListener::class);
 
 Yii::$container->set(ModuleEventDispatcher::class, function (Container $container) {
     /** @var AddOwnerAsMemberListener $listener */
-    $listener = $container->get(AddOwnerAsMemberListener::class);
+    $ownerListener = $container->get(AddOwnerAsMemberListener::class);
+    /** @var ProjectLoggerListener $logger */
+    $logger = $container->get(ProjectLoggerListener::class);
 
     $listeners = [
         ProjectCreatedEvent::class => [
-            [$listener, 'handleProjectCreated'],
+            [$ownerListener, 'handleProjectCreated'],
+            [$logger, 'handleProjectCreated'],
+        ],
+        ProjectMemberAddedEvent::class => [
+            [$logger, 'handleProjectMemberAdded'],
+        ],
+        ProjectMemberRemovedEvent::class => [
+            [$logger, 'handleProjectMemberRemoved'],
+        ],
+        BoardCreatedEvent::class => [
+            [$logger, 'handleBoardCreated'],
         ],
     ];
 
@@ -59,6 +75,9 @@ Yii::$container->set(ModuleEventDispatcher::class, function (Container $containe
 
 $forwardEvents = [
     ProjectCreatedEvent::class,
+    ProjectMemberAddedEvent::class,
+    ProjectMemberRemovedEvent::class,
+    BoardCreatedEvent::class,
 ];
 
 Yii::$container->set(ProjectEventDispatcher::class, function (Container $container) use ($forwardEvents) {
