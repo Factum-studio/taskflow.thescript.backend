@@ -1,0 +1,230 @@
+:root {
+    --primary: #E6E9EE;
+    --blue: #6BA7FF;
+    --green: #6EE7B7;
+    --secondary: #ADB3BD;
+    --black: #0B0D10;
+    --bg: rgba(255,255,255,0.04);
+    --border: rgba(255,255,255,0.2);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--black);
+    color: var(--primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Layout */
+.docs-wrapper {
+    display: flex;
+}
+
+/* Sidebar */
+.docs-sidebar {
+    width: 280px;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    transition: transform 0.3s ease;
+    user-select: none;
+}
+
+.logo {
+    padding: 20px;
+    opacity: 0.8;
+}
+
+.logo svg {
+    width: 100%;
+    max-width: 174px;
+    height: auto;
+}
+
+/* Menu styling */
+.doc-toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.doc-toc ul ul {
+    padding-left: 20px;
+}
+
+.nav-pills a,
+.nav-pills span {
+    display: block;
+    padding: 8px 20px;
+    color: var(--secondary);
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.nav-pills a:hover {
+    background: rgba(107,167,255,0.1);
+    color: var(--blue);
+}
+
+.nav-pills .active > a {
+    color: var(--blue);
+    border-left: 2px solid var(--blue);
+}
+
+.nav-pills .folder > span {
+    font-weight: 600;
+    color: var(--primary);
+    cursor: default;
+}
+
+/* Content area */
+.docs-content {
+    flex: 1;
+    padding: 40px;
+    min-width: 0; /* чтобы не вылезал */
+}
+
+.docs-content-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    overflow-x: auto;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--primary);
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+}
+
+p, li {
+    color: var(--secondary);
+    line-height: 1.6;
+}
+
+/* Code blocks */
+pre {
+    background: var(--bg);
+    padding: 15px;
+    border-radius: 8px;
+    overflow-x: auto;
+    position: relative;
+    margin: 1em 0;
+}
+
+code {
+    color: var(--blue);
+    font-family: 'Fira Code', monospace;
+}
+
+/* Copy button */
+.copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--primary);
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s;
+}
+
+.copy-btn:hover {
+    background: rgba(107,167,255,0.2);
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+    display: block;
+    overflow-x: auto;
+}
+
+th, td {
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    text-align: left;
+}
+
+th {
+    background: rgba(255,255,255,0.05);
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* Sidebar toggle button (mobile + optional desktop) */
+.sidebar-toggle {
+    display: none;
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 1000;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--primary);
+    font-size: 20px;
+    padding: 8px 12px;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    transition: all 0.3s ease-in-out;
+}
+
+.sidebar-toggle:hover {
+    background: rgba(107,167,255,0.2);
+}
+
+.doc-folder {
+    margin-top: 16px;
+}
+.folder-label {
+    padding: 8px 20px;
+    font-weight: 600;
+    color: var(--primary);
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity: 0.7;
+}
+
+/* Mobile styles */
+@media (max-width: 1024px) {
+    .sidebar-toggle {
+        display: block;
+    }
+
+    .docs-sidebar {
+        position: fixed;
+        left: -280px;
+        top: 0;
+        z-index: 999;
+        background: var(--black);
+        box-shadow: 2px 0 8px rgba(0,0,0,0.3);
+    }
+
+    .docs-sidebar.open {
+        left: 0;
+    }
+
+    .docs-content {
+        padding: 20px;
+        margin-left: 0;
+    }
+}
