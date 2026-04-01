@@ -3,6 +3,7 @@
 namespace modules\projects\application\handler;
 
 use core\application\port\IPassportGateway;
+use core\domain\valueObject\QueryParams;
 use modules\projects\application\command\AcceptInvitationCommand;
 use modules\projects\domain\entity\ProjectUser;
 use modules\projects\domain\event\IEventDispatcher;
@@ -44,7 +45,11 @@ class AcceptInvitationHandler
             throw new RuntimeException('Invitation is no longer valid');
         }
 
-        $userData = $this->passportGateway->getUserById((string)$command->userId, $command->jwtToken);
+        $userData = $this->passportGateway->getUserById(
+            (string)$command->userId,
+            $command->jwtToken,
+            QueryParams::create(expand: ['contacts'])
+        );
         if (!$userData) {
             throw new RuntimeException('User not found in Passport');
         }
