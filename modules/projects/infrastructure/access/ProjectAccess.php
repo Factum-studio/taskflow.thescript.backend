@@ -108,6 +108,15 @@ class ProjectAccess implements IProjectAccess
 
     public function canInviteUser(int $userId, int $projectId): bool
     {
+        $project = $this->projectRepository->findById(new ProjectId($projectId));
+        if (!$project) {
+            return false;
+        }
+
+        if ($project->getType()->isPersonal()) {
+            return false;
+        }
+
         return $this->isAdmin($userId, $projectId);
     }
 
