@@ -77,10 +77,11 @@ class InvitationController extends BaseController
         }
 
         $command = new InviteUserCommand(
-            $id,
-            $request->email,
-            $userId,
-            $this->getUserIdentity()->getJwtToken()->value()
+            projectId: $id,
+            invitedBy: $userId,
+            jwtToken: $this->getUserIdentity()->getJwtToken(),
+            email: $request->email,
+            userId: $request->userId
         );
 
         try {
@@ -153,7 +154,7 @@ class InvitationController extends BaseController
      * @throws ServerErrorHttpException
      */
     #[OA\Delete(
-        path: '/project/{id}/invitation/{email}',
+        path: '/project/{id}/invitation?email={email}',
         summary: 'Отменить приглашение по email',
         security: [['bearerAuth' => []]],
         tags: ['project-invitations'],
@@ -170,12 +171,23 @@ class InvitationController extends BaseController
     )]
     public function actionCancel(int $id, string $email): SuccessDto|ErrorDto|array
     {
+        $email = Yii::$app->request->get('email');
+        if (!$email) {
+            return $this->error('Email parameter is required', 422);
+        }
+
         $userId = $this->getUserId();
         if (!$userId) {
             return $this->error('User not authenticated', 401);
         }
 
-        $command = new CancelInvitationCommand($id, $email, $userId);
+        $command = new CancelInvitationCommand(
+            $id,
+            $email,
+            $userId,
+            $this->getUserIdentity()->getJwtToken()
+        );
+
         try {
             $this->cancelInvitationHandler->handle($command);
         } catch (RuntimeException $e) {

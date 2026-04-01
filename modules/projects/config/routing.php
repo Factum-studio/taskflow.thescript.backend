@@ -24,5 +24,5 @@ return [
     // Приглашения
     'POST project/<id:\d+>/invite' => 'projects/invitation/invite',
     'POST invitation/accept' => 'projects/invitation/accept',
-    'DELETE project/<id:\d+>/invitation/<email:.+>' => 'projects/invitation/cancel',
+    'DELETE project/<id:\d+>/invitation' => 'projects/invitation/cancel',
 ];
