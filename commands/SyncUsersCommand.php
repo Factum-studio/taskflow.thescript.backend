@@ -78,6 +78,7 @@ class SyncUsersCommand extends Controller
                 }
 
                 $email = null;
+                $post = null;
                 if (isset($userData['contacts']) && is_array($userData['contacts'])) {
                     foreach ($userData['contacts'] as $contact) {
                         if (($contact['name'] ?? '') === 'email') {
@@ -86,6 +87,7 @@ class SyncUsersCommand extends Controller
                         }
                     }
                 }
+                $post = $userData['post']['name'] ?? null;
 
                 if ($dryRun) {
                     $this->stdout("[DRY RUN] Would create user ID {$userId}, email: {$email}\n", Console::FG_CYAN);
@@ -95,7 +97,7 @@ class SyncUsersCommand extends Controller
 
                 try {
                     // Создаём локальную запись пользователя
-                    $this->localUserRepository->create($userId, $email ?? '');
+                    $this->localUserRepository->create($userId, $email ?? '', $post, $post ? 1 : null);
 
                     // Создаём персональный проект напрямую
                     $command = new CreateProjectCommand(

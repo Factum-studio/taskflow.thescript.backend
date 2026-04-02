@@ -500,3 +500,26 @@ class ProjectsSchemas {}
  * )
  */
 class SseTokenSchema {}
+
+/**
+ * @OA\Schema(
+ *     schema="Company",
+ *     @OA\Property(property="id", type="integer"),
+ *     @OA\Property(property="name", type="string"),
+ *     @OA\Property(property="description", type="string", nullable=true),
+ *     @OA\Property(property="createdAt", type="string", format="date-time"),
+ *     @OA\Property(property="updatedAt", type="string", format="date-time")
+ * )
+ *
+ * @OA\Schema(
+ *     schema="CompanyUser",
+ *     @OA\Property(property="userId", type="integer"),
+ *     @OA\Property(property="surname", type="string"),
+ *     @OA\Property(property="name", type="string"),
+ *     @OA\Property(property="patronymic", type="string", nullable=true),
+ *     @OA\Property(property="post", type="string", nullable=true),
+ *     @OA\Property(property="email", type="string", nullable=true),
+ *     @OA\Property(property="avatar", type="string", nullable=true)
+ * )
+ */
+class CompanySchema {}

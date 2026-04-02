@@ -243,6 +243,7 @@ code {
 }
 /* modules group */
 #operations-tag-users > a,
+#operations-tag-companies > a,
 #operations-tag-stream > a {
     color: lightblue !important;
 }
