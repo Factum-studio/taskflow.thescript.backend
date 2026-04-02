@@ -51,7 +51,7 @@ class InviteUserHandler
             throw new RuntimeException("Project with ID {$command->projectId} not found");
         }
 
-        if (!$this->projectAccess->canInviteUser($command->invitedBy, $command->projectId)) {
+        if (!$this->projectAccess->canInviteUser($command->invitedBy, $command->userId, $command->projectId)) {
             throw new RuntimeException('You are not allowed to invite users to this project');
         }
 

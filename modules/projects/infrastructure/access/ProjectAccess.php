@@ -106,7 +106,7 @@ class ProjectAccess implements IProjectAccess
         return $board->getCreatedBy()->getValue() === $userId;
     }
 
-    public function canInviteUser(int $userId, int $projectId): bool
+    public function canAddMember(int $userId, int $targetUserId, int $projectId): bool
     {
         $project = $this->projectRepository->findById(new ProjectId($projectId));
         if (!$project) {
@@ -117,7 +117,48 @@ class ProjectAccess implements IProjectAccess
             return false;
         }
 
-        return $this->isAdmin($userId, $projectId);
+        if ($project->getType()->isCollaborative()) {
+            return false;
+        }
+
+        if ($project->getType()->isCorporate()) {
+            $userCompany    = $this->getUserCompanyId($userId);
+            $targetCompany  = $this->getUserCompanyId($targetUserId);
+            return $userCompany !== null && $userCompany === $targetCompany;
+        }
+
+        return false;
+    }
+
+    public function canInviteUser(int $userId, int $targetUserId, int $projectId): bool
+    {
+        $project = $this->projectRepository->findById(new ProjectId($projectId));
+        if (!$project) {
+            return false;
+        }
+
+        if ($project->getType()->isPersonal()) {
+            return false;
+        }
+
+        if (!$this->isAdmin($userId, $projectId)) {
+            return false;
+        }
+
+        if ($project->getType()->isCorporate()) {
+            $userCompany    = $this->getUserCompanyId($userId);
+            $targetCompany  = $this->getUserCompanyId($targetUserId);
+            return !($userCompany !== null && $userCompany === $targetCompany);
+        }
+
+        return true;
+    }
+
+    // TODO выделить в отдельный сервис или привязывать проекты к компании
+    private function getUserCompanyId(int $userId): ?int
+    {
+        $userAR = \core\infrastructure\persistence\UserAR::findOne(['user_id' => $userId]);
+        return $userAR?->company_id;
     }
 
     public function canRemoveUser(int $userId, int $targetUserId, int $projectId): bool

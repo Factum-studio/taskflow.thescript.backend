@@ -53,8 +53,8 @@ class AddProjectMemberHandler
             throw new RuntimeException("Project with ID {$command->projectId} not found");
         }
 
-        if (!$this->projectAccess->canInviteUser($command->addedBy, $command->projectId)) {
-            throw new RuntimeException('You are not allowed to invite users to this project');
+        if (!$this->projectAccess->canAddMember($command->addedBy, $command->userId, $command->projectId)) {
+            throw new RuntimeException('You are not allowed to add users to this project');
         }
 
         $jwtToken = new JwtToken($command->jwtToken);
