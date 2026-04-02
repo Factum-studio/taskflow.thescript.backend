@@ -89,8 +89,6 @@ jobs:
             --exclude='.github/' \
             --exclude='tests/' \
             --exclude='codeception.yml' \
-            --exclude='README.md' \
-            --exclude='LICENSE.md' \
             --exclude='.gitignore' \
             ./ ${{ secrets.SSH_USER }}@${{ secrets.HOST }}:${{ secrets.SSH_TARGET_PATH }}
 
