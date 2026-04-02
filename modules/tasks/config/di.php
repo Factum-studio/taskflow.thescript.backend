@@ -1,5 +1,8 @@
 <?php
 
+use core\application\port\IEventDispatcher as GlobalEventDispatcher;
+use modules\tasks\domain\event\IEventDispatcher as TaskEventDispatcher;
+use modules\tasks\application\port\ITaskAccess;
 use modules\tasks\domain\event\CommentAddedEvent;
 use modules\tasks\domain\event\CommentUpdatedEvent;
 use modules\tasks\domain\event\IntervalLoggedEvent;
@@ -16,9 +19,10 @@ use modules\tasks\domain\repository\IDailySummaryRepository;
 use modules\tasks\domain\repository\IStickerRepository;
 use modules\tasks\domain\repository\ITaskPriorityRepository;
 use modules\tasks\domain\repository\ITaskRepository;
-use modules\tasks\domain\event\IEventDispatcher;
 use modules\tasks\domain\repository\ITaskStickerRepository;
 use modules\tasks\domain\repository\ITimeIntervalRepository;
+use modules\tasks\infrastructure\access\TaskAccess;
+use modules\tasks\infrastructure\event\DispatchingEventDecorator;
 use modules\tasks\infrastructure\listener\AutoTimerListener;
 use modules\tasks\infrastructure\listener\PlannedIntervalListener;
 use modules\tasks\infrastructure\listener\TimeTrackingListener;
@@ -62,13 +66,18 @@ Yii::$container->set(IDailySummaryRepository::class, function() {
     return new DbDailySummaryRepository(Yii::$app->db);
 });
 
+Yii::$container->set(
+    ITaskAccess::class,
+    TaskAccess::class
+);
+
 Yii::$container->set(TaskLoggerListener::class);
 Yii::$container->set(TaskNotificationListener::class);
 Yii::$container->set(TimeTrackingListener::class);
 Yii::$container->set(AutoTimerListener::class);
 Yii::$container->set(PlannedIntervalListener::class);
 
-Yii::$container->set(IEventDispatcher::class, function (Container $container) {
+Yii::$container->set(ModuleEventDispatcher::class, function (Container $container) {
     /** @var TaskLoggerListener $logger */
     $logger = $container->get(TaskLoggerListener::class);
     /** @var TaskNotificationListener $notifier */
@@ -124,8 +133,31 @@ Yii::$container->set(IEventDispatcher::class, function (Container $container) {
         ],
         IntervalLoggedEvent::class => [
             [$logger, 'handleIntervalLogged'],
-        ]
+        ],
     ];
 
     return new ModuleEventDispatcher($listeners);
+});
+
+$forwardEvents = [
+    TaskCreatedEvent::class,
+    TaskAssignedEvent::class,
+    TaskMovedToColumnEvent::class,
+    TaskUpdatedEvent::class,
+    TaskSoftDeletedEvent::class,
+    TaskRestoredEvent::class,
+    CommentAddedEvent::class,
+    CommentUpdatedEvent::class,
+    StickerAttachedToTaskEvent::class,
+    TimerStartedEvent::class,
+    TimerStoppedEvent::class,
+    IntervalLoggedEvent::class,
+];
+
+Yii::$container->set(TaskEventDispatcher::class, function (Container $container) use ($forwardEvents) {
+    return new DispatchingEventDecorator(
+        $container->get(ModuleEventDispatcher::class),
+        $container->get(GlobalEventDispatcher::class),
+        $forwardEvents
+    );
 });

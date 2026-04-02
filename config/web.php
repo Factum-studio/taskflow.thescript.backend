@@ -4,11 +4,17 @@ use core\security\JwtMiddleware;
 use core\security\YiiIdentity;
 use yii\symfonymailer\Mailer;
 
-$params = require __DIR__ . '/params.php';
-$db = require __DIR__ . '/db.php';
-$modules = require __DIR__ . '/modules.php';
+$params             = require __DIR__ . '/params.php';
+$db                 = require __DIR__ . '/db.php';
+$modules            = require __DIR__ . '/modules.php';
+$redis              = require __DIR__ . '/redis.php';
 $passportHttpClient = require __DIR__ . '/passport_http_client.php';
-$container = __DIR__ . '/container.php';
+$container          = __DIR__ . '/container.php';
+$ignoreConfig       = require __DIR__ . '/ignore_routes.php';
+$diConfigs          = [
+    __DIR__ . '/../modules/projects/config/di.php',
+    __DIR__ . '/../modules/tasks/config/di.php',
+];
 
 $config = [
     'id' => $_ENV['APP_NAME'],
@@ -16,16 +22,19 @@ $config = [
     'controllerNamespace' => 'core\presentation\controller',
     'bootstrap' => ['log'],
     'on beforeRequest' => function () {
+        global $ignoreConfig;
         $request = Yii::$app->request;
+        $currentPath = $request->getPathInfo();
 
-        if (strpos($request->getPathInfo(), 'docs/') === 0) {
-            return;
-        }
+        if (in_array($currentPath, $ignoreConfig['ignoreRoutes']['exact'])) return;
+        foreach ($ignoreConfig['ignoreRoutes']['startsWith'] as $prefix)
+            if (str_starts_with($currentPath, $prefix)) return;
+        foreach ($ignoreConfig['ignoreRoutes']['regex'] as $pattern)
+            if (preg_match($pattern, $currentPath)) return;
 
         $middleware = Yii::$container->get(
             JwtMiddleware::class
         );
-
         $middleware->handle();
     },
     'aliases' => [
@@ -47,8 +56,10 @@ $config = [
             'format' => yii\web\Response::FORMAT_JSON,
             'charset' => 'UTF-8',
         ],
+        'redis'=> $redis,
         'cache' => [
-            'class' => 'yii\caching\FileCache',
+            'class' => 'yii\redis\Cache',
+            'redis' => 'redis',
         ],
         'user' => [
             'identityClass' => YiiIdentity::class,
@@ -61,8 +72,10 @@ $config = [
         'mailer' => [
             'class' => Mailer::class,
             'viewPath' => '@app/mail',
-            // send all mails to a file by default.
-            'useFileTransport' => true,
+            'useFileTransport' => false,
+            'transport' => [
+                'dsn' => $_ENV['MAILER_DSN'],
+            ],
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 1 : 0,
@@ -74,6 +87,21 @@ $config = [
                     'except' => [
                         'yii\web\HttpException:404',
                     ],
+                ],
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['error'],
+                    'categories' => ['projects'],
+                    'logFile' => '@app/runtime/logs/projects-error.log',
+                    'logVars' => [],
+                ],
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['info'],
+                    'categories' => ['tasks'],
+                    'logFile' => '@app/runtime/logs/projects-info.log',
+                    'logVars' => [],
+                    'enabled' => YII_DEBUG,
                 ],
                 [
                     'class' => 'yii\log\FileTarget',
@@ -97,14 +125,30 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => array_merge(
+                require __DIR__ . '/../modules/projects/config/routing.php',
                 require __DIR__ . '/../modules/tasks/config/routing.php',
                 [
+                    // Event route
+                    'GET events' => 'stream/events',
+                    'GET events/token' => 'stream/sse-token',
+
                     // User routes
                     'GET user/me' => 'user/me',
+                    'GET user/login' => 'user/login',
+
+                    // Company routes
+                    'GET company' => 'company/index',
+                    'GET company/<id:\d+>' => 'company/view',
+                    'GET company/<id:\d+>/user' => 'company/users',
+                    'PUT company/<id:\d+>' => 'company/update',
 
                     // Swagger documentation
                     'docs/swagger/json' => 'swagger/json',
                     'docs/swagger' => 'swagger/ui',
+
+                    // Project documentation
+                    'docs/<page:[\w\/\-]+>' => 'docs/ui',
+                    'docs' => 'docs/ui',
 
                     // Дефолтный маршрут для OPTIONS (CORS)
                     'OPTIONS <any:.*>' => 'site/options',
@@ -116,6 +160,12 @@ $config = [
 ];
 
 require $container;
+
+foreach ($diConfigs as $diConfig) {
+    if (file_exists($diConfig)) {
+        require $diConfig;
+    }
+}
 
 if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment

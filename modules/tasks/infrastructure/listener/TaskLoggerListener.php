@@ -40,7 +40,7 @@ class TaskLoggerListener
 
     public function handleTaskSoftDeleted(TaskSoftDeletedEvent $event): void
     {
-        Yii::info("Task {$event->getAggregateId()} deleted by {$event->getDeletedBy()}", 'tasks');
+        Yii::info("Task {$event->getAggregateId()} soft deleted by {$event->getDeletedBy()}", 'tasks');
     }
 
     public function handleTaskUpdated(TaskUpdatedEvent $event): void

@@ -79,4 +79,56 @@ final class HttpPassportGateway implements IPassportGateway
 
         return $response->data;
     }
+
+    public function getAllUsers(JwtToken $token, ?QueryParams $params = null): array
+    {
+        $url = $this->urlBuilder->build(
+            $this->endpointConfig->get('user'),
+            $params
+        );
+        $data = $this->executeRequest($url, $token);
+
+        return [
+            'items' => $data['items'] ?? [],
+            'total' => $data['_meta']['totalCount'] ?? 0,
+        ];
+    }
+
+    public function findUserByEmail(string $email, JwtToken $token): ?array
+    {
+        $limit = 100;
+        $page = 1;
+        $params = QueryParams::create(
+            expand: ['contacts'],
+            limit: $limit,
+            page: $page
+        );
+
+        do {
+            try {
+                $data = $this->getAllUsers($token, $params);
+            } catch (\Throwable $e) {
+                \Yii::error("Failed to fetch users from Passport: " . $e->getMessage(), 'passport');
+                return null;
+            }
+
+            $users = $data['items'] ?? [];
+            $total = $data['total'] ?? 0;
+
+            foreach ($users as $user) {
+                if (isset($user['contacts']) && is_array($user['contacts'])) {
+                    foreach ($user['contacts'] as $contact) {
+                        if (($contact['name'] ?? '') === 'email' && ($contact['data'] ?? '') === $email) {
+                            return $user;
+                        }
+                    }
+                }
+            }
+
+            $page++;
+            $params = $params->withPage($page);
+        } while (($page - 1) * $limit < $total);
+
+        return null;
+    }
 }

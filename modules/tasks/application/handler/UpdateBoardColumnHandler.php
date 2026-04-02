@@ -5,6 +5,7 @@ namespace modules\tasks\application\handler;
 use modules\tasks\application\command\UpdateBoardColumnCommand;
 use modules\tasks\application\dto\BoardColumnDto;
 use modules\tasks\application\assembler\BoardColumnDtoAssembler;
+use modules\tasks\application\port\ITaskAccess;
 use modules\tasks\domain\repository\IBoardColumnRepository;
 use modules\tasks\domain\valueObject\ColumnId;
 use RuntimeException;
@@ -13,13 +14,16 @@ class UpdateBoardColumnHandler
 {
     private IBoardColumnRepository $columnRepository;
     private BoardColumnDtoAssembler $dtoAssembler;
+    private ITaskAccess $taskAccess;
 
     public function __construct(
         IBoardColumnRepository $columnRepository,
-        BoardColumnDtoAssembler $dtoAssembler
+        BoardColumnDtoAssembler $dtoAssembler,
+        ITaskAccess $taskAccess
     ) {
         $this->columnRepository = $columnRepository;
-        $this->dtoAssembler = $dtoAssembler;
+        $this->dtoAssembler     = $dtoAssembler;
+        $this->taskAccess       = $taskAccess;
     }
 
     public function handle(UpdateBoardColumnCommand $command): BoardColumnDto
@@ -28,6 +32,10 @@ class UpdateBoardColumnHandler
         $column = $this->columnRepository->findById($columnId);
         if (!$column) {
             throw new RuntimeException("Column with ID {$command->id} not found");
+        }
+
+        if (!$this->taskAccess->canUpdateColumn($command->updatedBy, $command->id)) {
+            throw new RuntimeException('You are not allowed to update this column');
         }
 
         if ($command->name !== null) {

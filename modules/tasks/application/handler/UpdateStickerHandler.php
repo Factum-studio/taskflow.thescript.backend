@@ -3,6 +3,7 @@
 namespace modules\tasks\application\handler;
 
 use InvalidArgumentException;
+use modules\projects\application\port\IProjectAccess;
 use modules\tasks\application\assembler\StickerDtoAssembler;
 use modules\tasks\application\command\UpdateStickerCommand;
 use modules\tasks\application\dto\StickerDto;
@@ -15,13 +16,16 @@ class UpdateStickerHandler
 {
     private IStickerRepository $stickerRepository;
     private StickerDtoAssembler $stickerDtoAssembler;
+    private IProjectAccess $projectAccess;
 
     public function __construct(
         IStickerRepository $stickerRepository,
-        StickerDtoAssembler $stickerDtoAssembler
+        StickerDtoAssembler $stickerDtoAssembler,
+        IProjectAccess $projectAccess
     ) {
         $this->stickerRepository    = $stickerRepository;
         $this->stickerDtoAssembler  = $stickerDtoAssembler;
+        $this->projectAccess        = $projectAccess;
     }
 
     public function handle(UpdateStickerCommand $command): StickerDto
@@ -32,9 +36,14 @@ class UpdateStickerHandler
             throw new RuntimeException("Sticker with ID {$command->id} not found");
         }
 
-        // только создатель
         if ($sticker->getCreatedBy()->getValue() !== $command->updatedBy) {
             throw new InvalidArgumentException('You are not allowed to update this sticker');
+        }
+
+        if ($sticker->getProjectId() !== null) {
+            if (!$this->projectAccess->canViewProject($command->updatedBy, $sticker->getProjectId())) {
+                throw new RuntimeException('You are not allowed to update this sticker');
+            }
         }
 
         if ($command->name !== null) {

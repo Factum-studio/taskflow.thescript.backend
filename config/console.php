@@ -1,8 +1,22 @@
 <?php
 
-$params = require __DIR__ . '/params.php';
-$db = require __DIR__ . '/db.php';
-$migrationNamespaces = require __DIR__ . '/migration_namespaces.php';
+$params                 = require __DIR__ . '/params.php';
+$db                     = require __DIR__ . '/db.php';
+$redis                  = require __DIR__ . '/redis.php';
+$migrationNamespaces    = require __DIR__ . '/migration_namespaces.php';
+$passportHttpClient     = require __DIR__ . '/passport_http_client.php';
+$diConfigs          = [
+    __DIR__ . '/../modules/projects/config/di.php',
+    __DIR__ . '/../modules/tasks/config/di.php',
+];
+
+require __DIR__ . '/container.php';
+
+foreach ($diConfigs as $diConfig) {
+    if (file_exists($diConfig)) {
+        require $diConfig;
+    }
+}
 
 $config = [
     'id' => $_ENV['APP_NAME'],
@@ -10,15 +24,22 @@ $config = [
     'bootstrap' => ['log'],
     'controllerNamespace' => 'app\commands',
     'aliases' => [
-        '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
-        '@tests' => '@app/tests',
-        '@core' => dirname(__DIR__) . '/core',
-        '@modules' => dirname(__DIR__) . '/modules',
+        '@bower'    => '@vendor/bower-asset',
+        '@npm'      => '@vendor/npm-asset',
+        '@tests'    => '@app/tests',
+        '@core'     => dirname(__DIR__) . '/core',
+        '@modules'  => dirname(__DIR__) . '/modules',
     ],
     'components' => [
+        'passportHttpClient' => $passportHttpClient,
+        'redis'=> $redis,
         'cache' => [
-            'class' => 'yii\caching\FileCache',
+            'class' => 'yii\redis\Cache',
+            'redis' => 'redis',
+        ],
+        'mailer' => [
+            'class' => \yii\symfonymailer\Mailer::class,
+            'useFileTransport' => true,
         ],
         'log' => [
             'targets' => [
@@ -32,6 +53,8 @@ $config = [
     ],
     'params' => $params,
     'controllerMap' => [
+        'sync-users' => 'app\commands\SyncUsersCommand',
+        'company-clean' => 'app\commands\CompanyCleanController',
 //        'fixture' => [ // Fixture generation command line.
 //            'class' => 'yii\faker\FixtureController',
 //        ],

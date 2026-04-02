@@ -35,4 +35,11 @@ return [
     'POST time-interval' => 'tasks/time-interval/create',
     'GET time-interval/daily-summary' => 'tasks/time-interval/daily-summary',
     'GET task/<taskId:\d+>/time-summary' => 'tasks/time-interval/task-summary',
+
+    'GET board/<boardId:\d+>/column' => 'tasks/board-column/index',
+    'POST board/<boardId:\d+>/column' => 'tasks/board-column/create',
+    'GET board/column/<id:\d+>' => 'tasks/board-column/view',
+    'PUT board/column/<id:\d+>' => 'tasks/board-column/update',
+    'DELETE board/column/<id:\d+>' => 'tasks/board-column/delete',
+    'POST board/<boardId:\d+>/column/reorder' => 'tasks/board-column/reorder',
 ];
