@@ -37,6 +37,10 @@ $config = [
             'class' => 'yii\redis\Cache',
             'redis' => 'redis',
         ],
+        'mailer' => [
+            'class' => \yii\symfonymailer\Mailer::class,
+            'useFileTransport' => true,
+        ],
         'log' => [
             'targets' => [
                 [
@@ -50,6 +54,7 @@ $config = [
     'params' => $params,
     'controllerMap' => [
         'sync-users' => 'app\commands\SyncUsersCommand',
+        'company-clean' => 'app\commands\CompanyCleanController',
 //        'fixture' => [ // Fixture generation command line.
 //            'class' => 'yii\faker\FixtureController',
 //        ],
