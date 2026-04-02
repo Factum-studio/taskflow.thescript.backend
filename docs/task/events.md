@@ -1,6 +1,6 @@
 # События модуля Tasks
 
-Модуль генерирует множество событий, часть из которых пробрасывается в глобальную шину.
+Модуль генерирует множество событий, все из них пробрасываются в глобальную шину.
 
 ## Локальные события (все)
 
@@ -21,21 +21,27 @@
 
 ## Форвардинг в глобальную шину
 
-В `modules/tasks/config/di.php`:
+В `modules/tasks/config/di.php` определен массив `$forwardEvents`, содержащий следующие события:
 
-```
-$forwardEvents = [
-    TaskCreatedEvent::class,
-    TaskAssignedEvent::class,
-];
-```
+- `TaskCreatedEvent`
+- `TaskAssignedEvent`
+- `TaskMovedToColumnEvent`
+- `TaskUpdatedEvent`
+- `TaskSoftDeletedEvent`
+- `TaskRestoredEvent`
+- `CommentAddedEvent`
+- `CommentUpdatedEvent`
+- `StickerAttachedToTaskEvent`
+- `TimerStartedEvent`
+- `TimerStoppedEvent`
+- `IntervalLoggedEvent`
 
 Эти события доступны для подписки из других модулей (например, для аналитики или уведомлений).
 
 ## Обработчики (внутри модуля)
 
-- `TaskLoggerListener` – логирует все события в Yii::info/error.
-- `TaskNotificationListener` – заглушка для уведомлений (TODO).
-- `TimeTrackingListener` – обновляет ежедневные сводки (`DailySummary`) при остановке таймера.
+- `TaskLoggerListener` – логирует все события в файлы `runtime/logs/tasks-info.log` и `tasks-error.log`.
+- `TaskNotificationListener` – заглушка для отправки уведомлений (TODO).
+- `TimeTrackingListener` – обновляет ежедневные сводки при остановке таймера.
 - `AutoTimerListener` – автоматически запускает/останавливает таймер при перемещении задачи или смене исполнителя.
 - `PlannedIntervalListener` – синхронизирует плановые интервалы с таблицей `task_time_intervals`.

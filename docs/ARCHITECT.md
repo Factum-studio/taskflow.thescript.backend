@@ -98,6 +98,45 @@ modules/
 ```
 ---
 
+## Событийная шина (Event Bus)
+
+В проекте используется два уровня событий:
+
+1. **Локальный диспетчер** (`ModuleEventDispatcher`) – обрабатывает события внутри модуля.
+2. **Глобальный диспетчер** (`GlobalEventDispatcher`) – позволяет подписываться на события из любого модуля.
+
+Модули могут форвардить свои доменные события в глобальную шину через `DispatchingEventDecorator`.
+Это позволяет реализовать кросс-модульные сценарии (например, аналитика, уведомления, аудит) без прямых зависимостей.
+
+### Форвардимые события
+
+#### Модуль Projects
+- `ProjectCreatedEvent`
+- `ProjectMemberAddedEvent`
+- `ProjectMemberRemovedEvent`
+- `BoardCreatedEvent`
+- `InvitationCreatedEvent`
+- `InvitationAcceptedEvent`
+- `InvitationCancelledEvent`
+
+#### Модуль Tasks
+- `TaskCreatedEvent`
+- `TaskAssignedEvent`
+- `TaskMovedToColumnEvent`
+- `TaskUpdatedEvent`
+- `TaskSoftDeletedEvent`
+- `TaskRestoredEvent`
+- `CommentAddedEvent`
+- `CommentUpdatedEvent`
+- `StickerAttachedToTaskEvent`
+- `TimerStartedEvent`
+- `TimerStoppedEvent`
+- `IntervalLoggedEvent`
+
+Все эти события доступны для подписки из других модулей через `GlobalEventDispatcher`.
+
+---
+
 ## Структура config (Конфигурация)
 
 Централизованная конфигурация приложения Yii2.

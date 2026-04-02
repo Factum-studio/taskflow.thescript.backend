@@ -136,6 +136,12 @@ $config = [
                     'GET user/me' => 'user/me',
                     'GET user/login' => 'user/login',
 
+                    // Company routes
+                    'GET company' => 'company/index',
+                    'GET company/<id:\d+>' => 'company/view',
+                    'GET company/<id:\d+>/user' => 'company/users',
+                    'PUT company/<id:\d+>' => 'company/update',
+
                     // Swagger documentation
                     'docs/swagger/json' => 'swagger/json',
                     'docs/swagger' => 'swagger/ui',

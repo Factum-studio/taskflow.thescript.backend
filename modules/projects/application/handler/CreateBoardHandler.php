@@ -7,6 +7,8 @@ use modules\projects\application\command\CreateBoardCommand;
 use modules\projects\application\dto\BoardDto;
 use modules\projects\application\port\IProjectAccess;
 use modules\projects\domain\entity\Board;
+use modules\projects\domain\event\BoardCreatedEvent;
+use modules\projects\domain\event\IEventDispatcher;
 use modules\projects\domain\repository\IBoardRepository;
 use modules\projects\domain\repository\IProjectRepository;
 use modules\projects\domain\valueObject\BoardId;
@@ -22,17 +24,20 @@ class CreateBoardHandler
     private IProjectRepository $projectRepository;
     private BoardDtoAssembler $boardDtoAssembler;
     private IProjectAccess $projectAccess;
+    private IEventDispatcher $eventDispatcher;
 
     public function __construct(
         IBoardRepository $boardRepository,
         IProjectRepository $projectRepository,
         BoardDtoAssembler $boardDtoAssembler,
-        IProjectAccess $projectAccess
+        IProjectAccess $projectAccess,
+        IEventDispatcher $eventDispatcher
     ) {
         $this->boardRepository      = $boardRepository;
         $this->projectRepository    = $projectRepository;
         $this->boardDtoAssembler    = $boardDtoAssembler;
         $this->projectAccess        = $projectAccess;
+        $this->eventDispatcher      = $eventDispatcher;
     }
 
     public function handle(CreateBoardCommand $command): BoardDto
@@ -60,6 +65,8 @@ class CreateBoardHandler
         );
 
         $savedBoard = $this->boardRepository->save($board);
+
+        $this->eventDispatcher->dispatch(new BoardCreatedEvent($savedBoard));
 
         return $this->boardDtoAssembler->toDto($savedBoard);
     }

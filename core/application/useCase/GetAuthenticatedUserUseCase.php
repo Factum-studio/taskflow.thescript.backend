@@ -37,7 +37,8 @@ final class GetAuthenticatedUserUseCase
 
         if (!$this->localUserRepository->exists($userIdValue)) {
             $email = $user->getContactByType('email')?->getValue() ?? '';
-            $this->localUserRepository->create($userIdValue, $email);
+            $post = $user->getPost()?->getName() ?? '';
+            $this->localUserRepository->create($userIdValue, $email, $post);
             $this->eventDispatcher->dispatch(new UserFirstLoginEvent($userIdValue));
         }
 

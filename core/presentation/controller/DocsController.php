@@ -14,6 +14,9 @@ class DocsController extends Controller
 {
     private $currentPage;
 
+    /**
+     * @throws NotFoundHttpException
+     */
     public function actionUi($page = 'index')
     {
         Yii::$app->response->format = Response::FORMAT_HTML;

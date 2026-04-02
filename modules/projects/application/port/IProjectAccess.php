@@ -75,13 +75,25 @@ interface IProjectAccess
     public function canManageBoard(int $userId, int $boardId): bool;
 
     /**
-     * Может ли пользователь приглашать участников в проект.
+     * Может ли пользователь напрямую добавить участника в проект
+     * (без приглашения, только для corporate и только из своей компании)
      *
      * @param int $userId
+     * @param int $targetUserId
      * @param int $projectId
      * @return bool
      */
-    public function canInviteUser(int $userId, int $projectId): bool;
+    public function canAddMember(int $userId, int $targetUserId, int $projectId): bool;
+
+    /**
+     * Может ли пользователь приглашать участников в проект.
+     *
+     * @param int $userId
+     * @param int $targetUserId
+     * @param int $projectId
+     * @return bool
+     */
+    public function canInviteUser(int $userId, int $targetUserId, int $projectId): bool;
 
     /**
      * Может ли пользователь удалять другого участника из проекта.

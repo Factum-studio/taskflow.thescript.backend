@@ -20,4 +20,9 @@ return [
     'POST project/<projectId:\d+>/member' => 'projects/project-member/create',
     'PUT project/<projectId:\d+>/member/<userId:\d+>/role' => 'projects/project-member/update-role',
     'DELETE project/<projectId:\d+>/member/<userId:\d+>' => 'projects/project-member/delete',
+
+    // Приглашения
+    'POST project/<id:\d+>/invite' => 'projects/invitation/invite',
+    'POST invitation/accept' => 'projects/invitation/accept',
+    'DELETE project/<id:\d+>/invitation' => 'projects/invitation/cancel',
 ];

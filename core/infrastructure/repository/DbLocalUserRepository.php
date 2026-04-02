@@ -18,11 +18,13 @@ class DbLocalUserRepository implements ILocalUserRepository
     /**
      * @throws Exception
      */
-    public function create(int $userId, string $email): void
+    public function create(int $userId, string $email, ?string $post = null, ?int $companyId = null): void
     {
-        $ar = new UserAR();
-        $ar->user_id = $userId;
-        $ar->email = $email ?: null;
+        $ar             = new UserAR();
+        $ar->user_id    = $userId;
+        $ar->email      = $email ?: null;
+        $ar->company_id = $companyId;
+        $ar->post       = $post;
         if (!$ar->save()) {
             throw new RuntimeException('Failed to create local user record');
         }
@@ -44,5 +46,17 @@ class DbLocalUserRepository implements ILocalUserRepository
     {
         $ar = UserAR::find()->where(['user_id' => $userId])->one();
         return $ar?->email;
+    }
+
+    public function getPost(int $userId): ?string
+    {
+        $ar = UserAR::find()->where(['user_id' => $userId])->one();
+        return $ar?->post;
+    }
+
+    public function getCompanyId(int $userId): ?int
+    {
+        $ar = UserAR::find()->where(['user_id' => $userId])->one();
+        return $ar?->company_id;
     }
 }
