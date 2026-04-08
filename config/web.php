@@ -128,6 +128,9 @@ $config = [
                 require __DIR__ . '/../modules/projects/config/routing.php',
                 require __DIR__ . '/../modules/tasks/config/routing.php',
                 [
+                    // Authors
+                    'GET authors' => 'author/index',
+
                     // Event route
                     'GET events' => 'stream/events',
                     'GET events/token' => 'stream/sse-token',
