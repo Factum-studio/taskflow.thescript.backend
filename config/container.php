@@ -5,6 +5,7 @@ use core\application\notification\channel\EmailChannel;
 use core\application\notification\channel\PushChannel;
 use core\application\notification\channel\TelegramChannel;
 use core\application\notification\NotificationHub;
+use core\application\port\IAuthorRepository;
 use core\application\port\ICompanyRepository;
 use core\application\port\IEventDispatcher;
 use core\application\port\ILocalUserRepository;
@@ -19,6 +20,7 @@ use core\infrastructure\http\ApiUrlBuilder;
 use core\infrastructure\http\config\ApiEndpointConfig;
 use core\infrastructure\passport\HttpPassportGateway;
 use core\infrastructure\jwt\JwtValidator;
+use core\infrastructure\repository\DbAuthorRepository;
 use core\infrastructure\repository\DbCompanyRepository;
 use core\infrastructure\repository\DbLocalUserRepository;
 use core\infrastructure\repository\PassportUserRepository;
@@ -79,6 +81,10 @@ $container->set(ILocalUserRepository::class, function() {
 
 $container->setSingleton(ICompanyRepository::class, function() {
     return new DbCompanyRepository(Yii::$app->db);
+});
+
+$container->setSingleton(IAuthorRepository::class, function() {
+    return new DbAuthorRepository(Yii::$app->db);
 });
 
 $container->setSingleton(GetAuthenticatedUserUseCase::class, function() use ($container) {

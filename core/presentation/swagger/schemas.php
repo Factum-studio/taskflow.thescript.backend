@@ -523,3 +523,19 @@ class SseTokenSchema {}
  * )
  */
 class CompanySchema {}
+
+/**
+ * @OA\Schema(
+ *     schema="Author",
+ *     required={"id", "userId", "uiName", "avatar", "phrase", "badges"},
+ *     @OA\Property(property="id", type="integer"),
+ *     @OA\Property(property="userId", type="integer"),
+ *     @OA\Property(property="uiName", type="string", description="Имя для интерфейса"),
+ *     @OA\Property(property="avatar", type="string", nullable=true),
+ *     @OA\Property(property="phrase", type="string", minLength=10, maxLength=50),
+ *     @OA\Property(property="badges", type="array", @OA\Items(type="string")),
+ *     @OA\Property(property="createdAt", type="string", format="date-time"),
+ *     @OA\Property(property="updatedAt", type="string", format="date-time")
+ * )
+ */
+class AuthorSchema {}
