@@ -18,6 +18,7 @@ use yii\db\ActiveRecord;
  * @property int $board_id
  * @property int|null $parent_id
  * @property int $overdue
+ * @property int $complete
  * @property string $created_at
  * @property string $updated_at
  * @property string|null $deleted_at
