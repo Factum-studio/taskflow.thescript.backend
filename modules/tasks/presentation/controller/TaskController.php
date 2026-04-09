@@ -108,6 +108,13 @@ class TaskController extends BaseController
                 schema: new OA\Schema(type: 'integer')
             ),
             new OA\Parameter(
+                name: 'onlyComplete',
+                description: 'Только завершённые',
+                in: 'query',
+                required: false,
+                schema: new OA\Schema(type: 'boolean')
+            ),
+            new OA\Parameter(
                 name: 'onlyOverdue',
                 description: 'Только просроченные задачи',
                 in: 'query',
@@ -182,6 +189,11 @@ class TaskController extends BaseController
         $parentId = $request->get('parentId');
         if ($parentId !== null && ctype_digit($parentId)) {
             $filters['parentId'] = (int)$parentId;
+        }
+
+        $onlyComplete = $request->get('onlyComplete');
+        if ($onlyComplete !== null) {
+            $filters['onlyComplete'] = $onlyComplete === '1' || $onlyComplete === 'true';
         }
 
         $onlyOverdue = $request->get('onlyOverdue');

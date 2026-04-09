@@ -173,6 +173,7 @@ class UserSchema {}
  *     @OA\Property(property="boardId", type="integer", example=5),
  *     @OA\Property(property="parentId", type="integer", nullable=true, example=10),
  *     @OA\Property(property="overdue", type="boolean", example=false),
+ *     @OA\Property(property="complete", type="boolean", example=false),
  *     @OA\Property(property="createdAt", type="string", format="date-time", example="2026-02-25 10:00:00"),
  *     @OA\Property(property="updatedAt", type="string", format="date-time", example="2026-02-25 11:30:00"),
  *     @OA\Property(property="deletedAt", type="string", format="date-time", nullable=true, example=null)
