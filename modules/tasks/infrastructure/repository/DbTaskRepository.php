@@ -73,6 +73,9 @@ class DbTaskRepository implements ITaskRepository
         if (isset($criteria['parent_id'])) {
             $query->andWhere(['parent_id' => $criteria['parent_id']]);
         }
+        if (isset($criteria['complete'])) {
+            $query->andWhere(['complete' => $criteria['complete']]);
+        }
         if (isset($criteria['overdue'])) {
             $query->andWhere(['overdue' => $criteria['overdue']]);
         }
@@ -124,6 +127,7 @@ class DbTaskRepository implements ITaskRepository
         $ar->board_id       = $task->getBoardId();
         $ar->parent_id      = $task->getParentId()?->getValue();
         $ar->overdue        = $task->isOverdue() ? 1 : 0;
+        $ar->complete       = $task->isComplete() ? 1 : 0;
         $ar->created_at     = $task->getCreatedAt()->format('Y-m-d H:i:s');
         $ar->updated_at     = $task->getUpdatedAt()->format('Y-m-d H:i:s');
         $ar->deleted_at     = $task->getDeletedAt()?->format('Y-m-d H:i:s');
@@ -148,6 +152,7 @@ class DbTaskRepository implements ITaskRepository
             $ar->assigned_to ? new UserId((int)$ar->assigned_to) : null,
             $ar->parent_id ? new TaskId((int)$ar->parent_id) : null,
             (bool)$ar->overdue,
+            (bool)$ar->complete,
             new DateTimeImmutable($ar->created_at),
             new DateTimeImmutable($ar->updated_at),
             $ar->deleted_at ? new DateTimeImmutable($ar->deleted_at) : null

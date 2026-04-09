@@ -10,6 +10,7 @@ class ListTasksQuery
     public ?int $boardId = null;
     public ?int $parentId = null;
     public ?bool $onlyOverdue = null;
+    public ?bool $onlyComplete = null;
     public ?bool $includeDeleted = null;
     public int $userId;
 
@@ -44,6 +45,9 @@ class ListTasksQuery
         }
         if ($this->parentId !== null) {
             $criteria['parent_id'] = $this->parentId;
+        }
+        if ($this->onlyComplete !== null) {
+            $criteria['complete'] = $this->onlyComplete ? 1 : 0;
         }
         if ($this->onlyOverdue !== null) {
             $criteria['overdue'] = $this->onlyOverdue ? 1 : 0;

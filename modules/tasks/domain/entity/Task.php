@@ -24,6 +24,7 @@ class Task
     private int $boardId;
     private ?TaskId $parentId;
     private bool $overdue;
+    private bool $complete;
     private DateTimeImmutable $createdAt;
     private DateTimeImmutable $updatedAt;
     private ?DateTimeImmutable $deletedAt;
@@ -42,6 +43,7 @@ class Task
         ?UserId $assignedTo = null,
         ?TaskId $parentId = null,
         bool $overdue = false,
+        bool $complete = false,
         ?DateTimeImmutable $createdAt = null,
         ?DateTimeImmutable $updatedAt = null,
         ?DateTimeImmutable $deletedAt = null
@@ -59,6 +61,7 @@ class Task
         $this->assignedTo   = $assignedTo;
         $this->parentId     = $parentId;
         $this->overdue      = $overdue;
+        $this->complete     = $complete;
         $this->createdAt    = $createdAt ?? new DateTimeImmutable();
         $this->updatedAt    = $updatedAt ?? new DateTimeImmutable();
         $this->deletedAt    = $deletedAt;
@@ -77,6 +80,7 @@ class Task
     public function getBoardId(): int { return $this->boardId; }
     public function getParentId(): ?TaskId { return $this->parentId; }
     public function isOverdue(): bool { return $this->overdue; }
+    public function isComplete(): bool { return $this->complete; }
     public function getCreatedAt(): DateTimeImmutable { return $this->createdAt; }
     public function getUpdatedAt(): DateTimeImmutable { return $this->updatedAt; }
     public function getDeletedAt(): ?DateTimeImmutable { return $this->deletedAt; }
@@ -145,6 +149,12 @@ class Task
     public function markOverdue(bool $overdue): void
     {
         $this->overdue = $overdue;
+        $this->touch();
+    }
+
+    public function markComplete(bool $complete): void
+    {
+        $this->complete = $complete;
         $this->touch();
     }
 
