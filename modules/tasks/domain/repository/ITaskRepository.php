@@ -17,4 +17,5 @@ interface ITaskRepository
     public function findAll(array $criteria = []): array;
     public function remove(Task $task): void;
     public function countByColumn(ColumnId $columnId): int;
+    public function countAll(): int;
 }

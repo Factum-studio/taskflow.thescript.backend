@@ -1,6 +1,8 @@
 <?php
 
 use core\application\port\IEventDispatcher as GlobalEventDispatcher;
+use core\application\port\ITaskStatisticsService;
+use modules\tasks\application\service\TaskStatisticsService;
 use modules\tasks\domain\event\IEventDispatcher as TaskEventDispatcher;
 use modules\tasks\application\port\ITaskAccess;
 use modules\tasks\domain\event\CommentAddedEvent;
@@ -161,3 +163,5 @@ Yii::$container->set(TaskEventDispatcher::class, function (Container $container)
         $forwardEvents
     );
 });
+
+Yii::$container->set(ITaskStatisticsService::class, TaskStatisticsService::class);

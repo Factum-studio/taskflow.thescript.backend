@@ -158,4 +158,9 @@ class DbTaskRepository implements ITaskRepository
             $ar->deleted_at ? new DateTimeImmutable($ar->deleted_at) : null
         );
     }
+
+    public function countAll(): int
+    {
+        return TaskAR::find()->count();
+    }
 }
