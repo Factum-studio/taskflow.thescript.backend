@@ -244,7 +244,9 @@ code {
 /* modules group */
 #operations-tag-users > a,
 #operations-tag-companies > a,
-#operations-tag-stream > a {
+#operations-tag-stream > a,
+#operations-tag-feedback > a,
+#operations-tag-authors > a {
     color: lightblue !important;
 }
 #operations-tag-time-intervals > a,

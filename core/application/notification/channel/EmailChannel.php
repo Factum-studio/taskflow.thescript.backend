@@ -3,17 +3,16 @@
 namespace core\application\notification\channel;
 
 use core\application\notification\INotification;
+use Yii;
 use yii\mail\MailerInterface;
 
 class EmailChannel
 {
-    private MailerInterface $mailer;
     private string $fromEmail;
     private string $fromName;
 
-    public function __construct(MailerInterface $mailer, string $fromEmail, string $fromName)
+    public function __construct(string $fromEmail, string $fromName)
     {
-        $this->mailer = $mailer;
         $this->fromEmail = $fromEmail;
         $this->fromName = $fromName;
     }
@@ -24,7 +23,10 @@ class EmailChannel
             return false;
         }
 
-        return $this->mailer
+        /** @var MailerInterface $mailer */
+        $mailer = Yii::$app->mailer;
+
+        return $mailer
             ->compose()
             ->setFrom([$this->fromEmail => $this->fromName])
             ->setTo($notification->getRecipient())

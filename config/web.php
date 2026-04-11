@@ -74,7 +74,13 @@ $config = [
             'viewPath' => '@app/mail',
             'useFileTransport' => false,
             'transport' => [
-                'dsn' => $_ENV['MAILER_DSN'],
+//                'dsn'           => $_ENV['MAILER_DSN'],
+                'scheme'        => $_ENV['MAILER_SCHEME'],
+                'host'          => $_ENV['MAILER_HOST'],
+                'port'          => $_ENV['MAILER_PORT'],
+                'username'      => $_ENV['MAILER_USERNAME'],
+                'password'      => $_ENV['MAILER_PASSWORD'],
+                'encryption'    => $_ENV['MAILER_ENCRYPTION'],
             ],
         ],
         'log' => [
@@ -152,6 +158,12 @@ $config = [
                     // Project documentation
                     'docs/<page:[\w\/\-]+>' => 'docs/ui',
                     'docs' => 'docs/ui',
+
+                    // Rating and ideas
+                    'POST feedback/rating' => 'feedback/submit-rating',
+                    'POST feedback/idea' => 'feedback/submit-idea',
+                    'GET feedback/idea' => 'feedback/ideas',
+                    'GET feedback/stats' => 'feedback/stats',
 
                     // Дефолтный маршрут для OPTIONS (CORS)
                     'OPTIONS <any:.*>' => 'site/options',

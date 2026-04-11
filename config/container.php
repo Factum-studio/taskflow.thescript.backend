@@ -8,6 +8,8 @@ use core\application\notification\NotificationHub;
 use core\application\port\IAuthorRepository;
 use core\application\port\ICompanyRepository;
 use core\application\port\IEventDispatcher;
+use core\application\port\IFeedbackIdeaRepository;
+use core\application\port\IFeedbackRatingRepository;
 use core\application\port\ILocalUserRepository;
 use core\application\port\IPassportGateway;
 use core\application\port\IJwtValidator;
@@ -15,13 +17,18 @@ use core\application\port\IUrlBuilder;
 use core\application\port\IUserRepository;
 use core\application\useCase\AuthenticateByJwtUseCase;
 use core\application\useCase\GetAuthenticatedUserUseCase;
+use core\domain\event\IdeaSubmittedEvent;
+use core\domain\event\RatingSubmittedEvent;
 use core\infrastructure\event\GlobalEventDispatcher;
 use core\infrastructure\http\ApiUrlBuilder;
 use core\infrastructure\http\config\ApiEndpointConfig;
+use core\infrastructure\listener\SendNonMaxRatingEmailListener;
 use core\infrastructure\passport\HttpPassportGateway;
 use core\infrastructure\jwt\JwtValidator;
 use core\infrastructure\repository\DbAuthorRepository;
 use core\infrastructure\repository\DbCompanyRepository;
+use core\infrastructure\repository\DbFeedbackIdeaRepository;
+use core\infrastructure\repository\DbFeedbackRatingRepository;
 use core\infrastructure\repository\DbLocalUserRepository;
 use core\infrastructure\repository\PassportUserRepository;
 use core\presentation\controller\UserController;
@@ -87,6 +94,14 @@ $container->setSingleton(IAuthorRepository::class, function() {
     return new DbAuthorRepository(Yii::$app->db);
 });
 
+$container->set(IFeedbackRatingRepository::class, function() {
+    return new DbFeedbackRatingRepository();
+});
+
+$container->set(IFeedbackIdeaRepository::class, function() {
+    return new DbFeedbackIdeaRepository();
+});
+
 $container->setSingleton(GetAuthenticatedUserUseCase::class, function() use ($container) {
     return new GetAuthenticatedUserUseCase(
         $container->get(AuthenticateByJwtUseCase::class),
@@ -119,7 +134,6 @@ $container->set(PushChannel::class, function ($container) {
 
 $container->set(EmailChannel::class, function () {
     return new EmailChannel(
-        Yii::$app->mailer,
         $_ENV['SENDER_EMAIL'],
         $_ENV['SENDER_NAME']
     );
@@ -136,5 +150,14 @@ $container->set(NotificationHub::class, function ($container) {
 });
 
 $container->set(IEventDispatcher::class, function ($container) {
-    return new GlobalEventDispatcher($container, []);
+    /** @var SendNonMaxRatingEmailListener $listener */
+    $ratingNonMaxEmailer = $container->get(SendNonMaxRatingEmailListener::class);
+
+    $listeners = [
+        RatingSubmittedEvent::class => [
+            [$ratingNonMaxEmailer, 'handle'],
+        ],
+    ];
+
+    return new GlobalEventDispatcher($container, $listeners);
 });

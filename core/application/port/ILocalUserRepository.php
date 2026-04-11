@@ -10,4 +10,5 @@ interface ILocalUserRepository
     public function getPost(int $userId): ?string;
     public function getCompanyId(int $userId): ?int;
     public function getCreatedAt(int $userId): ?\DateTimeImmutable;
+    public function countAll(): int;
 }
