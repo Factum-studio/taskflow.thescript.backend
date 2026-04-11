@@ -159,6 +159,12 @@ $config = [
                     'docs/<page:[\w\/\-]+>' => 'docs/ui',
                     'docs' => 'docs/ui',
 
+                    // Rating and ideas
+                    'POST feedback/rating' => 'feedback/submit-rating',
+                    'POST feedback/idea' => 'feedback/submit-idea',
+                    'GET feedback/idea' => 'feedback/ideas',
+                    'GET feedback/stats' => 'feedback/stats',
+
                     // Дефолтный маршрут для OPTIONS (CORS)
                     'OPTIONS <any:.*>' => 'site/options',
                 ]
