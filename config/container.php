@@ -119,7 +119,6 @@ $container->set(PushChannel::class, function ($container) {
 
 $container->set(EmailChannel::class, function () {
     return new EmailChannel(
-        Yii::$app->mailer,
         $_ENV['SENDER_EMAIL'],
         $_ENV['SENDER_NAME']
     );
