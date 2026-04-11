@@ -59,4 +59,9 @@ class DbLocalUserRepository implements ILocalUserRepository
         $ar = UserAR::find()->where(['user_id' => $userId])->one();
         return $ar?->company_id;
     }
+
+    public function countAll(): int
+    {
+        return UserAR::find()->count();
+    }
 }
