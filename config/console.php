@@ -1,5 +1,7 @@
 <?php
 
+use yii\symfonymailer\Mailer;
+
 $params                 = require __DIR__ . '/params.php';
 $db                     = require __DIR__ . '/db.php';
 $redis                  = require __DIR__ . '/redis.php';
@@ -38,14 +40,25 @@ $config = [
             'redis' => 'redis',
         ],
         'mailer' => [
-            'class' => \yii\symfonymailer\Mailer::class,
-            'useFileTransport' => true,
+            'class' => Mailer::class,
+            'viewPath' => '@app/mail',
+            'useFileTransport' => false,
+            'transport' => [
+//                'dsn'           => $_ENV['MAILER_DSN'],
+                'scheme'        => $_ENV['MAILER_SCHEME'],
+                'host'          => $_ENV['MAILER_HOST'],
+                'port'          => $_ENV['MAILER_PORT'],
+                'username'      => $_ENV['MAILER_USERNAME'],
+                'password'      => $_ENV['MAILER_PASSWORD'],
+                'encryption'    => $_ENV['MAILER_ENCRYPTION'],
+            ],
         ],
         'log' => [
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
+                    'logVars' => [],
                 ],
             ],
         ],
@@ -54,7 +67,8 @@ $config = [
     'params' => $params,
     'controllerMap' => [
         'sync-users' => 'app\commands\SyncUsersCommand',
-        'company-clean' => 'app\commands\CompanyCleanController',
+        'company-clean' => 'app\commands\CompanyCleanCommand',
+        'email-send' => 'app\commands\EmailSendCommand',
 //        'fixture' => [ // Fixture generation command line.
 //            'class' => 'yii\faker\FixtureController',
 //        ],
