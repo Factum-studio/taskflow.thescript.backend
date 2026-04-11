@@ -540,3 +540,38 @@ class CompanySchema {}
  * )
  */
 class AuthorSchema {}
+
+/**
+ * @OA\Schema(
+ *     schema="FeedbackRating",
+ *     @OA\Property(property="userId", type="integer"),
+ *     @OA\Property(property="speed", type="integer", minimum=0, maximum=5),
+ *     @OA\Property(property="functionality", type="integer", minimum=0, maximum=5),
+ *     @OA\Property(property="design", type="integer", minimum=0, maximum=5),
+ *     @OA\Property(property="usability", type="integer", minimum=0, maximum=5),
+ *     @OA\Property(property="createdAt", type="string", format="date-time"),
+ *     @OA\Property(property="updatedAt", type="string", format="date-time")
+ * )
+ *
+ * @OA\Schema(
+ *     schema="FeedbackIdea",
+ *     @OA\Property(property="id", type="integer"),
+ *     @OA\Property(property="userId", type="integer"),
+ *     @OA\Property(property="type", type="string", enum={"idea","bug","feature","improvement","question"}),
+ *     @OA\Property(property="comment", type="string"),
+ *     @OA\Property(property="isImplemented", type="boolean"),
+ *     @OA\Property(property="createdAt", type="string", format="date-time"),
+ *     @OA\Property(property="updatedAt", type="string", format="date-time")
+ * )
+ *
+ * @OA\Schema(
+ *     schema="FeedbackStats",
+ *     @OA\Property(property="totalIdeas", type="integer"),
+ *     @OA\Property(property="maxRatings", type="integer"),
+ *     @OA\Property(property="implementedIdeas", type="integer"),
+ *     @OA\Property(property="minRatings", type="integer"),
+ *     @OA\Property(property="totalUsers", type="integer"),
+ *     @OA\Property(property="totalTasks", type="integer")
+ * )
+ */
+class FeedbackSchemas {}
