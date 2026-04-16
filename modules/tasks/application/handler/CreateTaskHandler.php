@@ -81,6 +81,7 @@ class CreateTaskHandler
             $assignedTo,
             $parentId,
             false,
+            false,
             new DateTimeImmutable(),
             new DateTimeImmutable(),
             null

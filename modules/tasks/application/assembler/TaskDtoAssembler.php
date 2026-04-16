@@ -23,6 +23,7 @@ class TaskDtoAssembler
             'boardId'       => $task->getBoardId(),
             'parentId'      => $task->getParentId()?->getValue(),
             'overdue'       => $task->isOverdue(),
+            'complete'      => $task->isComplete(),
             'createdAt'     => $task->getCreatedAt()->format('Y-m-d H:i:s'),
             'updatedAt'     => $task->getUpdatedAt()->format('Y-m-d H:i:s'),
             'deletedAt'     => $task->getDeletedAt()?->format('Y-m-d H:i:s'),
