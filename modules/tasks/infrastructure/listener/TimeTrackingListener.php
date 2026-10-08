@@ -2,12 +2,12 @@
 
 namespace modules\tasks\infrastructure\listener;
 
+use core\domain\valueObject\Date;
+use core\domain\valueObject\UserId;
 use modules\tasks\domain\event\TimerStoppedEvent;
 use modules\tasks\domain\repository\IDailySummaryRepository;
-use modules\tasks\domain\valueObject\Date;
 use modules\tasks\domain\valueObject\Duration;
 use modules\tasks\domain\valueObject\TaskId;
-use modules\tasks\domain\valueObject\UserId;
 use Yii;
 
 class TimeTrackingListener

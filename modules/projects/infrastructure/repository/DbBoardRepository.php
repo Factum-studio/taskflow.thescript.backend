@@ -2,12 +2,12 @@
 
 namespace modules\projects\infrastructure\repository;
 
+use core\domain\valueObject\UserId;
 use DateTimeImmutable;
 use modules\projects\domain\entity\Board;
 use modules\projects\domain\repository\IBoardRepository;
 use modules\projects\domain\valueObject\BoardId;
 use modules\projects\domain\valueObject\ProjectId;
-use modules\projects\domain\valueObject\UserId;
 use modules\projects\domain\valueObject\Settings;
 use modules\projects\infrastructure\persistence\BoardAR;
 use RuntimeException;
@@ -37,7 +37,7 @@ class DbBoardRepository implements IBoardRepository
             throw new RuntimeException('Failed to save board: ' . implode(', ', $ar->getFirstErrors()));
         }
 
-        if (!$board->getId() || $board->getId()->getValue() !== (int)$ar->id) {
+        if (!$board->getId() || $board->getId()->value() !== (int)$ar->id) {
             $board->setId(new BoardId((int)$ar->id));
         }
 
@@ -56,7 +56,7 @@ class DbBoardRepository implements IBoardRepository
     public function findByProject(ProjectId $projectId): array
     {
         $ars = BoardAR::find()
-            ->where(['project_id' => $projectId->getValue()])
+            ->where(['project_id' => $projectId->value()])
             ->orderBy(['created_at' => SORT_ASC])
             ->all();
         return array_map([$this, 'mapARToEntity'], $ars);
@@ -74,20 +74,20 @@ class DbBoardRepository implements IBoardRepository
 
     private function findARById(BoardId $id): ?BoardAR
     {
-        return BoardAR::findOne($id->getValue());
+        return BoardAR::findOne($id->value());
     }
 
     public function countByProject(ProjectId $projectId): int
     {
-        return BoardAR::find()->where(['project_id' => $projectId->getValue()])->count();
+        return BoardAR::find()->where(['project_id' => $projectId->value()])->count();
     }
 
     private function mapEntityToAR(Board $board, BoardAR $ar): void
     {
-        $ar->project_id     = $board->getProjectId()->getValue();
+        $ar->project_id     = $board->getProjectId()->value();
         $ar->name           = $board->getName();
         $ar->description    = $board->getDescription();
-        $ar->created_by     = $board->getCreatedBy()->getValue();
+        $ar->created_by     = $board->getCreatedBy()->value();
         $ar->settings       = $board->getSettings()->toArray();
     }
 

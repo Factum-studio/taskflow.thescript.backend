@@ -2,9 +2,9 @@
 
 namespace modules\projects\domain\repository;
 
+use core\domain\valueObject\UserId;
 use modules\projects\domain\entity\ProjectUser;
 use modules\projects\domain\valueObject\ProjectId;
-use modules\projects\domain\valueObject\UserId;
 
 interface IProjectUserRepository
 {

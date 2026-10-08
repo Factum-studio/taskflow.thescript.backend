@@ -2,12 +2,12 @@
 
 namespace modules\tasks\domain\entity;
 
+use core\domain\valueObject\Date;
+use core\domain\valueObject\UserId;
 use DateTimeImmutable;
 use modules\tasks\domain\valueObject\DailySummaryId;
-use modules\tasks\domain\valueObject\Date;
 use modules\tasks\domain\valueObject\Duration;
 use modules\tasks\domain\valueObject\TaskId;
-use modules\tasks\domain\valueObject\UserId;
 
 class DailySummary
 {

@@ -1,0 +1,50 @@
+@startuml
+' Поток приглашения в проект (модуль projects)
+title TASKFLOW: приглашение участника в проект
+
+actor "Владелец (owner)" as O
+participant "InvitationController" as C
+participant "InviteUserHandler" as H
+participant "IInvitationRepository" as R
+participant "ProjectEventDispatcher" as E
+participant "SendInvitationEmailListener" as L
+participant "NotificationHub (ядро)" as N
+actor "Приглашённый пользователь" as U
+
+O -> C : POST /project/{id}/invite {email}
+activate C
+C -> H : InviteUserCommand
+activate H
+H -> H : canInviteUser / валидация
+H -> R : createInvitation(token, pending)
+activate R
+R --> H : Invitation
+deactivate R
+H -> E : dispatch InvitationCreatedEvent
+activate E
+E -> L : handle()
+activate L
+L -> N : Notification(email, 'Вас пригласили в проект')
+activate N
+N --> L : (email отправлен)
+deactivate N
+deactivate L
+deactivate E
+H --> C : (void)
+deactivate H
+C --> O : SuccessDto 'Invitation sent'
+deactivate C
+
+U -> C : POST /invitation/accept {token}
+activate C
+C -> H : AcceptInvitationCommand(token, userId)
+activate H
+H -> R : findByToken
+H -> R : create ProjectUser(role) + status=accepted
+H -> E : dispatch InvitationAcceptedEvent
+deactivate E
+deactivate H
+C --> U : SuccessDto 'Invitation accepted'
+deactivate C
+
+@enduml

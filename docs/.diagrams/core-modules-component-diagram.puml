@@ -1,0 +1,69 @@
+@startuml
+' Архитектура TASKFLOW CRM: модули и ядро
+title TASKFLOW CRM: компоненты и слои
+
+package "Внешние системы" {
+    [Passport] as PASS <<SSO/OAuth2>>
+}
+
+package "Ядро (core)" {
+    [Presentation\nконтроллеры, BaseController\nrequest, swagger] as C_PRES
+    [Application\nCQRS, DTO, порты,\nNotificationHub] as C_APP
+    [Domain\nRole, User, UserRole\nисключения, VO, события] as C_DOM
+    [Infrastructure\nрепозитории (AR),\nGlobalEventDispatcher, JsonErrorHandler\nмиграции users/rbac] as C_INF
+    [Security\nYiiIdentity] as C_SEC
+}
+
+package "Модули" {
+    package "passport/auth" {
+        [AuthController] as P_AUTH
+        [PassportAuthMiddleware] as P_MW
+        [PassportHttpClient] as P_HTTP
+    }
+    package "rbac" {
+        [RbacMiddleware] as R_MW
+        [AuthorizationService] as R_AUTH
+    }
+    package "projects" {
+        [Project/Board/Invitation\nконтроллеры и хендлеры] as PRJ
+        [ProjectAccess] as PRJ_ACC
+        [Листенеры: owner, invitation,\npersonal project] as PRJ_L
+    }
+    package "tasks" {
+        [Task/Column/Comment/Sticker\nконтроллеры и хендлеры] as TSK
+        [TaskAccess] as TSK_ACC
+        [AutoTimer/TimeTracking/\nPlannedInterval листенеры] as TSK_L
+    }
+    package "feedback" {
+        [FeedbackController] as FB
+        [SendNonMaxRatingEmailListener] as FB_L
+    }
+}
+
+P_AUTH ..> C_SEC : YiiIdentity
+P_MW ..> C_SEC
+P_AUTH ..> C_APP : SyncUserHandler
+P_HTTP --> PASS : HTTP
+
+R_MW --> P_MW : после аутентификации
+R_MW ..> C_SEC : identity
+R_AUTH --> C_DOM : PermissionDeniedException
+
+PRJ --> C_APP : UserFirstLoginEvent, NotificationHub
+PRJ_ACC --> C_DOM : UserId и т.п.
+PRJ_L --> C_APP
+
+TSK --> PRJ : доски (IProjectAccess)
+TSK_ACC --> PRJ_ACC : делегирование прав
+TSK_L --> C_APP : GlobalEventDispatcher
+TSK ..> C_APP : ITaskStatisticsService
+
+FB --> C_APP : RatingSubmittedEvent, NotificationHub
+
+C_PRES --> C_APP : вызывает хендлеры
+C_APP --> C_DOM : сущности/VO
+C_INF ..> C_APP : реализует порты
+C_INF ..> C_DOM : реализует репозитории
+C_SEC ..> C_PRES : используется
+
+@enduml

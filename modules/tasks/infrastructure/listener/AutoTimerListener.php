@@ -2,6 +2,7 @@
 
 namespace modules\tasks\infrastructure\listener;
 
+use core\domain\valueObject\UserId;
 use DateTimeImmutable;
 use modules\tasks\domain\entity\TimeInterval;
 use modules\tasks\domain\event\TaskAssignedEvent;
@@ -13,7 +14,6 @@ use modules\tasks\domain\repository\ITimeIntervalRepository;
 use modules\tasks\domain\valueObject\ColumnId;
 use modules\tasks\domain\valueObject\TaskId;
 use modules\tasks\domain\valueObject\TimeIntervalId;
-use modules\tasks\domain\valueObject\UserId;
 use Yii;
 
 class AutoTimerListener
@@ -63,7 +63,7 @@ class AutoTimerListener
             if ($active) {
                 $active->stop(new DateTimeImmutable(), 'Task completed (final column)');
                 $this->intervalRepository->save($active);
-                Yii::info("Auto timer stopped for task {$taskId->getValue()} user {$userId->getValue()} (final column)", 'tasks');
+                Yii::info("Auto timer stopped for task {$taskId->value()} user {$userId->value()} (final column)", 'tasks');
             }
             return;
         }
@@ -83,13 +83,13 @@ class AutoTimerListener
                     TimeInterval::TYPE_TIMER
                 );
                 $this->intervalRepository->save($interval);
-                Yii::info("Auto timer started for task {$taskId->getValue()} user {$userId->getValue()}", 'tasks');
+                Yii::info("Auto timer started for task {$taskId->value()} user {$userId->value()}", 'tasks');
             }
         } elseif ($wasActive && !$isActive) {
             $active = $this->intervalRepository->findActiveByTaskAndUser($taskId, $userId, TimeInterval::TYPE_TIMER);
             if ($active) {
                 $this->intervalRepository->remove($active);
-                Yii::info("Auto timer deleted for task {$taskId->getValue()} user {$userId->getValue()}", 'tasks');
+                Yii::info("Auto timer deleted for task {$taskId->value()} user {$userId->value()}", 'tasks');
             }
         }
     }
@@ -124,7 +124,7 @@ class AutoTimerListener
                     $active->getUpdatedAt()
                 );
                 $this->intervalRepository->save($active);
-                Yii::info("Auto timer moved from user {$oldAssigneeId} to {$newAssigneeId} for task {$taskId->getValue()}", 'tasks');
+                Yii::info("Auto timer moved from user {$oldAssigneeId} to {$newAssigneeId} for task {$taskId->value()}", 'tasks');
             }
         }
     }
@@ -140,7 +140,7 @@ class AutoTimerListener
         if ($active) {
             $active->stop(new DateTimeImmutable(), 'Task deleted');
             $this->intervalRepository->save($active);
-            Yii::info("Auto timer stopped due to task deletion for task {$taskId->getValue()}", 'tasks');
+            Yii::info("Auto timer stopped due to task deletion for task {$taskId->value()}", 'tasks');
         }
     }
 }

@@ -2,14 +2,14 @@
 
 namespace modules\tasks\infrastructure\repository;
 
+use core\domain\valueObject\Date;
+use core\domain\valueObject\UserId;
 use DateTimeImmutable;
 use modules\tasks\domain\entity\DailySummary;
 use modules\tasks\domain\repository\IDailySummaryRepository;
 use modules\tasks\domain\valueObject\DailySummaryId;
-use modules\tasks\domain\valueObject\Date;
 use modules\tasks\domain\valueObject\Duration;
 use modules\tasks\domain\valueObject\TaskId;
-use modules\tasks\domain\valueObject\UserId;
 use modules\tasks\infrastructure\persistence\DailySummaryAR;
 use RuntimeException;
 use yii\db\Connection;
@@ -32,8 +32,8 @@ class DbDailySummaryRepository implements IDailySummaryRepository
     public function findOrCreate(TaskId $taskId, UserId $userId, Date $date): DailySummary
     {
         $ar = DailySummaryAR::findOne([
-            'task_id' => $taskId->getValue(),
-            'user_id' => $userId->getValue(),
+            'task_id' => $taskId->value(),
+            'user_id' => $userId->value(),
             'date' => $date->toString(),
         ]);
         if ($ar) {
@@ -41,8 +41,8 @@ class DbDailySummaryRepository implements IDailySummaryRepository
         }
 
         $ar = new DailySummaryAR();
-        $ar->task_id = $taskId->getValue();
-        $ar->user_id = $userId->getValue();
+        $ar->task_id = $taskId->value();
+        $ar->user_id = $userId->value();
         $ar->date = $date->toString();
         $ar->total_duration = 0;
         if (!$ar->save()) {
@@ -63,10 +63,10 @@ class DbDailySummaryRepository implements IDailySummaryRepository
      */
     public function save(DailySummary $summary): void
     {
-        $ar = DailySummaryAR::findOne($summary->getId()->getValue());
+        $ar = DailySummaryAR::findOne($summary->getId()->value());
         if (!$ar) {
             $ar = new DailySummaryAR();
-            $ar->id = $summary->getId()->getValue();
+            $ar->id = $summary->getId()->value();
         }
         $ar->total_duration = $summary->getTotalDuration()->getSeconds();
         if (!$ar->save()) {
@@ -77,14 +77,14 @@ class DbDailySummaryRepository implements IDailySummaryRepository
     public function getTotalForUser(UserId $userId, Date $date): int
     {
         return (int)DailySummaryAR::find()
-            ->where(['user_id' => $userId->getValue(), 'date' => $date->toString()])
+            ->where(['user_id' => $userId->value(), 'date' => $date->toString()])
             ->sum('total_duration');
     }
 
     public function findByUserAndDate(UserId $userId, Date $date): array
     {
         $ars = DailySummaryAR::find()
-            ->where(['user_id' => $userId->getValue(), 'date' => $date->toString()])
+            ->where(['user_id' => $userId->value(), 'date' => $date->toString()])
             ->all();
         return array_map([$this, 'mapARToEntity'], $ars);
     }
@@ -94,7 +94,7 @@ class DbDailySummaryRepository implements IDailySummaryRepository
         // Возвращаем массив [date => totalSeconds] за период
         $rows = DailySummaryAR::find()
             ->select(['date', 'SUM(total_duration) as total'])
-            ->where(['user_id' => $userId->getValue()])
+            ->where(['user_id' => $userId->value()])
             ->andWhere(['>=', 'date', $from->toString()])
             ->andWhere(['<=', 'date', $to->toString()])
             ->groupBy('date')

@@ -2,11 +2,11 @@
 
 namespace modules\projects\infrastructure\listener;
 
+use core\domain\valueObject\UserId;
 use modules\projects\domain\entity\ProjectUser;
 use modules\projects\domain\event\ProjectCreatedEvent;
 use modules\projects\domain\repository\IProjectUserRepository;
 use modules\projects\domain\valueObject\ProjectId;
-use modules\projects\domain\valueObject\UserId;
 use modules\projects\domain\valueObject\UserRole;
 use DateTimeImmutable;
 use Yii;

@@ -41,7 +41,10 @@ class InvitationController extends BaseController
     #[OA\Post(
         path: '/project/{id}/invite',
         summary: 'Отправить приглашение пользователю по email',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
@@ -79,7 +82,6 @@ class InvitationController extends BaseController
         $command = new InviteUserCommand(
             projectId: $id,
             invitedBy: $userId,
-            jwtToken: $this->getUserIdentity()->getJwtToken(),
             email: $request->email,
             userId: $request->userId
         );
@@ -102,7 +104,10 @@ class InvitationController extends BaseController
     #[OA\Post(
         path: '/invitation/accept',
         summary: 'Принять приглашение по токену',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
@@ -135,7 +140,6 @@ class InvitationController extends BaseController
         $command = new AcceptInvitationCommand(
             $token,
             $userId,
-            $this->getUserIdentity()->getJwtToken()
         );
 
         try {
@@ -156,7 +160,10 @@ class InvitationController extends BaseController
     #[OA\Delete(
         path: '/project/{id}/invitation?email={email}',
         summary: 'Отменить приглашение по email',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['project-invitations'],
         parameters: [
             new OA\Parameter(name: 'id', description: 'ID проекта', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
@@ -185,7 +192,6 @@ class InvitationController extends BaseController
             $id,
             $email,
             $userId,
-            $this->getUserIdentity()->getJwtToken()
         );
 
         try {

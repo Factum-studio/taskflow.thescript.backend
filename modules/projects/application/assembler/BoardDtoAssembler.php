@@ -10,11 +10,11 @@ class BoardDtoAssembler
     public function toDto(Board $board): BoardDto
     {
         return new BoardDto([
-            'id'            => $board->getId()->getValue(),
-            'projectId'     => $board->getProjectId()->getValue(),
+            'id'            => $board->getId()->value(),
+            'projectId'     => $board->getProjectId()->value(),
             'name'          => $board->getName(),
             'description'   => $board->getDescription(),
-            'createdBy'     => $board->getCreatedBy()->getValue(),
+            'createdBy'     => $board->getCreatedBy()->value(),
             'settings'      => $board->getSettings()->toArray(),
             'createdAt'     => $board->getCreatedAt()->format('Y-m-d H:i:s'),
             'updatedAt'     => $board->getUpdatedAt()->format('Y-m-d H:i:s'),

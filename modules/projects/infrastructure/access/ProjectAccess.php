@@ -2,12 +2,12 @@
 
 namespace modules\projects\infrastructure\access;
 
+use core\domain\valueObject\UserId;
 use modules\projects\application\port\IProjectAccess;
 use modules\projects\domain\repository\IProjectRepository;
 use modules\projects\domain\repository\IBoardRepository;
 use modules\projects\domain\repository\IProjectUserRepository;
 use modules\projects\domain\valueObject\ProjectId;
-use modules\projects\domain\valueObject\UserId;
 use modules\projects\domain\valueObject\BoardId;
 use modules\projects\domain\entity\Project;
 use modules\projects\domain\entity\Board;
@@ -26,19 +26,19 @@ class ProjectAccess implements IProjectAccess
     public function getUserProjectIds(int $userId): array
     {
         $projects = $this->projectRepository->findByUser(new UserId($userId));
-        return array_map(fn(Project $p) => $p->getId()->getValue(), $projects);
+        return array_map(fn(Project $p) => $p->getId()->value(), $projects);
     }
 
     public function getProjectBoardIds(int $projectId): array
     {
         $boards = $this->boardRepository->findByProject(new ProjectId($projectId));
-        return array_map(fn(Board $b) => $b->getId()->getValue(), $boards);
+        return array_map(fn(Board $b) => $b->getId()->value(), $boards);
     }
 
     public function getProjectIdByBoardId(int $boardId): ?int
     {
         $board = $this->boardRepository->findById(new BoardId($boardId));
-        return $board?->getProjectId()->getValue();
+        return $board?->getProjectId()->value();
     }
 
     public function canViewProject(int $userId, int $projectId): bool
@@ -67,7 +67,7 @@ class ProjectAccess implements IProjectAccess
         }
 
         // Нельзя управлять владельцем проекта
-        if ($targetUserId === $project->getOwnerId()->getValue()) {
+        if ($targetUserId === $project->getOwnerId()->value()) {
             return false;
         }
 
@@ -103,7 +103,7 @@ class ProjectAccess implements IProjectAccess
             return false;
         }
 
-        return $board->getCreatedBy()->getValue() === $userId;
+        return $board->getCreatedBy()->value() === $userId;
     }
 
     public function canAddMember(int $userId, int $targetUserId, int $projectId): bool
@@ -173,7 +173,7 @@ class ProjectAccess implements IProjectAccess
         }
 
         // Нельзя удалить владельца проекта
-        if ($targetUserId === $project->getOwnerId()->getValue()) {
+        if ($targetUserId === $project->getOwnerId()->value()) {
             return false;
         }
 
@@ -200,7 +200,7 @@ class ProjectAccess implements IProjectAccess
             return false;
         }
 
-        return $project->getOwnerId()->getValue() === $userId;
+        return $project->getOwnerId()->value() === $userId;
     }
 
     public function canDeleteBoard(int $userId, int $boardId): bool
@@ -215,7 +215,7 @@ class ProjectAccess implements IProjectAccess
             return false;
         }
 
-        return $project->getOwnerId()->getValue() === $userId;
+        return $project->getOwnerId()->value() === $userId;
     }
 
     public function canCreateBoard(int $userId, int $projectId): bool
@@ -255,7 +255,7 @@ class ProjectAccess implements IProjectAccess
     private function isOwner(int $userId, int $projectId): bool
     {
         $project = $this->projectRepository->findById(new ProjectId($projectId));
-        return $project && $project->getOwnerId()->getValue() === $userId;
+        return $project && $project->getOwnerId()->value() === $userId;
     }
 
     private function countAdmins(int $projectId): int

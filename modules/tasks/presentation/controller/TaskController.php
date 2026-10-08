@@ -69,7 +69,10 @@ class TaskController extends BaseController
         path: '/task',
         description: 'Возвращает список задач с возможностью фильтрации',
         summary: 'Список задач',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['tasks'],
         parameters: [
             new OA\Parameter(
@@ -214,7 +217,10 @@ class TaskController extends BaseController
     #[OA\Get(
         path: '/task/{id}',
         summary: 'Получить задачу по ID',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['tasks'],
         parameters: [
             new OA\Parameter(
@@ -272,7 +278,10 @@ class TaskController extends BaseController
     #[OA\Post(
         path: '/task',
         summary: 'Создать новую задачу',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/CreateTaskRequest')
@@ -357,7 +366,10 @@ class TaskController extends BaseController
     #[OA\Put(
         path: '/task/{id}',
         summary: 'Обновить задачу',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/UpdateTaskRequest')
@@ -460,7 +472,10 @@ class TaskController extends BaseController
     #[OA\Post(
         path: '/task/{id}/move-to-column',
         summary: 'Переместить задачу в другую колонку',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/MoveTaskToColumnRequest')
@@ -549,7 +564,10 @@ class TaskController extends BaseController
     #[OA\Post(
         path: '/task/{id}/assign',
         summary: 'Назначить исполнителя задачи',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/AssignTaskRequest')
@@ -638,7 +656,10 @@ class TaskController extends BaseController
     #[OA\Delete(
         path: '/task/{id}',
         summary: 'Мягкое удаление задачи',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['tasks'],
         parameters: [
             new OA\Parameter(
@@ -710,7 +731,10 @@ class TaskController extends BaseController
     #[OA\Post(
         path: '/task/{id}/restore',
         summary: 'Восстановить мягко удалённую задачу',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['tasks'],
         parameters: [
             new OA\Parameter(
@@ -784,7 +808,10 @@ class TaskController extends BaseController
     #[OA\Delete(
         path: '/task/{id}/hard',
         summary: 'Физическое удаление задачи',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['tasks'],
         parameters: [
             new OA\Parameter(

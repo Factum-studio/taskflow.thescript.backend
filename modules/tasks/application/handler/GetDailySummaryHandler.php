@@ -2,11 +2,11 @@
 
 namespace modules\tasks\application\handler;
 
+use core\domain\valueObject\Date;
+use core\domain\valueObject\UserId;
 use modules\tasks\application\assembler\DailySummaryDtoAssembler;
 use modules\tasks\application\query\GetDailySummaryQuery;
 use modules\tasks\domain\repository\IDailySummaryRepository;
-use modules\tasks\domain\valueObject\Date;
-use modules\tasks\domain\valueObject\UserId;
 
 class GetDailySummaryHandler
 {

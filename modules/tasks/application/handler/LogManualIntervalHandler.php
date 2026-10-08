@@ -2,6 +2,7 @@
 
 namespace modules\tasks\application\handler;
 
+use core\domain\valueObject\UserId;
 use InvalidArgumentException;
 use modules\tasks\application\assembler\TimeIntervalDtoAssembler;
 use modules\tasks\application\command\LogManualIntervalCommand;
@@ -13,7 +14,6 @@ use modules\tasks\domain\repository\ITaskRepository;
 use modules\tasks\domain\repository\ITimeIntervalRepository;
 use modules\tasks\domain\valueObject\TaskId;
 use modules\tasks\domain\valueObject\TimeIntervalId;
-use modules\tasks\domain\valueObject\UserId;
 use RuntimeException;
 
 class LogManualIntervalHandler

@@ -10,10 +10,10 @@ class ProjectUserDtoAssembler
     public function toDto(ProjectUser $projectUser): ProjectUserDto
     {
         return new ProjectUserDto([
-            'projectId'     => $projectUser->getProjectId()->getValue(),
-            'userId'        => $projectUser->getUserId()->getValue(),
-            'role'          => $projectUser->getRole()->getValue(),
-            'invitedBy'     => $projectUser->getInvitedBy()?->getValue(),
+            'projectId'     => $projectUser->getProjectId()->value(),
+            'userId'        => $projectUser->getUserId()->value(),
+            'role'          => $projectUser->getRole()->value(),
+            'invitedBy'     => $projectUser->getInvitedBy()?->value(),
             'invitedAt'     => $projectUser->getInvitedAt()?->format('Y-m-d H:i:s'),
             'acceptedAt'    => $projectUser->getAcceptedAt()?->format('Y-m-d H:i:s'),
             'joinedAt'      => $projectUser->getJoinedAt()->format('Y-m-d H:i:s'),

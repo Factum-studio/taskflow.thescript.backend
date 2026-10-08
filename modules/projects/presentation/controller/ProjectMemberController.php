@@ -47,7 +47,10 @@ class ProjectMemberController extends BaseController
         path: '/project/{projectId}/member',
         description: 'Возвращает список участников проекта',
         summary: 'Участники проекта',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['project-members'],
         parameters: [
             new OA\Parameter(
@@ -104,7 +107,10 @@ class ProjectMemberController extends BaseController
     #[OA\Post(
         path: '/project/{projectId}/member',
         summary: 'Добавить участника в проект',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/AddProjectMemberRequest')
@@ -156,15 +162,11 @@ class ProjectMemberController extends BaseController
             return $this->error('User not authenticated', 401);
         }
 
-        $identity = $this->getUserIdentity();
-        $jwtToken = $identity?->getJwtToken()?->value() ?? '';
-
         $command = new AddProjectMemberCommand(
             projectId: $projectId,
             userId: $request->userId,
             role: $request->role,
             addedBy: $userId,
-            jwtToken: $jwtToken
         );
 
         try {
@@ -188,7 +190,10 @@ class ProjectMemberController extends BaseController
     #[OA\Put(
         path: '/project/{projectId}/member/{userId}/role',
         summary: 'Изменить роль участника',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/ChangeProjectMemberRoleRequest')
@@ -275,7 +280,10 @@ class ProjectMemberController extends BaseController
     #[OA\Delete(
         path: '/project/{projectId}/member/{userId}',
         summary: 'Удалить участника из проекта',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['project-members'],
         parameters: [
             new OA\Parameter(

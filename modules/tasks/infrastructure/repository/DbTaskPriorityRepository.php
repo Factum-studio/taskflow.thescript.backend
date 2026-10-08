@@ -19,7 +19,7 @@ class DbTaskPriorityRepository implements ITaskPriorityRepository
 
     public function findById(PriorityId $id): ?TaskPriority
     {
-        $ar = TaskPriorityAR::findOne($id->getValue());
+        $ar = TaskPriorityAR::findOne($id->value());
         return $ar ? $this->mapARToEntity($ar) : null;
     }
 

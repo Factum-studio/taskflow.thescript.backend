@@ -1,0 +1,46 @@
+@startuml
+' SSO-поток модуля passport/auth
+title TASKFLOW: SSO-аутентификация через Passport
+
+actor "Пользователь (браузер)" as U
+participant "Frontend (SPA)" as F
+participant "API taskflow" as A
+participant "Passport (SSO)" as P
+
+U -> F : клик «Войти»
+F -> A : GET /auth/login
+activate A
+A -> A : state = random_bytes(32)
+A -> U : Set-Cookie taskflow_oauth_state (10 мин)
+A --> U : HTML + meta-refresh (3.1 c)
+deactivate A
+
+U -> P : GET /auth/authorize?client_id&redirect_uri&scope&state
+activate P
+P --> U : форма входа
+U -> P : учётные данные
+P --> U : 302 → /auth/callback?code&state
+deactivate P
+
+U -> A : GET /auth/callback?code&state
+activate A
+A -> A : hash_equals(state, cookie.state)
+A -> P : POST /token (authorization_code)
+activate P
+P --> A : {access_token, refresh_token, expires_in, scopes}
+deactivate P
+
+A -> A : passportClaims (декодировать sub)
+A -> P : GET /users/{sub} (Bearer)
+activate P
+P --> A : PassportUserDto (email, ФИО, post, isOwner)
+deactivate P
+
+A -> A : SyncUserHandler: user + роли (user/admin) + UserFirstLoginEvent
+A -> U : Set-Cookie access + refresh (httpOnly, Secure, LAX)
+A --> U : 302 → FRONTEND_URL
+deactivate A
+
+U -> F : приложение загружено (куки уже есть)
+
+@enduml

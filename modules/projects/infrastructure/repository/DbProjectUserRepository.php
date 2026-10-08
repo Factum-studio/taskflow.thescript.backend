@@ -2,11 +2,11 @@
 
 namespace modules\projects\infrastructure\repository;
 
+use core\domain\valueObject\UserId;
 use DateTimeImmutable;
 use modules\projects\domain\entity\ProjectUser;
 use modules\projects\domain\repository\IProjectUserRepository;
 use modules\projects\domain\valueObject\ProjectId;
-use modules\projects\domain\valueObject\UserId;
 use modules\projects\domain\valueObject\UserRole;
 use modules\projects\infrastructure\persistence\ProjectUserAR;
 use RuntimeException;
@@ -58,7 +58,7 @@ class DbProjectUserRepository implements IProjectUserRepository
     public function findByProject(ProjectId $projectId): array
     {
         $ars = ProjectUserAR::find()
-            ->where(['project_id' => $projectId->getValue()])
+            ->where(['project_id' => $projectId->value()])
             ->all();
         return array_map([$this, 'mapARToEntity'], $ars);
     }
@@ -66,7 +66,7 @@ class DbProjectUserRepository implements IProjectUserRepository
     public function findByUser(UserId $userId): array
     {
         $ars = ProjectUserAR::find()
-            ->where(['user_id' => $userId->getValue()])
+            ->where(['user_id' => $userId->value()])
             ->all();
         return array_map([$this, 'mapARToEntity'], $ars);
     }
@@ -74,17 +74,17 @@ class DbProjectUserRepository implements IProjectUserRepository
     private function findAR(ProjectId $projectId, UserId $userId): ?ProjectUserAR
     {
         return ProjectUserAR::findOne([
-            'project_id' => $projectId->getValue(),
-            'user_id' => $userId->getValue(),
+            'project_id' => $projectId->value(),
+            'user_id' => $userId->value(),
         ]);
     }
 
     private function mapEntityToAR(ProjectUser $projectUser, ProjectUserAR $ar): void
     {
-        $ar->project_id     = $projectUser->getProjectId()->getValue();
-        $ar->user_id        = $projectUser->getUserId()->getValue();
-        $ar->role           = $projectUser->getRole()->getValue();
-        $ar->invited_by     = $projectUser->getInvitedBy()?->getValue();
+        $ar->project_id     = $projectUser->getProjectId()->value();
+        $ar->user_id        = $projectUser->getUserId()->value();
+        $ar->role           = $projectUser->getRole()->value();
+        $ar->invited_by     = $projectUser->getInvitedBy()?->value();
         $ar->invited_at     = $projectUser->getInvitedAt()?->format('Y-m-d H:i:s');
         $ar->accepted_at    = $projectUser->getAcceptedAt()?->format('Y-m-d H:i:s');
         $ar->joined_at      = $projectUser->getJoinedAt()->format('Y-m-d H:i:s');

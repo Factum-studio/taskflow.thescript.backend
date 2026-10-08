@@ -2,13 +2,13 @@
 
 namespace modules\tasks\infrastructure\repository;
 
+use core\domain\valueObject\UserId;
 use DateTimeImmutable;
 use modules\tasks\domain\entity\Sticker;
 use modules\tasks\domain\repository\IStickerRepository;
 use modules\tasks\domain\valueObject\StickerId;
 use modules\tasks\domain\valueObject\StickerName;
 use modules\tasks\domain\valueObject\StickerType;
-use modules\tasks\domain\valueObject\UserId;
 use modules\tasks\infrastructure\persistence\StickerAR;
 use RuntimeException;
 use Throwable;
@@ -38,21 +38,21 @@ class DbStickerRepository implements IStickerRepository
         // Пользовательские
         if ($sticker->getType()->isUser()) {
             $exists = StickerAR::find()
-                ->where(['name' => $sticker->getName()->getValue()])
+                ->where(['name' => $sticker->getName()->value()])
                 ->andWhere(['project_id' => $sticker->getProjectId()])
                 ->andWhere(['type' => 'user'])
                 ->exists();
-            if ($exists && (!$sticker->getId() || $this->findARById($sticker->getId())->name !== $sticker->getName()->getValue())) {
-                throw new RuntimeException("Sticker with name '{$sticker->getName()->getValue()}' already exists in this project");
+            if ($exists && (!$sticker->getId() || $this->findARById($sticker->getId())->name !== $sticker->getName()->value())) {
+                throw new RuntimeException("Sticker with name '{$sticker->getName()->value()}' already exists in this project");
             }
         } else {
             // Системные
             $exists = StickerAR::find()
-                ->where(['name' => $sticker->getName()->getValue()])
+                ->where(['name' => $sticker->getName()->value()])
                 ->andWhere(['type' => 'system'])
                 ->exists();
-            if ($exists && (!$sticker->getId() || $this->findARById($sticker->getId())->name !== $sticker->getName()->getValue())) {
-                throw new RuntimeException("System sticker with name '{$sticker->getName()->getValue()}' already exists");
+            if ($exists && (!$sticker->getId() || $this->findARById($sticker->getId())->name !== $sticker->getName()->value())) {
+                throw new RuntimeException("System sticker with name '{$sticker->getName()->value()}' already exists");
             }
         }
 
@@ -60,7 +60,7 @@ class DbStickerRepository implements IStickerRepository
             throw new RuntimeException('Failed to save sticker: ' . implode(', ', $ar->getFirstErrors()));
         }
 
-        if (!$sticker->getId() || $sticker->getId()->getValue() !== (int)$ar->id) {
+        if (!$sticker->getId() || $sticker->getId()->value() !== (int)$ar->id) {
             $sticker->setId(new StickerId((int)$ar->id));
         }
 
@@ -80,7 +80,7 @@ class DbStickerRepository implements IStickerRepository
     {
         $query = StickerAR::find()->where(['project_id' => $projectId]);
         if ($type) {
-            $query->andWhere(['type' => $type->getValue()]);
+            $query->andWhere(['type' => $type->value()]);
         }
         $ars = $query->orderBy(['name' => SORT_ASC])->all();
         return array_map([$this, 'mapARToEntity'], $ars);
@@ -107,17 +107,17 @@ class DbStickerRepository implements IStickerRepository
 
     private function findARById(StickerId $id): ?StickerAR
     {
-        return StickerAR::findOne($id->getValue());
+        return StickerAR::findOne($id->value());
     }
 
     private function mapEntityToAR(Sticker $sticker, StickerAR $ar): void
     {
-        $ar->name = $sticker->getName()->getValue();
-        $ar->type = $sticker->getType()->getValue();
+        $ar->name = $sticker->getName()->value();
+        $ar->type = $sticker->getType()->value();
         $ar->project_id = $sticker->getProjectId();
         $ar->data = $sticker->getData();
         $ar->color = $sticker->getColor();
-        $ar->created_by = $sticker->getCreatedBy()->getValue();
+        $ar->created_by = $sticker->getCreatedBy()->value();
     }
 
     /**

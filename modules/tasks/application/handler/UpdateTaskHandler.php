@@ -2,6 +2,7 @@
 
 namespace modules\tasks\application\handler;
 
+use core\domain\valueObject\UserId;
 use modules\tasks\application\assembler\TaskDtoAssembler;
 use modules\tasks\application\command\UpdateTaskCommand;
 use modules\tasks\application\dto\TaskDto;
@@ -15,7 +16,6 @@ use modules\tasks\domain\valueObject\ColumnId;
 use modules\tasks\domain\valueObject\PriorityId;
 use modules\tasks\domain\valueObject\TaskId;
 use modules\tasks\domain\valueObject\Title;
-use modules\tasks\domain\valueObject\UserId;
 use RuntimeException;
 
 class UpdateTaskHandler
@@ -56,7 +56,7 @@ class UpdateTaskHandler
 
         // Обновляем только переданные параметры, что б их
         if ($command->title !== null) {
-            $old = $task->getTitle()->getValue();
+            $old = $task->getTitle()->value();
             $task->changeTitle(new Title($command->title));
             if ($old !== $command->title) {
                 $changedFields['title'] = $command->title;
@@ -70,14 +70,14 @@ class UpdateTaskHandler
             }
         }
         if ($command->columnId !== null) {
-            $old = $task->getColumnId()->getValue();
+            $old = $task->getColumnId()->value();
             $task->moveToColumn(new ColumnId($command->columnId));
             if ($old !== $command->columnId) {
                 $changedFields['columnId'] = $command->columnId;
             }
         }
         if ($command->priorityId !== null) {
-            $old = $task->getPriorityId()->getValue();
+            $old = $task->getPriorityId()->value();
             $task->changePriority(new PriorityId($command->priorityId));
             if ($old !== $command->priorityId) {
                 $changedFields['priorityId'] = $command->priorityId;
@@ -103,7 +103,7 @@ class UpdateTaskHandler
             }
         }
         if ($command->assignedTo !== null) {
-            $old = $task->getAssignedTo()?->getValue();
+            $old = $task->getAssignedTo()?->value();
             $task->assignTo($command->assignedTo ? new UserId($command->assignedTo) : null);
             if ($old !== $command->assignedTo) {
                 $changedFields['assignedTo'] = $command->assignedTo;
@@ -117,7 +117,7 @@ class UpdateTaskHandler
             }
         }
         if ($command->parentId !== null) {
-            $old = $task->getParentId()?->getValue();
+            $old = $task->getParentId()?->value();
             $task->setParentId($command->parentId ? new TaskId($command->parentId) : null);
             if ($old !== $command->parentId) {
                 $changedFields['parentId'] = $command->parentId;

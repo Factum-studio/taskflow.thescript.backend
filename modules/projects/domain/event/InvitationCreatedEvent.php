@@ -17,9 +17,9 @@ class InvitationCreatedEvent implements IProjectDomainEvent
     public function __construct(Invitation $invitation)
     {
         $this->invitationId = $invitation->getId();
-        $this->projectId    = $invitation->getProjectId()->getValue();
+        $this->projectId    = $invitation->getProjectId()->value();
         $this->email        = $invitation->getEmail();
-        $this->invitedBy    = $invitation->getInvitedBy()->getValue();
+        $this->invitedBy    = $invitation->getInvitedBy()->value();
         $this->token        = $invitation->getToken();
         $this->occurredAt   = new DateTimeImmutable();
     }

@@ -1,10 +1,15 @@
 <?php
 
-$params = require __DIR__ . '/params.php';
-$db = require __DIR__ . '/test_db.php';
+declare(strict_types=1);
 
+$params = require __DIR__ . '/params.php';
+$db     = require __DIR__ . '/test_db.php';
+
+/**
+ * Application configuration shared by all test types
+ */
 return [
-    'id' => $_ENV['APP_NAME'].'_tests',
+    'id' => $_ENV['APP_NAME'].'-tests',
     'basePath' => dirname(__DIR__),
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
@@ -18,7 +23,7 @@ return [
             'viewPath' => '@app/mail',
             // send all mails to a file by default.
             'useFileTransport' => true,
-            'messageClass' => 'yii\symfonymailer\Message'
+            'messageClass' => 'yii\symfonymailer\Message',
         ],
         'assetManager' => [
             'basePath' => __DIR__ . '/../web/assets',
@@ -27,13 +32,13 @@ return [
             'showScriptName' => true,
         ],
 //        'user' => [
-//            'identityClass' => 'app\models\User',
+//            'identityClass'   => 'app\models\User',
 //            'enableAutoLogin' => false,
-//            'enableSession' => false,
+//            'enableSession'   => false,
 //        ],
-        'cache' => [
-            'class' => 'yii\caching\DummyCache',
-        ],
+//        'cache' => [
+//            'class' => 'yii\caching\DummyCache',
+//        ],
         'request' => [
             'cookieValidationKey' => 'test',
             'enableCsrfValidation' => false,

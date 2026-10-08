@@ -3,8 +3,7 @@
 namespace modules\projects\application\handler;
 
 use core\application\port\IUserRepository;
-use core\domain\valueObject\Identify;
-use core\domain\valueObject\JwtToken;
+use core\domain\valueObject\UserId;
 use modules\projects\application\assembler\ProjectUserDtoAssembler;
 use modules\projects\application\command\AddProjectMemberCommand;
 use modules\projects\application\dto\ProjectUserDto;
@@ -15,7 +14,6 @@ use modules\projects\domain\event\ProjectMemberAddedEvent;
 use modules\projects\domain\repository\IProjectRepository;
 use modules\projects\domain\repository\IProjectUserRepository;
 use modules\projects\domain\valueObject\ProjectId;
-use modules\projects\domain\valueObject\UserId;
 use modules\projects\domain\valueObject\UserRole;
 use RuntimeException;
 
@@ -57,9 +55,7 @@ class AddProjectMemberHandler
             throw new RuntimeException('You are not allowed to add users to this project');
         }
 
-        $jwtToken = new JwtToken($command->jwtToken);
-        $userId = Identify::fromString((string)$command->userId);
-        $user = $this->userRepository->findById($userId, $jwtToken);
+        $user = $this->userRepository->findById(new UserId($command->userId));
         if ($user === null) {
             throw new RuntimeException("User with ID {$command->userId} not found");
         }

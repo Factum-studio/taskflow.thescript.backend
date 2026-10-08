@@ -10,8 +10,8 @@ class BoardColumnDtoAssembler
     public function toDto(BoardColumn $column): BoardColumnDto
     {
         return new BoardColumnDto([
-            'id'            => $column->getId()->getValue(),
-            'boardId'       => $column->getBoardId()->getValue(),
+            'id'            => $column->getId()->value(),
+            'boardId'       => $column->getBoardId()->value(),
             'name'          => $column->getName(),
             'label'         => $column->getLabel(),
             'sortOrder'     => $column->getSortOrder(),

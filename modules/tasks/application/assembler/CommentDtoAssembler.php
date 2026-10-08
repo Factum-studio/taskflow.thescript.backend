@@ -10,9 +10,9 @@ class CommentDtoAssembler
     public function toDto(Comment $comment): CommentDto
     {
         return new CommentDto([
-            'id'        => $comment->getId()->getValue(),
-            'taskId'    => $comment->getTaskId()->getValue(),
-            'userId'    => $comment->getUserId()->getValue(),
+            'id'        => $comment->getId()->value(),
+            'taskId'    => $comment->getTaskId()->value(),
+            'userId'    => $comment->getUserId()->value(),
             'content'   => $comment->getContent(),
             'createdAt' => $comment->getCreatedAt()->format('Y-m-d H:i:s'),
             'updatedAt' => $comment->getUpdatedAt()->format('Y-m-d H:i:s'),

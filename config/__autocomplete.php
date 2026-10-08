@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This class only exists here for IDE (PHPStorm/Netbeans/...) autocompletion.
  * This file is never included anywhere.
  * Adjust this file to match classes configured in your application config, to enable IDE autocompletion for custom components.
- * Example: A property phpdoc can be added in `__Application` class as `@property \vendor\package\Rollbar|__Rollbar $rollbar` and adding a class in this file
- * ```php
- * // @property of \vendor\package\Rollbar goes here
- * class __Rollbar {
- * }
- * ```
+ */
+
+/**
+ * @method static void error($message, $category = 'application') // для JsonErrorHandler
+ * @method static string getAlias($alias) // для DocsController, SwaggerController
+ * @property static \yii\di\Container $container // доступ к контейнеру
  */
 class Yii
 {
@@ -17,6 +19,11 @@ class Yii
      * @var \yii\web\Application|\yii\console\Application|__Application
      */
     public static $app;
+
+    /**
+     * @var \yii\di\Container
+     */
+    public static $container;
 }
 
 /**

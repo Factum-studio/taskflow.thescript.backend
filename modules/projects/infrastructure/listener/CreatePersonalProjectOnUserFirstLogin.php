@@ -23,7 +23,7 @@ class CreatePersonalProjectOnUserFirstLogin
             name: 'Личный проект пользователя #'.$event->getUserId(),
             type: 'personal',
             ownerId: $event->getUserId(),
-            settings: []
+            settings: [],
         );
 
         try {

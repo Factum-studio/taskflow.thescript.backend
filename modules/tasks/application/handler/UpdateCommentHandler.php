@@ -41,11 +41,11 @@ class UpdateCommentHandler
         }
 
         // Я вам запрещаю редактировать чужие комментарии TODO: унифицировать через интерфейс
-        if ($comment->getUserId()->getValue() !== $command->userId) {
+        if ($comment->getUserId()->value() !== $command->userId) {
             throw new InvalidArgumentException("You are not allowed to edit this comment.");
         }
 
-        if (!$this->taskAccess->canCommentOnTask($command->userId, $comment->getTaskId()->getValue())) {
+        if (!$this->taskAccess->canCommentOnTask($command->userId, $comment->getTaskId()->value())) {
             throw new RuntimeException('You are not allowed to edit comments on this task');
         }
 

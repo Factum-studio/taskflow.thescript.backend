@@ -15,8 +15,8 @@ class StickerAttachedToTaskEvent implements ITaskDomainEvent
 
     public function __construct(TaskId $taskId, StickerId $stickerId, int $attachedBy)
     {
-        $this->taskId       = $taskId->getValue();
-        $this->stickerId    = $stickerId->getValue();
+        $this->taskId       = $taskId->value();
+        $this->stickerId    = $stickerId->value();
         $this->attachedBy   = $attachedBy;
         $this->occurredAt   = new DateTimeImmutable();
     }

@@ -2,12 +2,12 @@
 
 namespace modules\tasks\application\handler;
 
+use core\domain\valueObject\UserId;
 use DateTimeImmutable;
 use modules\tasks\application\assembler\TimeIntervalDtoAssembler;
 use modules\tasks\application\query\ListTimeIntervalsQuery;
 use modules\tasks\domain\repository\ITimeIntervalRepository;
 use modules\tasks\domain\valueObject\TaskId;
-use modules\tasks\domain\valueObject\UserId;
 
 class ListTimeIntervalsHandler
 {

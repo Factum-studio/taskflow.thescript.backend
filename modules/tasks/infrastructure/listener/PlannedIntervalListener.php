@@ -10,7 +10,6 @@ use modules\tasks\domain\repository\ITaskRepository;
 use modules\tasks\domain\repository\ITimeIntervalRepository;
 use modules\tasks\domain\valueObject\TaskId;
 use modules\tasks\domain\valueObject\TimeIntervalId;
-use modules\tasks\domain\valueObject\UserId;
 use Yii;
 
 class PlannedIntervalListener
@@ -62,7 +61,7 @@ class PlannedIntervalListener
         if ($plannedStart === null) {
             if ($existing) {
                 $this->intervalRepository->remove($existing);
-                Yii::info("Planned interval removed for task {$taskId->getValue()} (plannedStart null)", 'tasks');
+                Yii::info("Planned interval removed for task {$taskId->value()} (plannedStart null)", 'tasks');
             }
             return;
         }
@@ -83,7 +82,7 @@ class PlannedIntervalListener
                 new DateTimeImmutable()
             );
             $this->intervalRepository->save($existing);
-            Yii::info("Planned interval updated for task {$taskId->getValue()}", 'tasks');
+            Yii::info("Planned interval updated for task {$taskId->value()}", 'tasks');
         } else {
             // Создаём новый
             $interval = new TimeInterval(
@@ -97,7 +96,7 @@ class PlannedIntervalListener
                 TimeInterval::TYPE_PLAN
             );
             $this->intervalRepository->save($interval);
-            Yii::info("Planned interval created for task {$taskId->getValue()}", 'tasks');
+            Yii::info("Planned interval created for task {$taskId->value()}", 'tasks');
         }
     }
 }

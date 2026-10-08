@@ -45,7 +45,7 @@ class BusyChartService
                 $result[] = (object)[
                     'start' => $start,
                     'end' => $end,
-                    'taskId' => $interval->getTaskId()->getValue(),
+                    'taskId' => $interval->getTaskId()->value(),
                 ];
             }
         }

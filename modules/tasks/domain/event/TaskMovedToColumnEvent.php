@@ -16,9 +16,9 @@ class TaskMovedToColumnEvent implements ITaskDomainEvent
 
     public function __construct(Task $task, ColumnId $oldColumn, ?int $movedBy = null)
     {
-        $this->taskId       = $task->getId()->getValue();
-        $this->oldColumnId  = $oldColumn->getValue();
-        $this->newColumnId  = $task->getColumnId()->getValue();
+        $this->taskId       = $task->getId()->value();
+        $this->oldColumnId  = $oldColumn->value();
+        $this->newColumnId  = $task->getColumnId()->value();
         $this->movedBy      = $movedBy;
         $this->occurredAt   = new DateTimeImmutable();
     }

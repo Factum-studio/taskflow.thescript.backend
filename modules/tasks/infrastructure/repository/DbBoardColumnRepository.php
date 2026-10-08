@@ -32,7 +32,7 @@ class DbBoardColumnRepository implements IBoardColumnRepository
             throw new RuntimeException('Failed to save board column: ' . implode(', ', $ar->getFirstErrors()));
         }
 
-        if (!$column->getId() || $column->getId()->getValue() !== (int)$ar->id) {
+        if (!$column->getId() || $column->getId()->value() !== (int)$ar->id) {
             $column->setId(new ColumnId((int)$ar->id));
         }
 
@@ -48,7 +48,7 @@ class DbBoardColumnRepository implements IBoardColumnRepository
     public function findByBoard(BoardId $boardId): array
     {
         $ars = BoardColumnAR::find()
-            ->where(['board_id' => $boardId->getValue()])
+            ->where(['board_id' => $boardId->value()])
             ->orderBy(['sort_order' => SORT_ASC])
             ->all();
         return array_map([$this, 'mapARToEntity'], $ars);
@@ -66,12 +66,12 @@ class DbBoardColumnRepository implements IBoardColumnRepository
 
     private function findARById(ColumnId $id): ?BoardColumnAR
     {
-        return BoardColumnAR::findOne($id->getValue());
+        return BoardColumnAR::findOne($id->value());
     }
 
     private function mapEntityToAR(BoardColumn $column, BoardColumnAR $ar): void
     {
-        $ar->board_id       = $column->getBoardId()->getValue();
+        $ar->board_id       = $column->getBoardId()->value();
         $ar->name           = $column->getName();
         $ar->label          = $column->getLabel();
         $ar->sort_order     = $column->getSortOrder();

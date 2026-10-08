@@ -13,8 +13,8 @@ class TaskCreatedEvent implements ITaskDomainEvent
 
     public function __construct(Task $task)
     {
-        $this->taskId       = $task->getId()->getValue();
-        $this->createdBy    = $task->getCreatedBy()->getValue();
+        $this->taskId       = $task->getId()->value();
+        $this->createdBy    = $task->getCreatedBy()->value();
         $this->occurredAt   = new DateTimeImmutable();
     }
 

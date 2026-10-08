@@ -10,13 +10,13 @@ class StickerDtoAssembler
     public function toDto(Sticker $sticker): StickerDto
     {
         return new StickerDto([
-            'id'        => $sticker->getId()->getValue(),
-            'name'      => $sticker->getName()->getValue(),
-            'type'      => $sticker->getType()->getValue(),
+            'id'        => $sticker->getId()->value(),
+            'name'      => $sticker->getName()->value(),
+            'type'      => $sticker->getType()->value(),
             'projectId' => $sticker->getProjectId(),
             'data'      => $sticker->getData(),
             'color'     => $sticker->getColor(),
-            'createdBy' => $sticker->getCreatedBy()->getValue(),
+            'createdBy' => $sticker->getCreatedBy()->value(),
             'createdAt' => $sticker->getCreatedAt()->format('Y-m-d H:i:s'),
             'updatedAt' => $sticker->getUpdatedAt()->format('Y-m-d H:i:s'),
         ]);

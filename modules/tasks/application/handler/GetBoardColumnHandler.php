@@ -34,7 +34,7 @@ class GetBoardColumnHandler
         if (!$column) {
             throw new RuntimeException("Column with ID {$query->id} not found");
         }
-        $boardId = $column->getBoardId()->getValue();
+        $boardId = $column->getBoardId()->value();
         if (!$this->projectAccess->canViewBoard($query->userId, $boardId)) {
             throw new RuntimeException('You are not allowed to view this column');
         }

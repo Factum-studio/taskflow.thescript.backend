@@ -20,7 +20,7 @@ final class ProjectType
         $this->value = $value;
     }
 
-    public function getValue(): string
+    public function value(): string
     {
         return $this->value;
     }

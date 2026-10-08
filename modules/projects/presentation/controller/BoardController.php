@@ -50,7 +50,10 @@ class BoardController extends BaseController
         path: '/project/{projectId}/board',
         description: 'Возвращает все доски указанного проекта',
         summary: 'Список досок проекта',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['boards'],
         parameters: [
             new OA\Parameter(
@@ -107,7 +110,10 @@ class BoardController extends BaseController
     #[OA\Get(
         path: '/board/{id}',
         summary: 'Получить доску по ID',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['boards'],
         parameters: [
             new OA\Parameter(
@@ -159,7 +165,10 @@ class BoardController extends BaseController
     #[OA\Post(
         path: '/project/{projectId}/board',
         summary: 'Создать новую доску в проекте',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/CreateBoardRequest')
@@ -240,7 +249,10 @@ class BoardController extends BaseController
     #[OA\Put(
         path: '/board/{id}',
         summary: 'Обновить доску',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/UpdateBoardRequest')
@@ -321,7 +333,10 @@ class BoardController extends BaseController
     #[OA\Delete(
         path: '/board/{id}',
         summary: 'Удалить доску',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['boards'],
         parameters: [
             new OA\Parameter(

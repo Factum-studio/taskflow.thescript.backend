@@ -2,7 +2,7 @@
 
 [![PHP Version](https://img.shields.io/badge/PHP-8.1%2B-777BB4?logo=php)](https://php.net)
 [![Yii Framework](https://img.shields.io/badge/Yii-2.0-40b3d8?logo=yii)](https://www.yiiframework.com/)
-[![License: Script Agency](https://img.shields.io/badge/License-Script%20Agency%201.0-blue.svg)](./LICENSE.md)
+[![License: Script Agency](https://img.shields.io/badge/License-Script%20Agency%20Proprietary-blue.svg)](./LICENSE.md)
 
 **TASKFLOW CRM** - это мощная и гибкая CRM-система для управления задачами, личными проектами, а так же проектами в креативных агентствах. 
 Построена на принципах Domain-Driven Design (DDD) и Clean Architecture, что обеспечивает высокую масштабируемость и поддерживаемость кодовой базы.
@@ -130,7 +130,7 @@ vendor/bin/codecept run <test_type> tests/api/ClientsCest
 - Правила именования веток
 - Работу с pull request'ами
 
-[Перейти к руководству](./docs/contribute.md)
+[Перейти к руководству](./docs/developer-guide.md#8-чек-лист-добавления-нового-модуля)
 
 ## Лицензия
 
@@ -142,10 +142,9 @@ vendor/bin/codecept run <test_type> tests/api/ClientsCest
 
 ## Архитектура проекта
 
-Подробное описание архитектуры доступно в [архитектурная документация](./docs/architect.md)
+Подробное описание архитектуры доступно в [архитектура ядра](./docs/core/architecture.md), [возможности системы](./docs/capabilities.md) и [документации модулей](./docs/README.md).
 
 ### Ключевые диаграммы
-- [Компонентная архитектура](./docs/architect.md#архитектурные-диаграммы)
-- [Структура модуля](./docs/architect.md#структура-modules-бизнес-модули)
-
-- [CQRS поток](./docs/architect.md#архитектурные-принципы)
+- [Компонентная архитектура: слои и модули](./docs/.diagrams/core-modules-component-diagram.puml)
+- [Полный конвейер запроса](./docs/.diagrams/request-pipeline-sequence-diagram.puml)
+- [CQRS поток: команды/запросы](./docs/core/commands-queries.md)

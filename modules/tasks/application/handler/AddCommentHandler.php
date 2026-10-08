@@ -2,6 +2,7 @@
 
 namespace modules\tasks\application\handler;
 
+use core\domain\valueObject\UserId;
 use InvalidArgumentException;
 use modules\tasks\application\assembler\CommentDtoAssembler;
 use modules\tasks\application\command\AddCommentCommand;
@@ -14,7 +15,6 @@ use modules\tasks\domain\repository\ICommentRepository;
 use modules\tasks\domain\repository\ITaskRepository;
 use modules\tasks\domain\valueObject\CommentId;
 use modules\tasks\domain\valueObject\TaskId;
-use modules\tasks\domain\valueObject\UserId;
 use RuntimeException;
 
 class AddCommentHandler

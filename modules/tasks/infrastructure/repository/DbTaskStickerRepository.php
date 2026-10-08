@@ -25,15 +25,15 @@ class DbTaskStickerRepository implements ITaskStickerRepository
     public function attach(TaskId $taskId, StickerId $stickerId): void
     {
         $exists = TaskStickerMapAR::find()
-            ->where(['task_id' => $taskId->getValue(), 'sticker_id' => $stickerId->getValue()])
+            ->where(['task_id' => $taskId->value(), 'sticker_id' => $stickerId->value()])
             ->exists();
         if ($exists) {
             return; // уже прикреплено
         }
 
         $ar = new TaskStickerMapAR();
-        $ar->task_id = $taskId->getValue();
-        $ar->sticker_id = $stickerId->getValue();
+        $ar->task_id = $taskId->value();
+        $ar->sticker_id = $stickerId->value();
         if (!$ar->save()) {
             throw new RuntimeException('Failed to attach sticker to task');
         }
@@ -42,8 +42,8 @@ class DbTaskStickerRepository implements ITaskStickerRepository
     public function detach(TaskId $taskId, StickerId $stickerId): void
     {
         TaskStickerMapAR::deleteAll([
-            'task_id' => $taskId->getValue(),
-            'sticker_id' => $stickerId->getValue(),
+            'task_id' => $taskId->value(),
+            'sticker_id' => $stickerId->value(),
         ]);
     }
 
@@ -51,7 +51,7 @@ class DbTaskStickerRepository implements ITaskStickerRepository
     {
         $rows = TaskStickerMapAR::find()
             ->select('sticker_id')
-            ->where(['task_id' => $taskId->getValue()])
+            ->where(['task_id' => $taskId->value()])
             ->asArray()
             ->all();
         return array_map(fn($row) => new StickerId((int)$row['sticker_id']), $rows);
@@ -60,7 +60,7 @@ class DbTaskStickerRepository implements ITaskStickerRepository
     public function isAttached(TaskId $taskId, StickerId $stickerId): bool
     {
         return TaskStickerMapAR::find()
-            ->where(['task_id' => $taskId->getValue(), 'sticker_id' => $stickerId->getValue()])
+            ->where(['task_id' => $taskId->value(), 'sticker_id' => $stickerId->value()])
             ->exists();
     }
 }

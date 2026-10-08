@@ -10,7 +10,7 @@ class TaskPriorityDtoAssembler
     public function toDto(TaskPriority $priority): TaskPriorityDto
     {
         return new TaskPriorityDto([
-            'id'    => $priority->getId()->getValue(),
+            'id'    => $priority->getId()->value(),
             'value' => $priority->getValue(),
             'label' => $priority->getLabel(),
             'color' => $priority->getColor(),

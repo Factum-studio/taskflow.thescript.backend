@@ -7,8 +7,6 @@
 # env
 .env
 
-.git/
-
 # netbeans project files
 nbproject
 
@@ -34,20 +32,13 @@ phpunit.phar
 # local phpunit config
 /phpunit.xml
 
-**/tests/_output/
-**/tests/_support/_generated
+tests/_output/*
+tests/_support/_generated
 
 #vagrant folder
+/.vagrant
 /vagrant
 
-#web
-/web
-
-#runtime
-/runtime
-
-/.github
-
+#dev scancore
 scancore_output.txt
-
 stats*

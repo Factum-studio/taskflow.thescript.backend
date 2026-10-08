@@ -13,7 +13,7 @@ class TaskSoftDeletedEvent implements ITaskDomainEvent
 
     public function __construct(Task $task, int $deletedBy)
     {
-        $this->taskId       = $task->getId()->getValue();
+        $this->taskId       = $task->getId()->value();
         $this->deletedBy    = $deletedBy;
         $this->occurredAt   = new DateTimeImmutable();
     }

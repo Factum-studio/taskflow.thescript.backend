@@ -14,7 +14,7 @@ class TaskUpdatedEvent implements ITaskDomainEvent
 
     public function __construct(Task $task, array $changedFields, int $updatedBy)
     {
-        $this->taskId           = $task->getId()->getValue();
+        $this->taskId           = $task->getId()->value();
         $this->changedFields    = $changedFields;
         $this->updatedBy        = $updatedBy;
         $this->occurredAt       = new DateTimeImmutable();

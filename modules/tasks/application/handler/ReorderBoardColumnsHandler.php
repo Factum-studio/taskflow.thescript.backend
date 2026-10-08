@@ -32,7 +32,7 @@ class ReorderBoardColumnsHandler
         $columns = $this->columnRepository->findByBoard($boardId);
         $columnMap = [];
         foreach ($columns as $col) {
-            $columnMap[$col->getId()->getValue()] = $col;
+            $columnMap[$col->getId()->value()] = $col;
         }
 
         $newOrder = 10; // можно использовать шаг 10 для возможности вставок

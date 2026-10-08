@@ -8,7 +8,6 @@ use modules\projects\application\dto\ProjectDto;
 use modules\projects\application\port\IProjectAccess;
 use modules\projects\domain\repository\IProjectRepository;
 use modules\projects\domain\valueObject\ProjectId;
-use modules\projects\domain\valueObject\UserId;
 use RuntimeException;
 
 class UpdateProjectHandler

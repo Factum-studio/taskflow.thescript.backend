@@ -1,0 +1,67 @@
+@startuml
+' Тайм-трекинг и автотаймер (модуль tasks)
+title TASKFLOW: тайм-трекинг задачи
+
+actor "Пользователь" as U
+participant "TimeIntervalController" as C
+participant "StartTimerHandler / StopTimerHandler" as H
+participant "ITimeIntervalRepository" as R
+participant "DispatchingEventDecorator" as E
+participant "AutoTimerListener" as AT
+participant "TimeTrackingListener" as TT
+participant "IDailySummaryRepository" as DS
+
+U -> C : POST /time-interval/start {taskId}
+activate C
+C -> H : StartTimerCommand
+activate H
+H -> R : create TimeInterval(type=timer, endTime=null)
+activate R
+R --> H : saved
+deactivate R
+H -> E : TimerStartedEvent
+deactivate H
+deactivate C
+
+U -> C : POST /time-interval/stop {taskId}
+activate C
+C -> H : StopTimerCommand
+activate H
+H -> R : findActive → stop(now) → duration
+activate R
+R --> H : saved
+deactivate R
+H -> E : TimerStoppedEvent {duration}
+deactivate H
+deactivate C
+
+E -> TT : handleTimerStopped
+activate TT
+TT -> DS : findOrCreate(task, user, date) → addTime(duration) → save
+activate DS
+DS --> TT : DailySummary
+deactivate DS
+deactivate TT
+
+' Автотаймер при переносе в активную колонку
+U -> C : POST /task/{id}/move-to-column {columnId}
+activate C
+C -> H : MoveTaskToColumnCommand
+activate H
+H -> R : task.columnId = new
+H -> E : TaskMovedToColumnEvent
+deactivate H
+deactivate C
+
+E -> AT : handleTaskMovedToColumn
+activate AT
+alt финальная колонка
+    AT -> R : stop active timer ('Task completed')
+else активная колонка
+    AT -> R : create auto-timer
+else неактивная колонка
+    AT -> R : remove active timer
+end
+deactivate AT
+
+@enduml

@@ -21,9 +21,9 @@ class TimerStoppedEvent implements ITaskDomainEvent
         if (!$interval->isStopped()) {
             throw new \InvalidArgumentException('Cannot create event for non-stopped interval');
         }
-        $this->intervalId   = $interval->getId()->getValue();
-        $this->taskId       = $interval->getTaskId()->getValue();
-        $this->userId       = $interval->getUserId()->getValue();
+        $this->intervalId   = $interval->getId()->value();
+        $this->taskId       = $interval->getTaskId()->value();
+        $this->userId       = $interval->getUserId()->value();
         $this->startedAt    = $interval->getStartTime();
         $this->stoppedAt    = $interval->getEndTime();
         $this->duration     = $interval->getDurationSeconds();

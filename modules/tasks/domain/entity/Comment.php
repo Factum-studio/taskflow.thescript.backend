@@ -2,11 +2,11 @@
 
 namespace modules\tasks\domain\entity;
 
+use core\domain\valueObject\UserId;
 use DateTimeImmutable;
 use InvalidArgumentException;
 use modules\tasks\domain\valueObject\CommentId;
 use modules\tasks\domain\valueObject\TaskId;
-use modules\tasks\domain\valueObject\UserId;
 
 class Comment
 {

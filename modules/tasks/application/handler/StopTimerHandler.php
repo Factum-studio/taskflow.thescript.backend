@@ -41,7 +41,7 @@ class StopTimerHandler
             throw new RuntimeException("Interval with ID {$command->intervalId} not found");
         }
 
-        if ($interval->getUserId()->getValue() !== $command->userId) {
+        if ($interval->getUserId()->value() !== $command->userId) {
             throw new InvalidArgumentException("You are not allowed to stop this timer");
         }
 

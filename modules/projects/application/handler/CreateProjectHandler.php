@@ -2,6 +2,7 @@
 
 namespace modules\projects\application\handler;
 
+use core\domain\valueObject\UserId;
 use modules\projects\application\assembler\ProjectDtoAssembler;
 use modules\projects\application\command\CreateProjectCommand;
 use modules\projects\application\dto\ProjectDto;
@@ -12,7 +13,6 @@ use modules\projects\domain\event\ProjectCreatedEvent;
 use modules\projects\domain\repository\IProjectRepository;
 use modules\projects\domain\valueObject\ProjectId;
 use modules\projects\domain\valueObject\ProjectType;
-use modules\projects\domain\valueObject\UserId;
 use modules\projects\domain\valueObject\Settings;
 use DateTimeImmutable;
 use RuntimeException;

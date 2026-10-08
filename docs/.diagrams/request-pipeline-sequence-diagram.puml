@@ -1,0 +1,74 @@
+@startuml
+' Полный конвейер запроса: middleware → контроллер → CQRS → репозиторий
+title TASKFLOW: полный конвейер запроса
+
+actor "Клиент (frontend)" as C
+participant "Yii App" as Y
+participant "PassportAuthMiddleware" as PA
+participant "RbacMiddleware" as RB
+participant "Контроллер (BaseController)" as CT
+participant "CQRS Handler" as H
+participant "Repository (Infrastructure)" as R
+participant "MySQL" as DB
+participant "GlobalEventDispatcher" as EV
+participant "Listener (модуля)" as L
+
+C -> Y : HTTP-запрос
+activate Y
+Y -> PA : handle()
+activate PA
+PA -> PA : public route? / OPTIONS?
+alt public
+    PA --> Y : пропуск
+else
+    PA -> PA : валидация JWT (RS256) / refresh
+    PA -> Y : setIdentity(YiiIdentity)
+end
+deactivate PA
+
+Y -> RB : handle()
+activate RB
+RB -> RB : public route? → правило? → permission?
+alt нет правила
+    RB --> Y : 403 PermissionDenied
+else нет identity
+    RB --> Y : 401 Unauthorized
+else разрешение запрещено
+    RB --> Y : 403 PermissionDeniedException
+else role-assignment нарушение
+    RB --> Y : 403 Role hierarchy violation
+else ок
+    RB --> Y : continue
+end
+deactivate RB
+
+Y -> CT : dispatch action
+activate CT
+CT -> CT : request-модель (валидация)
+alt ошибка валидации
+    CT --> C : ErrorDto (422 / 400)
+else
+    CT -> H : Command / Query
+    activate H
+    H -> R : порт репозитория
+    activate R
+    R -> DB : SQL
+    activate DB
+    DB --> R : данные
+    deactivate DB
+    R --> H : сущности / результат
+    deactivate R
+    H -> EV : dispatch(доменное событие)
+    activate EV
+    EV -> L : handle(событие)
+    activate L
+    L --> EV : (уведомления, логи, авто-таймер)
+    deactivate L
+    deactivate EV
+    H --> CT : DTO
+    deactivate H
+    CT --> C : JSON {item|items|error|message}
+    deactivate CT
+end
+deactivate Y
+@enduml

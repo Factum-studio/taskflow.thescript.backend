@@ -26,7 +26,10 @@ class PriorityController extends BaseController
     #[OA\Get(
         path: '/task-priority',
         summary: 'Список приоритетов задач',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['task-priorities'],
         responses: [
             new OA\Response(

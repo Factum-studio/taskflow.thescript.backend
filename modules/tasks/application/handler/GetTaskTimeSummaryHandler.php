@@ -2,6 +2,7 @@
 
 namespace modules\tasks\application\handler;
 
+use core\domain\valueObject\UserId;
 use Exception;
 use modules\tasks\application\assembler\TaskTimeSummaryDtoAssembler;
 use modules\tasks\application\dto\TaskTimeSummaryDto;
@@ -10,7 +11,6 @@ use modules\tasks\application\service\BusyChartService;
 use modules\tasks\domain\repository\ITaskRepository;
 use modules\tasks\domain\repository\ITimeIntervalRepository;
 use modules\tasks\domain\valueObject\TaskId;
-use modules\tasks\domain\valueObject\UserId;
 use RuntimeException;
 
 class GetTaskTimeSummaryHandler
@@ -60,8 +60,8 @@ class GetTaskTimeSummaryHandler
         }
 
         $summaryData = [
-            'taskId' => $task->getId()->getValue(),
-            'taskTitle' => $task->getTitle()->getValue(),
+            'taskId' => $task->getId()->value(),
+            'taskTitle' => $task->getTitle()->value(),
             'blocks' => $blocks,
             'totalDuration' => $totalDuration,
         ];

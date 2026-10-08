@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\infrastructure\event;
 
 use core\application\port\IEventDispatcher as GlobalEventDispatcher;
@@ -15,7 +17,7 @@ class DispatchingEventDecorator implements LocalEventDispatcher
     public function __construct(
         LocalEventDispatcher $localDispatcher,
         GlobalEventDispatcher $globalDispatcher,
-        array $forwardEvents = []
+        array $forwardEvents = [],
     ) {
         $this->localDispatcher  = $localDispatcher;
         $this->globalDispatcher = $globalDispatcher;

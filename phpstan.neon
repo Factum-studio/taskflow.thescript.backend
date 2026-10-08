@@ -1,0 +1,12 @@
+parameters:
+    level: 5 # базовый уровень
+    paths:
+        - core
+        - modules
+    bootstrapFiles:
+        - phpstan-bootstrap.php
+    ignoreErrors:
+        - '#has no value type specified in iterable type array#'
+        - '#Access to static property \$app on an unknown class Yii\.#'
+        - '#Call to static method .* on an unknown class Yii\.#'
+

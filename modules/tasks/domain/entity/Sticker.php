@@ -2,12 +2,12 @@
 
 namespace modules\tasks\domain\entity;
 
+use core\domain\valueObject\UserId;
 use DateTimeImmutable;
 use InvalidArgumentException;
 use modules\tasks\domain\valueObject\StickerId;
 use modules\tasks\domain\valueObject\StickerName;
 use modules\tasks\domain\valueObject\StickerType;
-use modules\tasks\domain\valueObject\UserId;
 
 class Sticker
 {

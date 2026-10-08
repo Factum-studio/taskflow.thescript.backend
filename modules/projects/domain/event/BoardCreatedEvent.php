@@ -14,9 +14,9 @@ class BoardCreatedEvent implements IProjectDomainEvent
 
     public function __construct(Board $board)
     {
-        $this->boardId = $board->getId()->getValue();
-        $this->projectId = $board->getProjectId()->getValue();
-        $this->createdBy = $board->getCreatedBy()->getValue();
+        $this->boardId = $board->getId()->value();
+        $this->projectId = $board->getProjectId()->value();
+        $this->createdBy = $board->getCreatedBy()->value();
         $this->occurredAt = new DateTimeImmutable();
     }
 
