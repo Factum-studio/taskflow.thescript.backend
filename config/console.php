@@ -1,11 +1,11 @@
 <?php
 
-use yii\symfonymailer\Mailer;
 declare(strict_types=1);
+
+use yii\symfonymailer\Mailer;
 
 $params                 = require __DIR__ . '/params.php';
 $db                     = require __DIR__ . '/db.php';
-$redis                  = require __DIR__ . '/redis.php';
 $migrationNamespaces    = require __DIR__ . '/migration_namespaces.php';
 $diConfigs          = [
     __DIR__ . '/../modules/projects/config/di.php',
@@ -33,23 +33,24 @@ $config = [
         '@modules'  => dirname(__DIR__) . '/modules',
     ],
     'components' => [
-        'redis'=> $redis,
         'cache' => [
-            'class' => 'yii\redis\Cache',
-            'redis' => 'redis',
+            'class' => 'yii\caching\FileCache',
         ],
         'mailer' => [
-            'class' => Mailer::class,
-            'viewPath' => '@app/mail',
-            'useFileTransport' => false,
-            'transport' => [
-//                'dsn'           => $_ENV['MAILER_DSN'],
-                'scheme'        => $_ENV['MAILER_SCHEME'],
-                'host'          => $_ENV['MAILER_HOST'],
-                'port'          => $_ENV['MAILER_PORT'],
-                'username'      => $_ENV['MAILER_USERNAME'],
-                'password'      => $_ENV['MAILER_PASSWORD'],
-                'encryption'    => $_ENV['MAILER_ENCRYPTION'],
+            'class'             => Mailer::class,
+            'viewPath'          => '@app/mail',
+            'useFileTransport'  => false,
+            'transport'        => [
+                'scheme'   => $_ENV['MAILER_SCHEME'],
+                'host'     => $_ENV['MAILER_HOST'],
+                'port'     => $_ENV['MAILER_PORT'],
+                'username' => $_ENV['MAILER_USERNAME'],
+                'password' => $_ENV['MAILER_PASSWORD'],
+                'encryption' => $_ENV['MAILER_ENCRYPTION'],
+                'options' => [
+                    'verify_peer' => 0,
+                    'verify_peer_name' => 0,
+                ],
             ],
         ],
         'log' => [

@@ -12,10 +12,7 @@
 - **Затрагивает:** консольные команды (миграции, cron, email-send).
 - **Рекомендация:** добавить `config/redis.php` (обёртка над `$_ENV['REDIS_HOST'|'REDIS_PORT'|'REDIS_PASSWORD']`) или убрать его подключение из `console.php`. Также `yii\redis\Cache` требует расширение `yii2-redis`, которого нет в `composer.json` (в зависимостях только `ext-redis`).
 
-### 1.2. Веб-приложение использует `FileCache`, консоль — Redis
-- В `config/web.php` кэш — `yii\caching\FileCache`, в `config/console.php` — `yii\redis\Cache`. Разные кэши в вебе и консоли → невозможность общих данных кэша между CLI и web (сейчас, вероятно, некритично).
-
-### 1.3. `.env.example` не полностью соответствует фактическим переменным
+### 1.2. `.env.example` не полностью соответствует фактическим переменным
 - В `.env.example` есть `PASSPORT_SCOPES`, но в коде scopes берутся из `modules/passport/auth/config/params.php` (жёстко заданный массив), а не из `.env`.
 
 ---
