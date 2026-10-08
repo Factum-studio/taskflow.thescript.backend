@@ -13,8 +13,8 @@ class ProjectCreatedEvent implements IProjectDomainEvent
 
     public function __construct(Project $project)
     {
-        $this->projectId = $project->getId()->getValue();
-        $this->ownerId = $project->getOwnerId()->getValue();
+        $this->projectId = $project->getId()->value();
+        $this->ownerId = $project->getOwnerId()->value();
         $this->occurredAt = new DateTimeImmutable();
     }
 

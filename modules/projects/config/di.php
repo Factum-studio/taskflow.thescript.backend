@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use core\domain\event\UserFirstLoginEvent;
 use modules\projects\application\port\IProjectAccess;
 use core\application\port\IEventDispatcher as GlobalEventDispatcher;
@@ -53,7 +55,7 @@ Yii::$container->set(ProjectUserDtoAssembler::class);
 
 Yii::$container->set(
     IProjectAccess::class,
-    ProjectAccess::class
+    ProjectAccess::class,
 );
 
 Yii::$container->set(AddOwnerAsMemberListener::class);
@@ -86,10 +88,10 @@ Yii::$container->set(ModuleEventDispatcher::class, function (Container $containe
             [$invitationListener, 'handle'],
         ],
         InvitationAcceptedEvent::class => [
-            [$logger, 'handleInvitationAccepted']
+            [$logger, 'handleInvitationAccepted'],
         ],
         InvitationCancelledEvent::class => [
-            [$logger, 'handleInvitationCancelled']
+            [$logger, 'handleInvitationCancelled'],
         ],
     ];
 
@@ -103,14 +105,14 @@ $forwardEvents = [
     BoardCreatedEvent::class,
     InvitationCreatedEvent::class,
     InvitationAcceptedEvent::class,
-    InvitationCancelledEvent::class
+    InvitationCancelledEvent::class,
 ];
 
 Yii::$container->set(ProjectEventDispatcher::class, function (Container $container) use ($forwardEvents) {
     return new DispatchingEventDecorator(
         $container->get(ModuleEventDispatcher::class),
         $container->get(GlobalEventDispatcher::class),
-        $forwardEvents
+        $forwardEvents,
     );
 });
 

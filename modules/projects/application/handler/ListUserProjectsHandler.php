@@ -2,11 +2,11 @@
 
 namespace modules\projects\application\handler;
 
+use core\domain\valueObject\UserId;
 use modules\projects\application\assembler\ProjectDtoAssembler;
 use modules\projects\application\dto\ProjectDto;
 use modules\projects\application\query\ListUserProjectsQuery;
 use modules\projects\domain\repository\IProjectRepository;
-use modules\projects\domain\valueObject\UserId;
 
 class ListUserProjectsHandler
 {

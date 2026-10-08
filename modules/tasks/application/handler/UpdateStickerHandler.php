@@ -36,7 +36,7 @@ class UpdateStickerHandler
             throw new RuntimeException("Sticker with ID {$command->id} not found");
         }
 
-        if ($sticker->getCreatedBy()->getValue() !== $command->updatedBy) {
+        if ($sticker->getCreatedBy()->value() !== $command->updatedBy) {
             throw new InvalidArgumentException('You are not allowed to update this sticker');
         }
 

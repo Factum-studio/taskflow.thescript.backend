@@ -6,7 +6,6 @@ use modules\projects\application\command\DeleteProjectCommand;
 use modules\projects\application\port\IProjectAccess;
 use modules\projects\domain\repository\IProjectRepository;
 use modules\projects\domain\valueObject\ProjectId;
-use modules\projects\domain\valueObject\UserId;
 use RuntimeException;
 
 class DeleteProjectHandler

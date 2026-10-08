@@ -10,9 +10,9 @@ class TimeIntervalDtoAssembler
     public function toDto(TimeInterval $interval): TimeIntervalDto
     {
         return new TimeIntervalDto([
-            'id'        => $interval->getId()->getValue(),
-            'taskId'    => $interval->getTaskId()->getValue(),
-            'userId'    => $interval->getUserId()->getValue(),
+            'id'        => $interval->getId()->value(),
+            'taskId'    => $interval->getTaskId()->value(),
+            'userId'    => $interval->getUserId()->value(),
             'startTime' => $interval->getStartTime()->format('Y-m-d H:i:s'),
             'endTime'   => $interval->getEndTime()?->format('Y-m-d H:i:s'),
             'duration'  => $interval->getDurationSeconds(),

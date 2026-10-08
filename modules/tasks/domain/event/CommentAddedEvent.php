@@ -14,9 +14,9 @@ class CommentAddedEvent implements ITaskDomainEvent
 
     public function __construct(Comment $comment)
     {
-        $this->commentId    = $comment->getId()->getValue();
-        $this->taskId       = $comment->getTaskId()->getValue();
-        $this->userId       = $comment->getUserId()->getValue();
+        $this->commentId    = $comment->getId()->value();
+        $this->taskId       = $comment->getTaskId()->value();
+        $this->userId       = $comment->getUserId()->value();
         $this->occurredAt   = new DateTimeImmutable();
     }
 

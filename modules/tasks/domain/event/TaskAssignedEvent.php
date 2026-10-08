@@ -2,8 +2,8 @@
 
 namespace modules\tasks\domain\event;
 
+use core\domain\valueObject\UserId;
 use modules\tasks\domain\entity\Task;
-use modules\tasks\domain\valueObject\UserId;
 use DateTimeImmutable;
 
 class TaskAssignedEvent implements ITaskDomainEvent
@@ -16,9 +16,9 @@ class TaskAssignedEvent implements ITaskDomainEvent
 
     public function __construct(Task $task, ?UserId $oldAssignee, int $assignedBy)
     {
-        $this->taskId           = $task->getId()->getValue();
-        $this->oldAssigneeId    = $oldAssignee?->getValue();
-        $this->newAssigneeId    = $task->getAssignedTo()?->getValue();
+        $this->taskId           = $task->getId()->value();
+        $this->oldAssigneeId    = $oldAssignee?->value();
+        $this->newAssigneeId    = $task->getAssignedTo()?->value();
         $this->assignedBy       = $assignedBy;
         $this->occurredAt       = new DateTimeImmutable();
     }

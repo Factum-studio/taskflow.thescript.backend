@@ -2,13 +2,13 @@
 
 namespace modules\tasks\infrastructure\repository;
 
+use core\domain\valueObject\UserId;
 use DateTimeImmutable;
 use modules\tasks\domain\entity\TimeInterval;
 use modules\tasks\domain\repository\ITimeIntervalRepository;
 use modules\tasks\domain\valueObject\Duration;
 use modules\tasks\domain\valueObject\TaskId;
 use modules\tasks\domain\valueObject\TimeIntervalId;
-use modules\tasks\domain\valueObject\UserId;
 use modules\tasks\infrastructure\persistence\TimeIntervalAR;
 use RuntimeException;
 use Throwable;
@@ -36,7 +36,7 @@ class DbTimeIntervalRepository implements ITimeIntervalRepository
         if (!$ar->save()) {
             throw new RuntimeException('Failed to save time interval: ' . implode(', ', $ar->getFirstErrors()));
         }
-        if (!$interval->getId() || $interval->getId()->getValue() !== (int)$ar->id) {
+        if (!$interval->getId() || $interval->getId()->value() !== (int)$ar->id) {
             $interval->setId(new TimeIntervalId((int)$ar->id));
         }
         return $interval;
@@ -51,7 +51,7 @@ class DbTimeIntervalRepository implements ITimeIntervalRepository
     public function findByTaskAndUser(TaskId $taskId, UserId $userId, ?DateTimeImmutable $from = null, ?DateTimeImmutable $to = null): array
     {
         $query = TimeIntervalAR::find()
-            ->where(['task_id' => $taskId->getValue(), 'user_id' => $userId->getValue()]);
+            ->where(['task_id' => $taskId->value(), 'user_id' => $userId->value()]);
         if ($from) {
             $query->andWhere(['>=', 'start_time', $from->format('Y-m-d H:i:s')]);
         }
@@ -65,7 +65,7 @@ class DbTimeIntervalRepository implements ITimeIntervalRepository
     public function findByUser(UserId $userId, DateTimeImmutable $from, DateTimeImmutable $to): array
     {
         $ars = TimeIntervalAR::find()
-            ->where(['user_id' => $userId->getValue()])
+            ->where(['user_id' => $userId->value()])
             ->andWhere(['>=', 'start_time', $from->format('Y-m-d H:i:s')])
             ->andWhere(['<=', 'end_time', $to->format('Y-m-d H:i:s')])
             ->orderBy(['start_time' => SORT_ASC])
@@ -77,8 +77,8 @@ class DbTimeIntervalRepository implements ITimeIntervalRepository
     {
         $ar = TimeIntervalAR::find()
             ->where([
-                'task_id' => $taskId->getValue(),
-                'user_id' => $userId->getValue(),
+                'task_id' => $taskId->value(),
+                'user_id' => $userId->value(),
                 'end_time' => null,
                 'type' => $type,
             ])
@@ -88,7 +88,7 @@ class DbTimeIntervalRepository implements ITimeIntervalRepository
 
     public function findByTask(TaskId $taskId, ?string $type = null): array
     {
-        $query = TimeIntervalAR::find()->where(['task_id' => $taskId->getValue()]);
+        $query = TimeIntervalAR::find()->where(['task_id' => $taskId->value()]);
         if ($type !== null) {
             $query->andWhere(['type' => $type]);
         }
@@ -102,9 +102,9 @@ class DbTimeIntervalRepository implements ITimeIntervalRepository
     public function findActiveInterval(UserId $userId, ?TaskId $taskId = null): ?TimeInterval
     {
         $query = TimeIntervalAR::find()
-            ->where(['user_id' => $userId->getValue(), 'end_time' => null]);
+            ->where(['user_id' => $userId->value(), 'end_time' => null]);
         if ($taskId) {
-            $query->andWhere(['task_id' => $taskId->getValue()]);
+            $query->andWhere(['task_id' => $taskId->value()]);
         }
         $ar = $query->one();
         return $ar ? $this->mapARToEntity($ar) : null;
@@ -113,9 +113,9 @@ class DbTimeIntervalRepository implements ITimeIntervalRepository
     public function findAllActive(UserId $userId, ?TaskId $taskId = null): array
     {
         $query = TimeIntervalAR::find()
-            ->where(['user_id' => $userId->getValue(), 'end_time' => null]);
+            ->where(['user_id' => $userId->value(), 'end_time' => null]);
         if ($taskId) {
-            $query->andWhere(['task_id' => $taskId->getValue()]);
+            $query->andWhere(['task_id' => $taskId->value()]);
         }
         $ars = $query->orderBy(['start_time' => SORT_ASC])->all();
         return array_map([$this, 'mapARToEntity'], $ars);
@@ -133,13 +133,13 @@ class DbTimeIntervalRepository implements ITimeIntervalRepository
 
     private function findARById(TimeIntervalId $id): ?TimeIntervalAR
     {
-        return TimeIntervalAR::findOne($id->getValue());
+        return TimeIntervalAR::findOne($id->value());
     }
 
     private function mapEntityToAR(TimeInterval $interval, TimeIntervalAR $ar): void
     {
-        $ar->task_id    = $interval->getTaskId()->getValue();
-        $ar->user_id    = $interval->getUserId()->getValue();
+        $ar->task_id    = $interval->getTaskId()->value();
+        $ar->user_id    = $interval->getUserId()->value();
         $ar->start_time = $interval->getStartTime()->format('Y-m-d H:i:s');
         $ar->end_time   = $interval->getEndTime()?->format('Y-m-d H:i:s');
         $ar->duration   = $interval->getDurationSeconds();

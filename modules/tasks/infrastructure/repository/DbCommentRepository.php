@@ -2,13 +2,13 @@
 
 namespace modules\tasks\infrastructure\repository;
 
+use core\domain\valueObject\UserId;
 use DateTimeImmutable;
 use Exception;
 use modules\tasks\domain\entity\Comment;
 use modules\tasks\domain\repository\ICommentRepository;
 use modules\tasks\domain\valueObject\CommentId;
 use modules\tasks\domain\valueObject\TaskId;
-use modules\tasks\domain\valueObject\UserId;
 use modules\tasks\infrastructure\persistence\CommentAR;
 use RuntimeException;
 use Throwable;
@@ -34,7 +34,7 @@ class DbCommentRepository implements ICommentRepository
         if (!$ar->save()) {
             throw new RuntimeException('Failed to save comment: ' . implode(', ', $ar->getFirstErrors()));
         }
-        if (!$comment->getId() || $comment->getId()->getValue() !== (int)$ar->id) {
+        if (!$comment->getId() || $comment->getId()->value() !== (int)$ar->id) {
             $comment->setId(new CommentId((int)$ar->id));
         }
         return $comment;
@@ -52,7 +52,7 @@ class DbCommentRepository implements ICommentRepository
     public function findByTaskId(TaskId $taskId): array
     {
         $ars = CommentAR::find()
-            ->where(['task_id' => $taskId->getValue()])
+            ->where(['task_id' => $taskId->value()])
             ->orderBy(['created_at' => SORT_ASC])
             ->all();
         return array_map([$this, 'mapARToEntity'], $ars);
@@ -70,13 +70,13 @@ class DbCommentRepository implements ICommentRepository
 
     private function findARById(CommentId $id): ?CommentAR
     {
-        return CommentAR::findOne($id->getValue());
+        return CommentAR::findOne($id->value());
     }
 
     private function mapEntityToAR(Comment $comment, CommentAR $ar): void
     {
-        $ar->task_id = $comment->getTaskId()->getValue();
-        $ar->user_id = $comment->getUserId()->getValue();
+        $ar->task_id = $comment->getTaskId()->value();
+        $ar->user_id = $comment->getUserId()->value();
         $ar->content = $comment->getContent();
     }
 

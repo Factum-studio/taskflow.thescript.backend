@@ -30,7 +30,7 @@ class DeleteStickerHandler
             throw new RuntimeException("Sticker with ID {$command->id} not found");
         }
 
-        if ($sticker->getCreatedBy()->getValue() !== $command->deletedBy) {
+        if ($sticker->getCreatedBy()->value() !== $command->deletedBy) {
             throw new InvalidArgumentException('You are not allowed to delete this sticker');
         }
 

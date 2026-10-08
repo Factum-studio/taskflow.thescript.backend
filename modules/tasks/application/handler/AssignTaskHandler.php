@@ -2,6 +2,7 @@
 
 namespace modules\tasks\application\handler;
 
+use core\domain\valueObject\UserId;
 use modules\tasks\application\assembler\TaskDtoAssembler;
 use modules\tasks\application\command\AssignTaskCommand;
 use modules\tasks\application\dto\TaskDto;
@@ -10,7 +11,6 @@ use modules\tasks\domain\event\IEventDispatcher;
 use modules\tasks\domain\event\TaskAssignedEvent;
 use modules\tasks\domain\repository\ITaskRepository;
 use modules\tasks\domain\valueObject\TaskId;
-use modules\tasks\domain\valueObject\UserId;
 use RuntimeException;
 
 class AssignTaskHandler

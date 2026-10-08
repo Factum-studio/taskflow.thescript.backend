@@ -1,15 +1,15 @@
 <?php
 
-/**
- * TODO: По мере реализации раскомментировать базовый конфиг пространства имён миграции модулей
- */
+declare(strict_types=1);
 
+/**
+ * @example
+ * '<source>\module-name\infrastructure\migrations'
+ */
 return [
-    'core\infrastructure\migrations',
-//    'modules\clients\infrastructure\migrations',
-    'modules\projects\infrastructure\migrations',
-    'modules\tasks\infrastructure\migrations',
-//    'modules\kanban\infrastructure\migrations',
-//    'modules\files\infrastructure\migrations',
-//    'modules\analytics\infrastructure\migrations',
+    'core\\infrastructure\\migrations',
+    'modules\\rbac\\infrastructure\\migrations',
+    'modules\\tasks\\infrastructure\\migrations',       // TODO: special control this module
+    'modules\\projects\\infrastructure\\migrations',    // TODO: special control this module
+    'modules\\feedback\\infrastructure\\migrations',    // TODO: special control this module
 ];

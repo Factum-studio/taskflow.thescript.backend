@@ -21,11 +21,11 @@
         "vlucas/phpdotenv": "^5.6",
         "zircote/swagger-php": "^5.8",
         "doctrine/annotations": "^2.0",
+        "doctordanila/script-doc": "^1.0",
+        "league/oauth2-server": "^8.5.5",
+        "nyholm/psr7": "^1.5",
         "yiisoft/yii2-httpclient": "^2.0",
-        "firebase/php-jwt": "^7.0",
-        "ext-redis": "*",
-        "yiisoft/yii2-redis": "^2.1",
-        "cebe/markdown": "^1.2"
+        "ext-redis": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
@@ -38,7 +38,9 @@
         "codeception/module-filesystem": "^3.0 || ^2.0 || ^1.1",
         "codeception/verify": "^3.0 || ^2.2",
         "fakerphp/faker": "^1.24",
-        "doctordanila/scancore": "~1.0.6"
+        "doctordanila/scancore": "~1.0.6",
+        "friendsofphp/php-cs-fixer": "^3.95",
+        "phpstan/phpstan": "^2.2"
     },
     "autoload": {
         "psr-4": {
@@ -65,17 +67,16 @@
         }
     },
     "scripts": {
+        "unclestan:6": "phpstan analyse core modules --level=6 --no-progress",
+        "lint": "php-cs-fixer fix --dry-run --diff",
+        "lint-fix": "php-cs-fixer fix",
         "post-install-cmd": [
             "yii\\composer\\Installer::postInstall"
         ],
         "post-create-project-cmd": [
             "yii\\composer\\Installer::postCreateProject",
             "yii\\composer\\Installer::postInstall"
-        ],
-        "test:base": "vendor/bin/codecept run unit core/presentation/controller/BaseControllerTest",
-        "test": "vendor/bin/codecept run",
-        "test:unit": "vendor/bin/codecept run unit",
-        "test:api": "vendor/bin/codecept run api"
+        ]
     },
     "extra": {
         "yii\\composer\\Installer::postCreateProject": {

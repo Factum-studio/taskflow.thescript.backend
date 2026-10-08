@@ -2,9 +2,9 @@
 
 namespace modules\projects\domain\event;
 
+use core\domain\valueObject\UserId;
 use DateTimeImmutable;
 use modules\projects\domain\valueObject\ProjectId;
-use modules\projects\domain\valueObject\UserId;
 
 class ProjectMemberRemovedEvent implements IProjectDomainEvent
 {
@@ -15,8 +15,8 @@ class ProjectMemberRemovedEvent implements IProjectDomainEvent
 
     public function __construct(ProjectId $projectId, UserId $userId, int $removedBy)
     {
-        $this->projectId = $projectId->getValue();
-        $this->userId = $userId->getValue();
+        $this->projectId = $projectId->value();
+        $this->userId = $userId->value();
         $this->removedBy = $removedBy;
         $this->occurredAt = new DateTimeImmutable();
     }

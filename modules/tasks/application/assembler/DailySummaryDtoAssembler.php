@@ -10,9 +10,9 @@ class DailySummaryDtoAssembler
     public function toDto(DailySummary $summary): DailySummaryDto
     {
         return new DailySummaryDto([
-            'id'            => $summary->getId()->getValue(),
-            'taskId'        => $summary->getTaskId()->getValue(),
-            'userId'        => $summary->getUserId()->getValue(),
+            'id'            => $summary->getId()->value(),
+            'taskId'        => $summary->getTaskId()->value(),
+            'userId'        => $summary->getUserId()->value(),
             'date'          => $summary->getDate()->toString(),
             'totalDuration' => $summary->getTotalDuration()->getSeconds(),
             'updatedAt'     => $summary->getUpdatedAt()->format('Y-m-d H:i:s'),

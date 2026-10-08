@@ -2,9 +2,9 @@
 
 namespace modules\projects\domain\event;
 
+use core\domain\valueObject\UserId;
 use DateTimeImmutable;
 use modules\projects\domain\entity\Invitation;
-use modules\projects\domain\valueObject\UserId;
 
 class InvitationAcceptedEvent implements IProjectDomainEvent
 {
@@ -17,9 +17,9 @@ class InvitationAcceptedEvent implements IProjectDomainEvent
     public function __construct(Invitation $invitation, UserId $userId)
     {
         $this->invitationId = $invitation->getId();
-        $this->projectId    = $invitation->getProjectId()->getValue();
+        $this->projectId    = $invitation->getProjectId()->value();
         $this->email        = $invitation->getEmail();
-        $this->userId       = $userId->getValue();
+        $this->userId       = $userId->value();
         $this->occurredAt   = new DateTimeImmutable();
     }
 

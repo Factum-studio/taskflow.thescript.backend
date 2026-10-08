@@ -41,7 +41,10 @@ class TaskStickerController extends BaseController
     #[OA\Get(
         path: '/task/{taskId}/sticker',
         summary: 'Получить стикеры задачи',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['task-stickers'],
         parameters: [
             new OA\Parameter(
@@ -92,7 +95,10 @@ class TaskStickerController extends BaseController
     #[OA\Post(
         path: '/task/{taskId}/sticker',
         summary: 'Прикрепить стикер к задаче',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/AttachStickerRequest')
@@ -160,7 +166,10 @@ class TaskStickerController extends BaseController
     #[OA\Delete(
         path: '/task/{taskId}/sticker/{stickerId}',
         summary: 'Открепить стикер от задачи',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['task-stickers'],
         parameters: [
             new OA\Parameter(

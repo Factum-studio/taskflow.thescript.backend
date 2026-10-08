@@ -34,7 +34,7 @@ class GetCommentHandler
         if (!$comment) {
             throw new RuntimeException("Comment with ID {$query->commentId} not found.");
         }
-        if (!$this->taskAccess->canViewTask($query->userId, $comment->getTaskId()->getValue())) {
+        if (!$this->taskAccess->canViewTask($query->userId, $comment->getTaskId()->value())) {
             throw new RuntimeException('You are not allowed to view this comment');
         }
         return $this->commentDtoAssembler->toDto($comment);

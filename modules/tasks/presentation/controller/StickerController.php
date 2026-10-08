@@ -49,7 +49,10 @@ class StickerController extends BaseController
     #[OA\Get(
         path: '/sticker',
         summary: 'Список стикеров',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['stickers'],
         parameters: [
             new OA\Parameter(
@@ -111,7 +114,10 @@ class StickerController extends BaseController
     #[OA\Get(
         path: '/sticker/{id}',
         summary: 'Получить стикер по ID',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['stickers'],
         parameters: [
             new OA\Parameter(
@@ -157,7 +163,10 @@ class StickerController extends BaseController
     #[OA\Post(
         path: '/sticker',
         summary: 'Создать новый стикер',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/CreateStickerRequest')
@@ -221,7 +230,10 @@ class StickerController extends BaseController
     #[OA\Put(
         path: '/sticker/{id}',
         summary: 'Обновить стикер',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/UpdateStickerRequest')
@@ -298,7 +310,10 @@ class StickerController extends BaseController
     #[OA\Delete(
         path: '/sticker/{id}',
         summary: 'Удалить стикер',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['stickers'],
         parameters: [
             new OA\Parameter(

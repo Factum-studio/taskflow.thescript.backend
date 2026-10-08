@@ -55,7 +55,10 @@ class BoardColumnController extends BaseController
         path: '/board/{boardId}/column',
         description: 'Возвращает все колонки указанной доски',
         summary: 'Список колонок доски',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['board-columns'],
         parameters: [
             new OA\Parameter(
@@ -108,7 +111,10 @@ class BoardColumnController extends BaseController
     #[OA\Get(
         path: '/board/column/{id}',
         summary: 'Получить колонку по ID',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['board-columns'],
         parameters: [
             new OA\Parameter(
@@ -162,7 +168,10 @@ class BoardColumnController extends BaseController
     #[OA\Post(
         path: '/board/{boardId}/column',
         summary: 'Создать новую колонку в доске',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/CreateBoardColumnRequest')
@@ -238,7 +247,10 @@ class BoardColumnController extends BaseController
     #[OA\Put(
         path: '/board/column/{id}',
         summary: 'Обновить колонку',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/UpdateBoardColumnRequest')
@@ -318,7 +330,10 @@ class BoardColumnController extends BaseController
     #[OA\Delete(
         path: '/board/column/{id}',
         summary: 'Удалить колонку',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['board-columns'],
         parameters: [
             new OA\Parameter(
@@ -373,7 +388,10 @@ class BoardColumnController extends BaseController
     #[OA\Post(
         path: '/board/{boardId}/column/reorder',
         summary: 'Изменить порядок колонок',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/ReorderBoardColumnsRequest')

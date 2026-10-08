@@ -50,7 +50,10 @@ class ProjectController extends BaseController
         path: '/project',
         description: 'Возвращает список проектов текущего пользователя',
         summary: 'Список проектов пользователя',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['projects'],
         responses: [
             new OA\Response(
@@ -90,7 +93,10 @@ class ProjectController extends BaseController
     #[OA\Get(
         path: '/project/{id}',
         summary: 'Получить проект по ID',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['projects'],
         parameters: [
             new OA\Parameter(
@@ -142,7 +148,10 @@ class ProjectController extends BaseController
     #[OA\Post(
         path: '/project',
         summary: 'Создать новый проект',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/CreateProjectRequest')
@@ -202,7 +211,10 @@ class ProjectController extends BaseController
     #[OA\Put(
         path: '/project/{id}',
         summary: 'Обновить проект',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/UpdateProjectRequest')
@@ -282,7 +294,10 @@ class ProjectController extends BaseController
     #[OA\Delete(
         path: '/project/{id}',
         summary: 'Удалить проект',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['projects'],
         parameters: [
             new OA\Parameter(

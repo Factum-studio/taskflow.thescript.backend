@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\domain\entity;
 
+use core\domain\valueObject\UserId;
 use DateTimeImmutable;
 use modules\projects\domain\valueObject\InvitationStatus;
 use modules\projects\domain\valueObject\ProjectId;
-use modules\projects\domain\valueObject\UserId;
 use InvalidArgumentException;
 
 class Invitation
@@ -29,7 +31,7 @@ class Invitation
         InvitationStatus $status,
         DateTimeImmutable $createdAt,
         DateTimeImmutable $expiresAt,
-        ?DateTimeImmutable $updatedAt = null
+        ?DateTimeImmutable $updatedAt = null,
     ) {
         $this->id           = $id;
         $this->projectId    = $projectId;
@@ -42,15 +44,42 @@ class Invitation
         $this->updatedAt    = $updatedAt ?? new DateTimeImmutable();
     }
 
-    public function getId(): int { return $this->id; }
-    public function getProjectId(): ProjectId { return $this->projectId; }
-    public function getEmail(): string { return $this->email; }
-    public function getInvitedBy(): UserId { return $this->invitedBy; }
-    public function getToken(): string { return $this->token; }
-    public function getStatus(): InvitationStatus { return $this->status; }
-    public function getCreatedAt(): DateTimeImmutable { return $this->createdAt; }
-    public function getExpiresAt(): DateTimeImmutable { return $this->expiresAt; }
-    public function getUpdatedAt(): DateTimeImmutable { return $this->updatedAt; }
+    public function getId(): int
+    {
+        return $this->id;
+    }
+    public function getProjectId(): ProjectId
+    {
+        return $this->projectId;
+    }
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+    public function getInvitedBy(): UserId
+    {
+        return $this->invitedBy;
+    }
+    public function getToken(): string
+    {
+        return $this->token;
+    }
+    public function getStatus(): InvitationStatus
+    {
+        return $this->status;
+    }
+    public function getCreatedAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+    public function getExpiresAt(): DateTimeImmutable
+    {
+        return $this->expiresAt;
+    }
+    public function getUpdatedAt(): DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
 
     public function accept(): void
     {

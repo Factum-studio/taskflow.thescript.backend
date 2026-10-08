@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\domain\entity;
 
+use core\domain\valueObject\UserId;
 use DateTimeImmutable;
 use modules\projects\domain\valueObject\ProjectId;
-use modules\projects\domain\valueObject\UserId;
 use modules\projects\domain\valueObject\ProjectType;
 use modules\projects\domain\valueObject\Settings;
 use InvalidArgumentException;
@@ -26,7 +28,7 @@ class Project
         UserId $ownerId,
         ?Settings $settings = null,
         ?DateTimeImmutable $createdAt = null,
-        ?DateTimeImmutable $updatedAt = null
+        ?DateTimeImmutable $updatedAt = null,
     ) {
         $this->setName($name);
         $this->id           = $id;
@@ -37,13 +39,34 @@ class Project
         $this->updatedAt    = $updatedAt ?? new DateTimeImmutable();
     }
 
-    public function getId(): ProjectId { return $this->id; }
-    public function getName(): string { return $this->name; }
-    public function getType(): ProjectType { return $this->type; }
-    public function getOwnerId(): UserId { return $this->ownerId; }
-    public function getSettings(): Settings { return $this->settings; }
-    public function getCreatedAt(): DateTimeImmutable { return $this->createdAt; }
-    public function getUpdatedAt(): DateTimeImmutable { return $this->updatedAt; }
+    public function getId(): ProjectId
+    {
+        return $this->id;
+    }
+    public function getName(): string
+    {
+        return $this->name;
+    }
+    public function getType(): ProjectType
+    {
+        return $this->type;
+    }
+    public function getOwnerId(): UserId
+    {
+        return $this->ownerId;
+    }
+    public function getSettings(): Settings
+    {
+        return $this->settings;
+    }
+    public function getCreatedAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+    public function getUpdatedAt(): DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
 
     public function rename(string $newName): void
     {
@@ -59,7 +82,7 @@ class Project
 
     public function isOwner(UserId $userId): bool
     {
-        return $this->ownerId->getValue() === $userId->getValue();
+        return $this->ownerId->value() === $userId->value();
     }
 
     /**

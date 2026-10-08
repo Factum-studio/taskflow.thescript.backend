@@ -2,13 +2,13 @@
 
 namespace modules\tasks\infrastructure\repository;
 
+use core\domain\valueObject\UserId;
 use modules\tasks\domain\entity\Task;
 use modules\tasks\domain\repository\ITaskRepository;
 use modules\tasks\domain\valueObject\ColumnId;
 use modules\tasks\domain\valueObject\PriorityId;
 use modules\tasks\domain\valueObject\TaskId;
 use modules\tasks\domain\valueObject\Title;
-use modules\tasks\domain\valueObject\UserId;
 use modules\tasks\infrastructure\persistence\TaskAR;
 use DateTimeImmutable;
 use RuntimeException;
@@ -36,7 +36,7 @@ class DbTaskRepository implements ITaskRepository
         if (!$ar->save()) {
             throw new RuntimeException('Failed to save task: ' . implode(', ', $ar->getFirstErrors()));
         }
-        if (!$task->getId() || $task->getId()->getValue() !== (int)$ar->id) {
+        if (!$task->getId() || $task->getId()->value() !== (int)$ar->id) {
             $task->setId(new TaskId((int)$ar->id));
         }
         return $task;
@@ -103,29 +103,29 @@ class DbTaskRepository implements ITaskRepository
 
     private function findARById(TaskId $id): ?TaskAR
     {
-        return TaskAR::findOne($id->getValue());
+        return TaskAR::findOne($id->value());
     }
 
     public function countByColumn(ColumnId $columnId): int
     {
         return TaskAR::find()
-            ->where(['column_id' => $columnId->getValue(), 'deleted_at' => null])
+            ->where(['column_id' => $columnId->value(), 'deleted_at' => null])
             ->count();
     }
 
     private function mapEntityToAR(Task $task, TaskAR $ar): void
     {
-        $ar->title          = $task->getTitle()->getValue();
+        $ar->title          = $task->getTitle()->value();
         $ar->description    = $task->getDescription();
-        $ar->column_id      = $task->getColumnId()->getValue();
-        $ar->priority_id    = $task->getPriorityId()->getValue();
+        $ar->column_id      = $task->getColumnId()->value();
+        $ar->priority_id    = $task->getPriorityId()->value();
         $ar->due_date       = $task->getDueDate()?->format('Y-m-d H:i:s');
         $ar->planned_start  = $task->getPlannedStart()?->format('Y-m-d H:i:s');
         $ar->planned_end    = $task->getPlannedEnd()?->format('Y-m-d H:i:s');
-        $ar->created_by     = $task->getCreatedBy()->getValue();
-        $ar->assigned_to    = $task->getAssignedTo()?->getValue();
+        $ar->created_by     = $task->getCreatedBy()->value();
+        $ar->assigned_to    = $task->getAssignedTo()?->value();
         $ar->board_id       = $task->getBoardId();
-        $ar->parent_id      = $task->getParentId()?->getValue();
+        $ar->parent_id      = $task->getParentId()?->value();
         $ar->overdue        = $task->isOverdue() ? 1 : 0;
         $ar->complete       = $task->isComplete() ? 1 : 0;
         $ar->created_at     = $task->getCreatedAt()->format('Y-m-d H:i:s');

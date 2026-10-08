@@ -1,19 +1,22 @@
 <?php
 
-use core\security\JwtMiddleware;
+declare(strict_types=1);
+
 use core\security\YiiIdentity;
+use modules\passport\auth\presentation\middleware\PassportAuthMiddleware;
+use modules\rbac\presentation\middleware\RbacMiddleware;
 use yii\symfonymailer\Mailer;
 
-$params             = require __DIR__ . '/params.php';
-$db                 = require __DIR__ . '/db.php';
-$modules            = require __DIR__ . '/modules.php';
-$redis              = require __DIR__ . '/redis.php';
-$passportHttpClient = require __DIR__ . '/passport_http_client.php';
-$container          = __DIR__ . '/container.php';
-$ignoreConfig       = require __DIR__ . '/ignore_routes.php';
+$params         = require __DIR__ . '/params.php';
+$db             = require __DIR__ . '/db.php';
+$modules        = require __DIR__ . '/modules.php';
+$container      = __DIR__ . '/container.php';
 $diConfigs          = [
+    __DIR__ . '/../modules/passport/auth/config/di.php',
+    __DIR__ . '/../modules/rbac/config/di.php',
     __DIR__ . '/../modules/projects/config/di.php',
     __DIR__ . '/../modules/tasks/config/di.php',
+    __DIR__ . '/../modules/feedback/config/di.php',
 ];
 
 $config = [
@@ -21,153 +24,112 @@ $config = [
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'core\presentation\controller',
     'bootstrap' => ['log'],
-    'on beforeRequest' => function () {
-        global $ignoreConfig;
-        $request = Yii::$app->request;
-        $currentPath = $request->getPathInfo();
-
-        if (in_array($currentPath, $ignoreConfig['ignoreRoutes']['exact'])) return;
-        foreach ($ignoreConfig['ignoreRoutes']['startsWith'] as $prefix)
-            if (str_starts_with($currentPath, $prefix)) return;
-        foreach ($ignoreConfig['ignoreRoutes']['regex'] as $pattern)
-            if (preg_match($pattern, $currentPath)) return;
-
-        $middleware = Yii::$container->get(
-            JwtMiddleware::class
-        );
-        $middleware->handle();
-    },
     'aliases' => [
         '@bower'    => '@vendor/bower-asset',
         '@npm'      => '@vendor/npm-asset',
         '@core'     => dirname(__DIR__) . '/core',
         '@modules'  => dirname(__DIR__) . '/modules',
     ],
-    'modules'=>$modules,
+    'on beforeRequest' => static function (): void {
+        Yii::$container->get(PassportAuthMiddleware::class)->handle();
+        Yii::$container->get(RbacMiddleware::class)->handle();
+    },
+    'modules' => $modules,
     'components' => [
-        'passportHttpClient'=>$passportHttpClient,
         'request' => [
             'cookieValidationKey' => $_ENV['COOKIE_VALIDATION_KEY'],
             'parsers' => [
                 'application/json' => 'yii\web\JsonParser',
+                'multipart/form-data' => 'yii\web\MultipartFormDataParser',
             ],
         ],
         'response' => [
-            'format' => yii\web\Response::FORMAT_JSON,
-            'charset' => 'UTF-8',
+            'format'    => yii\web\Response::FORMAT_JSON,
+            'charset'   => 'UTF-8',
         ],
-        'redis'=> $redis,
         'cache' => [
-            'class' => 'yii\redis\Cache',
-            'redis' => 'redis',
+            'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => YiiIdentity::class,
-            'enableAutoLogin' => false,
-            'enableSession' => false,
+            'identityClass'     => YiiIdentity::class,
+            'enableAutoLogin'   => false,
+            'enableSession'     => false,
         ],
         'errorHandler' => [
             'class' => 'core\infrastructure\handler\JsonErrorHandler',
         ],
         'mailer' => [
-            'class' => Mailer::class,
-            'viewPath' => '@app/mail',
-            'useFileTransport' => false,
-            'transport' => [
-//                'dsn'           => $_ENV['MAILER_DSN'],
-                'scheme'        => $_ENV['MAILER_SCHEME'],
-                'host'          => $_ENV['MAILER_HOST'],
-                'port'          => $_ENV['MAILER_PORT'],
-                'username'      => $_ENV['MAILER_USERNAME'],
-                'password'      => $_ENV['MAILER_PASSWORD'],
-                'encryption'    => $_ENV['MAILER_ENCRYPTION'],
+            'class'             => Mailer::class,
+            'viewPath'          => '@app/mail',
+            'useFileTransport'  => false,
+            'transport'        => [
+                'scheme'   => $_ENV['MAILER_SCHEME'],
+                'host'     => $_ENV['MAILER_HOST'],
+                'port'     => $_ENV['MAILER_PORT'],
+                'username' => $_ENV['MAILER_USERNAME'],
+                'password' => $_ENV['MAILER_PASSWORD'],
+                'encryption' => $_ENV['MAILER_ENCRYPTION'],
+                'options' => [
+                    'verify_peer' => 0,
+                    'verify_peer_name' => 0,
+                ],
             ],
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 1 : 0,
             'targets' => [
                 [
-                    'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
-                    'logVars' => [],
+                    'class'     => 'yii\log\FileTarget',
+                    'levels'    => ['error', 'warning'],
+                    'logVars'   => [],
                     'except' => [
                         'yii\web\HttpException:404',
                     ],
-                ],
-                [
-                    'class' => 'yii\log\FileTarget',
-                    'levels' => ['error'],
-                    'categories' => ['projects'],
-                    'logFile' => '@app/runtime/logs/projects-error.log',
-                    'logVars' => [],
-                ],
-                [
-                    'class' => 'yii\log\FileTarget',
-                    'levels' => ['info'],
-                    'categories' => ['tasks'],
-                    'logFile' => '@app/runtime/logs/projects-info.log',
-                    'logVars' => [],
-                    'enabled' => YII_DEBUG,
-                ],
-                [
-                    'class' => 'yii\log\FileTarget',
-                    'levels' => ['error'],
-                    'categories' => ['tasks'],
-                    'logFile' => '@app/runtime/logs/tasks-error.log',
-                    'logVars' => [],
-                ],
-                [
-                    'class' => 'yii\log\FileTarget',
-                    'levels' => ['info'],
-                    'categories' => ['tasks'],
-                    'logFile' => '@app/runtime/logs/tasks-info.log',
-                    'logVars' => [],
-                    'enabled' => YII_DEBUG,
                 ],
             ],
         ],
         'db' => $db,
         'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'rules' => array_merge(
+            'enablePrettyUrl'   => true,
+            'showScriptName'    => false,
+            'rules' =>  array_merge(
+                require __DIR__ . '/../modules/passport/auth/config/routing.php',
+                require __DIR__ . '/../modules/rbac/config/routing.php',
                 require __DIR__ . '/../modules/projects/config/routing.php',
                 require __DIR__ . '/../modules/tasks/config/routing.php',
+                require __DIR__ . '/../modules/feedback/config/routing.php',
                 [
-                    // Authors
-                    'GET authors' => 'author/index',
+                    // Role
+                    'GET roles'                     => 'role/index',
+                    'GET roles/<id:\d+>'            => 'role/view',
+                    'POST roles'                    => 'role/create',
+                    'PUT roles/<id:\d+>'            => 'role/update',
+                    'DELETE roles/<id:\d+>'         => 'role/delete',
 
-                    // Event route
-                    'GET events' => 'stream/events',
-                    'GET events/token' => 'stream/sse-token',
+                    // User
+                    'GET users'                     => 'user/index',
+                    'GET users/<id:\d+>'            => 'user/view',
+                    'GET users/sync'                => 'user/sync',
 
-                    // User routes
-                    'GET user/me' => 'user/me',
-                    'GET user/login' => 'user/login',
+                    // UserRole
+                    'GET user-roles'                => 'user-role/index',
+                    'POST user-roles'               => 'user-role/create',
+                    'DELETE user-roles/<id:\d+>'    => 'user-role/delete',
 
-                    // Company routes
-                    'GET company' => 'company/index',
-                    'GET company/<id:\d+>' => 'company/view',
-                    'GET company/<id:\d+>/user' => 'company/users',
-                    'PUT company/<id:\d+>' => 'company/update',
+                    // Welcome
+                    'GET /'                         => 'welcome/index',
 
                     // Swagger documentation
-                    'docs/swagger/json' => 'swagger/json',
-                    'docs/swagger' => 'swagger/ui',
+                    'docs/swagger/json'             => 'swagger/json',
+                    'docs/swagger'                  => 'swagger/ui',
 
                     // Project documentation
-                    'docs/<page:[\w\/\-]+>' => 'docs/ui',
-                    'docs' => 'docs/ui',
-
-                    // Rating and ideas
-                    'POST feedback/rating' => 'feedback/submit-rating',
-                    'POST feedback/idea' => 'feedback/submit-idea',
-                    'GET feedback/idea' => 'feedback/ideas',
-                    'GET feedback/stats' => 'feedback/stats',
+                    'docs'                          => 'docs/ui',
+                    'docs/<page:.*>'                => 'docs/ui',
 
                     // Дефолтный маршрут для OPTIONS (CORS)
-                    'OPTIONS <any:.*>' => 'site/options',
-                ]
+                    'OPTIONS <any:.*>'              => 'site/options',
+                ],
             ),
         ],
     ],
@@ -183,19 +145,14 @@ foreach ($diConfigs as $diConfig) {
 }
 
 if (YII_ENV_DEV) {
-    // configuration adjustments for 'dev' environment
     $config['bootstrap'][] = 'debug';
     $config['modules']['debug'] = [
         'class' => 'yii\debug\Module',
-        // uncomment the following to add your IP if you are not connecting from localhost.
-        //'allowedIPs' => ['127.0.0.1', '::1'],
     ];
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
         'class' => 'yii\gii\Module',
-        // uncomment the following to add your IP if you are not connecting from localhost.
-        //'allowedIPs' => ['127.0.0.1', '::1'],
     ];
 }
 

@@ -2,11 +2,11 @@
 
 namespace modules\tasks\domain\repository;
 
+use core\domain\valueObject\UserId;
 use DateTimeImmutable;
 use modules\tasks\domain\entity\TimeInterval;
 use modules\tasks\domain\valueObject\TaskId;
 use modules\tasks\domain\valueObject\TimeIntervalId;
-use modules\tasks\domain\valueObject\UserId;
 
 interface ITimeIntervalRepository
 {

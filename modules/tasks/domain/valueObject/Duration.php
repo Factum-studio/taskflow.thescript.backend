@@ -1,12 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\domain\valueObject;
-
-
-/*TODO*/
 
 use InvalidArgumentException;
 
+// Warning: be careful, we find suspicious todo in this file
 final class Duration
 {
     private int $seconds;

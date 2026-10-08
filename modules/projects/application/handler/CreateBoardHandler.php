@@ -2,6 +2,7 @@
 
 namespace modules\projects\application\handler;
 
+use core\domain\valueObject\UserId;
 use modules\projects\application\assembler\BoardDtoAssembler;
 use modules\projects\application\command\CreateBoardCommand;
 use modules\projects\application\dto\BoardDto;
@@ -13,7 +14,6 @@ use modules\projects\domain\repository\IBoardRepository;
 use modules\projects\domain\repository\IProjectRepository;
 use modules\projects\domain\valueObject\BoardId;
 use modules\projects\domain\valueObject\ProjectId;
-use modules\projects\domain\valueObject\UserId;
 use modules\projects\domain\valueObject\Settings;
 use DateTimeImmutable;
 use RuntimeException;

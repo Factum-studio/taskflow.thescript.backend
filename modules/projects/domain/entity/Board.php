@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\domain\entity;
 
+use core\domain\valueObject\UserId;
 use DateTimeImmutable;
 use modules\projects\domain\valueObject\BoardId;
 use modules\projects\domain\valueObject\ProjectId;
-use modules\projects\domain\valueObject\UserId;
 use modules\projects\domain\valueObject\Settings;
 use InvalidArgumentException;
 
@@ -28,7 +30,7 @@ class Board
         ?string $description = null,
         ?Settings $settings = null,
         ?DateTimeImmutable $createdAt = null,
-        ?DateTimeImmutable $updatedAt = null
+        ?DateTimeImmutable $updatedAt = null,
     ) {
         $this->setName($name);
         $this->id           = $id;
@@ -40,14 +42,38 @@ class Board
         $this->updatedAt    = $updatedAt ?? new DateTimeImmutable();
     }
 
-    public function getId(): BoardId { return $this->id; }
-    public function getProjectId(): ProjectId { return $this->projectId; }
-    public function getName(): string { return $this->name; }
-    public function getDescription(): ?string { return $this->description; }
-    public function getCreatedBy(): UserId { return $this->createdBy; }
-    public function getSettings(): Settings { return $this->settings; }
-    public function getCreatedAt(): DateTimeImmutable { return $this->createdAt; }
-    public function getUpdatedAt(): DateTimeImmutable { return $this->updatedAt; }
+    public function getId(): BoardId
+    {
+        return $this->id;
+    }
+    public function getProjectId(): ProjectId
+    {
+        return $this->projectId;
+    }
+    public function getName(): string
+    {
+        return $this->name;
+    }
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+    public function getCreatedBy(): UserId
+    {
+        return $this->createdBy;
+    }
+    public function getSettings(): Settings
+    {
+        return $this->settings;
+    }
+    public function getCreatedAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+    public function getUpdatedAt(): DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
 
     public function rename(string $newName): void
     {

@@ -16,7 +16,7 @@ class InvitationCancelledEvent implements IProjectDomainEvent
     public function __construct(Invitation $invitation, int $cancelledBy)
     {
         $this->invitationId = $invitation->getId();
-        $this->projectId    = $invitation->getProjectId()->getValue();
+        $this->projectId    = $invitation->getProjectId()->value();
         $this->email        = $invitation->getEmail();
         $this->cancelledBy  = $cancelledBy;
         $this->occurredAt   = new DateTimeImmutable();

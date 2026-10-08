@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\domain\entity;
 
 use DateTimeImmutable;
@@ -31,7 +33,7 @@ class BoardColumn
         ?string $color = null,
         ?int $workflowId = null,
         ?DateTimeImmutable $createdAt = null,
-        ?DateTimeImmutable $updatedAt = null
+        ?DateTimeImmutable $updatedAt = null,
     ) {
         $this->id           = $id;
         $this->boardId      = $boardId;
@@ -47,17 +49,50 @@ class BoardColumn
     }
 
     // Геттеры
-    public function getId(): ColumnId { return $this->id; }
-    public function getBoardId(): BoardId { return $this->boardId; }
-    public function getName(): string { return $this->name; }
-    public function getLabel(): string { return $this->label; }
-    public function getSortOrder(): int { return $this->sortOrder; }
-    public function isActive(): bool { return $this->isActive; }
-    public function isFinal(): bool { return $this->isFinal; }
-    public function getColor(): ?string { return $this->color; }
-    public function getWorkflowId(): ?int { return $this->workflowId; }
-    public function getCreatedAt(): DateTimeImmutable { return $this->createdAt; }
-    public function getUpdatedAt(): DateTimeImmutable { return $this->updatedAt; }
+    public function getId(): ColumnId
+    {
+        return $this->id;
+    }
+    public function getBoardId(): BoardId
+    {
+        return $this->boardId;
+    }
+    public function getName(): string
+    {
+        return $this->name;
+    }
+    public function getLabel(): string
+    {
+        return $this->label;
+    }
+    public function getSortOrder(): int
+    {
+        return $this->sortOrder;
+    }
+    public function isActive(): bool
+    {
+        return $this->isActive;
+    }
+    public function isFinal(): bool
+    {
+        return $this->isFinal;
+    }
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+    public function getWorkflowId(): ?int
+    {
+        return $this->workflowId;
+    }
+    public function getCreatedAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+    public function getUpdatedAt(): DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
 
     public function rename(string $name): void
     {

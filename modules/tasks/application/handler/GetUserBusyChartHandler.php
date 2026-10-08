@@ -2,10 +2,10 @@
 
 namespace modules\tasks\application\handler;
 
+use core\domain\valueObject\UserId;
 use modules\tasks\application\query\GetUserBusyChartQuery;
 use modules\tasks\application\service\BusyChartService;
 use modules\tasks\domain\repository\ITimeIntervalRepository;
-use modules\tasks\domain\valueObject\UserId;
 
 class GetUserBusyChartHandler
 {

@@ -1,0 +1,60 @@
+* text=auto
+
+*.php     text diff=php
+*.yml     text
+*.yaml    text
+*.json    text
+*.md      text
+*.txt     text
+*.xml     text
+*.css     text
+*.js      text
+*.ts      text
+*.vue     text
+*.html    text
+*.htaccess text
+*.conf    text
+*.ini     text
+*.env     text
+*.example text
+*.gitignore text
+*.gitkeep  text
+*.bowerrc  text
+*.editorconfig text
+*.sql     text
+*.sh      text eol=lf    # shell-скрипты - LF
+*.bat     text eol=crlf  # bat-файлы для Windows - CRLF
+
+*.png     binary
+*.jpg     binary
+*.jpeg    binary
+*.gif     binary
+*.ico     binary
+*.svg     binary
+*.woff    binary
+*.woff2   binary
+*.ttf     binary
+*.eot     binary
+*.zip     binary
+*.tar     binary
+*.gz      binary
+*.rar     binary
+*.pdf     binary
+*.xls     binary
+*.xlsx    binary
+*.doc     binary
+*.docx    binary
+*.mp4     binary
+*.avi     binary
+*.mov     binary
+*.mo      binary
+*.po      binary
+*.phar    binary
+*.lock    binary
+
+/tests/   export-ignore
+/docs/    export-ignore
+/vagrant/ export-ignore
+/.git/    export-ignore
+/.idea/   export-ignore
+/.vscode/ export-ignore

@@ -15,9 +15,9 @@ class ProjectMemberAddedEvent implements IProjectDomainEvent
 
     public function __construct(ProjectUser $projectUser, int $addedBy)
     {
-        $this->projectId = $projectUser->getProjectId()->getValue();
-        $this->userId = $projectUser->getUserId()->getValue();
-        $this->role = $projectUser->getRole()->getValue();
+        $this->projectId = $projectUser->getProjectId()->value();
+        $this->userId = $projectUser->getUserId()->value();
+        $this->role = $projectUser->getRole()->value();
         $this->addedBy = $addedBy;
         $this->occurredAt = new DateTimeImmutable();
     }

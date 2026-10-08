@@ -2,15 +2,14 @@
 
 namespace modules\projects\application\handler;
 
-use core\application\port\IPassportGateway;
-use core\domain\valueObject\QueryParams;
+use core\application\port\IUserRepository;
+use core\domain\valueObject\UserId;
 use modules\projects\application\command\AcceptInvitationCommand;
 use modules\projects\domain\entity\ProjectUser;
 use modules\projects\domain\event\IEventDispatcher;
 use modules\projects\domain\event\InvitationAcceptedEvent;
 use modules\projects\domain\repository\IInvitationRepository;
 use modules\projects\domain\repository\IProjectUserRepository;
-use modules\projects\domain\valueObject\UserId;
 use modules\projects\domain\valueObject\UserRole;
 use RuntimeException;
 use DateTimeImmutable;
@@ -20,18 +19,18 @@ class AcceptInvitationHandler
     private IInvitationRepository $invitationRepository;
     private IProjectUserRepository $projectUserRepository;
     private IEventDispatcher $eventDispatcher;
-    private IPassportGateway $passportGateway;
+    private IUserRepository $userRepository;
 
     public function __construct(
         IInvitationRepository $invitationRepository,
         IProjectUserRepository $projectUserRepository,
         IEventDispatcher $eventDispatcher,
-        IPassportGateway $passportGateway
+        IUserRepository $userRepository
     ) {
         $this->invitationRepository     = $invitationRepository;
         $this->projectUserRepository    = $projectUserRepository;
         $this->eventDispatcher          = $eventDispatcher;
-        $this->passportGateway          = $passportGateway;
+        $this->userRepository          = $userRepository;
     }
 
     public function handle(AcceptInvitationCommand $command): void
@@ -45,26 +44,11 @@ class AcceptInvitationHandler
             throw new RuntimeException('Invitation is no longer valid');
         }
 
-        $userData = $this->passportGateway->getUserById(
-            (string)$command->userId,
-            $command->jwtToken,
-            QueryParams::create(expand: ['contacts'])
-        );
-        if (!$userData) {
-            throw new RuntimeException('User not found in Passport');
-        }
+        $userEmail = $this->userRepository->findById(
+            new UserId($command->userId),
+        )->getEmail();
 
-        $userEmail = null;
-        if (isset($userData['contacts']) && is_array($userData['contacts'])) {
-            foreach ($userData['contacts'] as $contact) {
-                if (($contact['name'] ?? '') === 'email') {
-                    $userEmail = $contact['data'] ?? null;
-                    break;
-                }
-            }
-        }
-
-        if (!$userEmail || $userEmail !== $invitation->getEmail()) {
+        if ($userEmail !== $invitation->getEmail()) {
             throw new RuntimeException('This invitation was sent to a different email address');
         }
 

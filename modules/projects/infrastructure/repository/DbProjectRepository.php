@@ -2,11 +2,11 @@
 
 namespace modules\projects\infrastructure\repository;
 
+use core\domain\valueObject\UserId;
 use DateTimeImmutable;
 use modules\projects\domain\entity\Project;
 use modules\projects\domain\repository\IProjectRepository;
 use modules\projects\domain\valueObject\ProjectId;
-use modules\projects\domain\valueObject\UserId;
 use modules\projects\domain\valueObject\ProjectType;
 use modules\projects\domain\valueObject\Settings;
 use modules\projects\infrastructure\persistence\ProjectAR;
@@ -37,7 +37,7 @@ class DbProjectRepository implements IProjectRepository
             throw new RuntimeException('Failed to save project: ' . implode(', ', $ar->getFirstErrors()));
         }
 
-        if (!$project->getId() || $project->getId()->getValue() !== (int)$ar->id) {
+        if (!$project->getId() || $project->getId()->value() !== (int)$ar->id) {
             $project->setId(new ProjectId((int)$ar->id));
         }
 
@@ -56,7 +56,7 @@ class DbProjectRepository implements IProjectRepository
     public function findByOwner(UserId $ownerId): array
     {
         $ars = ProjectAR::find()
-            ->where(['owner_id' => $ownerId->getValue()])
+            ->where(['owner_id' => $ownerId->value()])
             ->all();
         return array_map([$this, 'mapARToEntity'], $ars);
     }
@@ -67,8 +67,8 @@ class DbProjectRepository implements IProjectRepository
         $ars = ProjectAR::find()
             ->leftJoin('{{%project_user}}', 'project.id = project_user.project_id')
             ->where(['or',
-                ['project.owner_id' => $userId->getValue()],
-                ['project_user.user_id' => $userId->getValue()]
+                ['project.owner_id' => $userId->value()],
+                ['project_user.user_id' => $userId->value()]
             ])
             ->all();
         return array_map([$this, 'mapARToEntity'], $ars);
@@ -76,12 +76,12 @@ class DbProjectRepository implements IProjectRepository
 
     private function findARById(ProjectId $id): ?ProjectAR
     {
-        return ProjectAR::findOne($id->getValue());
+        return ProjectAR::findOne($id->value());
     }
 
     public function countByOwner(UserId $ownerId): int
     {
-        return ProjectAR::find()->where(['owner_id' => $ownerId->getValue()])->count();
+        return ProjectAR::find()->where(['owner_id' => $ownerId->value()])->count();
     }
 
     /**
@@ -97,8 +97,8 @@ class DbProjectRepository implements IProjectRepository
     private function mapEntityToAR(Project $project, ProjectAR $ar): void
     {
         $ar->name       = $project->getName();
-        $ar->type       = $project->getType()->getValue();
-        $ar->owner_id   = $project->getOwnerId()->getValue();
+        $ar->type       = $project->getType()->value();
+        $ar->owner_id   = $project->getOwnerId()->value();
         $ar->settings   = $project->getSettings()->toArray();
     }
 

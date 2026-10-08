@@ -13,7 +13,7 @@ class TaskRestoredEvent implements ITaskDomainEvent
 
     public function __construct(Task $task, int $restoredBy)
     {
-        $this->taskId       = $task->getId()->getValue();
+        $this->taskId       = $task->getId()->value();
         $this->restoredBy   = $restoredBy;
         $this->occurredAt   = new DateTimeImmutable();
     }

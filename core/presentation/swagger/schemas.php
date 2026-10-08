@@ -52,109 +52,85 @@
  *         @OA\Property(property="details", type="object", additionalProperties=true)
  *     )
  * )
+ * @OA\Schema(
+ *     schema="Success",
+ *     @OA\Property(property="message", type="string")
+ * )
  */
 class MainSchemasDefinitions {}
 
 /**
  * @OA\Schema(
- *     schema="Contact",
- *     required={"type", "value"},
- *     @OA\Property(
- *         property="type",
- *         type="string",
- *         enum={"tg", "phone", "email", "vk", "discord"},
- *         description="Тип контакта"
- *     ),
- *     @OA\Property(
- *         property="value",
- *         type="string",
- *         description="Значение контакта"
- *     ),
- *     @OA\Property(
- *         property="confirmed",
- *         type="boolean",
- *         description="Флаг подтверждения"
- *     )
+ *     schema="RoleRequest",
+ *     required={"name"},
+ *     @OA\Property(property="name", type="string", maxLength=50),
+ *     @OA\Property(property="description", type="string", maxLength=255, nullable=true)
+ * )
+ * @OA\Schema(
+ *     schema="UserRoleAssignRequest",
+ *     required={"userId","roleId"},
+ *     @OA\Property(property="userId", type="integer"),
+ *     @OA\Property(property="roleId", type="integer"),
+ *     @OA\Property(property="assignedBy", type="integer")
  * )
  */
-class ContactSchema {}
+class UserCircutDefinitions {}
 
 /**
  * @OA\Schema(
- *     schema="Post",
- *     required={"id", "name"},
- *     @OA\Property(
- *         property="id",
- *         type="integer",
- *         format="int64",
- *         description="ID должности"
- *     ),
- *     @OA\Property(
- *         property="name",
- *         type="string",
- *         description="Название должности"
- *     )
+ *     schema="Role",
+ *     required={"id","name","created_at"},
+ *     @OA\Property(property="id", type="integer", format="int64", example=1),
+ *     @OA\Property(property="name", type="string", example="admin"),
+ *     @OA\Property(property="description", type="string", nullable=true, example="Администратор системы"),
+ *     @OA\Property(property="created_at", type="string", example="2026-09-04 10:00:00")
+ * )
+ * @OA\Schema(
+ *     schema="UserRole",
+ *     required={"id","user_id","role_id","assigned_at"},
+ *     @OA\Property(property="id", type="integer", format="int64", example=20),
+ *     @OA\Property(property="user_id", type="integer", format="int64", example=42),
+ *     @OA\Property(property="role_id", type="integer", format="int64", example=2),
+ *     @OA\Property(property="assigned_at", type="string", example="2026-09-04 10:00:00"),
+ *     @OA\Property(property="assigned_by", type="integer", format="int64", nullable=true, example=1)
+ * )
+ * @OA\Schema(
+ *     schema="UserRoleDto",
+ *     required={"id","user_id","role_id","assigned_at"},
+ *     @OA\Property(property="id", type="integer", format="int64"),
+ *     @OA\Property(property="user_id", type="integer", format="int64"),
+ *     @OA\Property(property="role_id", type="integer", format="int64"),
+ *     @OA\Property(property="assigned_at", type="string"),
+ *     @OA\Property(property="assigned_by", type="integer", format="int64")
  * )
  */
-class PostSchema {}
+class CoreDtoSchemaDefinitions {}
 
 /**
+ * RBAC schemas
+ *
  * @OA\Schema(
- *     schema="User",
- *     required={"id", "surname", "name", "dob"},
- *     @OA\Property(
- *         property="id",
- *         type="integer",
- *         format="int64",
- *         description="ID пользователя"
- *     ),
- *     @OA\Property(
- *         property="surname",
- *         type="string",
- *         description="Фамилия"
- *     ),
- *     @OA\Property(
- *         property="name",
- *         type="string",
- *         description="Имя"
- *     ),
- *     @OA\Property(
- *         property="patronymic",
- *         type="string",
- *         nullable=true,
- *         description="Отчество"
- *     ),
- *     @OA\Property(
- *         property="ui_name",
- *         type="string",
- *         description="Интерфейсоное имя (Имя Отчество или Фамилия Имя при отсутствии отчества)"
- *     ),
- *     @OA\Property(
- *         property="full_name",
- *         type="string",
- *         description="Полное имя (Фамилия Имя Отчество)"
- *     ),
- *     @OA\Property(
- *         property="dob",
- *         type="integer",
- *         format="timestamp",
- *         description="Дата рождения (timestamp)"
- *     ),
- *     @OA\Property(
- *         property="contacts",
- *         type="array",
- *         @OA\Items(ref="#/components/schemas/Contact"),
- *         description="Контакты пользователя"
- *     ),
- *     @OA\Property(
- *         property="post",
- *         ref="#/components/schemas/Post",
- *         nullable=true,
- *         description="Должность пользователя"
- *     )
+ *     schema="Permission",
+ *     required={"id","code","scope"},
+ *     @OA\Property(property="id", type="integer", format="int64", example=1),
+ *     @OA\Property(property="code", type="string", example="users.read.self"),
+ *     @OA\Property(property="scope", type="string", example="user:read")
+ * )
+ * @OA\Schema(
+ *     schema="PermissionCollection",
+ *     allOf={
+ *         @OA\Schema(ref="#/components/schemas/Collection"),
+ *         @OA\Schema(
+ *             @OA\Property(
+ *                 property="items",
+ *                 type="array",
+ *                 @OA\Items(ref="#/components/schemas/Permission")
+ *             )
+ *         )
+ *     }
  * )
  */
-class UserSchema {}
+class RbacSchemaDefinitions {}
 
 /**
  * @OA\Schema(
@@ -409,7 +385,7 @@ class UserSchema {}
  *     @OA\Property(property="duration", type="integer", example=7200)
  * )
  */
-class TaskSchemas {}
+class TaskSchemaDefinitions {}
 
 /**
  * @OA\Schema(
@@ -491,55 +467,7 @@ class TaskSchemas {}
  *     @OA\Property(property="role", type="string", enum={"admin","member"}, example="admin")
  * )
  */
-class ProjectsSchemas {}
-
-/**
- * @OA\Schema(
- *     schema="SseTokenResponse",
- *     required={"token"},
- *     @OA\Property(property="token", type="string", description="JWT токен для подключения к SSE потоку")
- * )
- */
-class SseTokenSchema {}
-
-/**
- * @OA\Schema(
- *     schema="Company",
- *     @OA\Property(property="id", type="integer"),
- *     @OA\Property(property="name", type="string"),
- *     @OA\Property(property="description", type="string", nullable=true),
- *     @OA\Property(property="createdAt", type="string", format="date-time"),
- *     @OA\Property(property="updatedAt", type="string", format="date-time")
- * )
- *
- * @OA\Schema(
- *     schema="CompanyUser",
- *     @OA\Property(property="userId", type="integer"),
- *     @OA\Property(property="surname", type="string"),
- *     @OA\Property(property="name", type="string"),
- *     @OA\Property(property="patronymic", type="string", nullable=true),
- *     @OA\Property(property="post", type="string", nullable=true),
- *     @OA\Property(property="email", type="string", nullable=true),
- *     @OA\Property(property="avatar", type="string", nullable=true)
- * )
- */
-class CompanySchema {}
-
-/**
- * @OA\Schema(
- *     schema="Author",
- *     required={"id", "userId", "uiName", "avatar", "phrase", "badges"},
- *     @OA\Property(property="id", type="integer"),
- *     @OA\Property(property="userId", type="integer"),
- *     @OA\Property(property="uiName", type="string", description="Имя для интерфейса"),
- *     @OA\Property(property="avatar", type="string", nullable=true),
- *     @OA\Property(property="phrase", type="string", minLength=10, maxLength=50),
- *     @OA\Property(property="badges", type="array", @OA\Items(type="string")),
- *     @OA\Property(property="createdAt", type="string", format="date-time"),
- *     @OA\Property(property="updatedAt", type="string", format="date-time")
- * )
- */
-class AuthorSchema {}
+class ProjectsSchemaDefinitions {}
 
 /**
  * @OA\Schema(

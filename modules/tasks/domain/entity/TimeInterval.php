@@ -2,12 +2,12 @@
 
 namespace modules\tasks\domain\entity;
 
+use core\domain\valueObject\UserId;
 use DateTimeImmutable;
 use InvalidArgumentException;
 use modules\tasks\domain\valueObject\Duration;
 use modules\tasks\domain\valueObject\TaskId;
 use modules\tasks\domain\valueObject\TimeIntervalId;
-use modules\tasks\domain\valueObject\UserId;
 
 class TimeInterval
 {

@@ -1,229 +1,189 @@
 <?php
 
+declare(strict_types=1);
+
 namespace core\presentation\controller;
 
+use core\application\command\SyncUserCommand;
+use core\application\dto\CollectionDto;
 use core\application\dto\ErrorDto;
 use core\application\dto\ItemDto;
 use core\application\dto\SuccessDto;
-use core\application\dto\UserDto;
-use core\application\handler\GetCurrentUserQueryHandler;
-use core\application\port\ICompanyRepository;
-use core\application\query\GetCurrentUserQuery;
-use core\domain\entity\Company;
-use core\domain\exception\UserNotFoundException;
-use core\domain\valueObject\CompanyId;
-use core\domain\valueObject\CompanyName;
-use core\infrastructure\persistence\UserAR;
+use core\application\handler\GetUserHandler;
+use core\application\handler\ListUserHandler;
+use core\application\handler\SyncUserHandler;
+use core\application\port\IUserRepository;
+use modules\passport\auth\application\port\PassportAuthPort;
 use OpenApi\Attributes as OA;
-use RuntimeException;
+use core\application\query\GetUserQuery;
+use core\application\query\ListUserQuery;
+use core\application\dto\UserFiltersDto;
+use core\domain\exception\UserNotFoundException;
+use core\domain\exception\ValidationException;
 use Throwable;
 use Yii;
-use yii\web\NotFoundHttpException;
-use yii\web\UnauthorizedHttpException;
-//TODO убрать, это временное решение
-use yii\httpclient\Client;
+use yii\base\InvalidConfigException;
+use yii\di\NotInstantiableException;
 
 #[OA\Tag(
     name: 'users',
-    description: 'Управление пользователями'
+    description: 'Управление пользователями',
 )]
-final class UserController extends BaseController
+class UserController extends BaseController
 {
     public function __construct(
         $id,
         $module,
-        private readonly GetCurrentUserQueryHandler $getCurrentUserHandler,
-        private readonly ICompanyRepository $companyRepository,
+        private readonly PassportAuthPort $passport,
         $config = []
     ) {
         parent::__construct($id, $module, $config);
     }
+    #[OA\Get(
+        path: '/users/{id}',
+        summary: 'Получение пользователя по ID',
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
+        tags: ['users'],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'Успешно', content: new OA\JsonContent(ref: '#/components/schemas/Item')),
+            new OA\Response(response: 404, description: 'Пользователь не найден'),
+        ],
+    )]
+    /**
+     * @throws NotInstantiableException
+     * @throws InvalidConfigException
+     * @throws ValidationException
+     * @throws UserNotFoundException
+     */
+    public function actionView(int $id): ItemDto
+    {
+        $query = new GetUserQuery($id);
+        $handler = Yii::$container->get(GetUserHandler::class);
+        try {
+            $dto = $handler->handle($query);
+        } catch (UserNotFoundException $e) {
+            throw new UserNotFoundException($e->getMessage());
+        }
+        return $this->item($dto);
+    }
 
     #[OA\Get(
-        path: '/user/me',
-        description: 'Возвращает информацию о текущем аутентифицированном пользователе',
-        summary: 'Получить данные текущего пользователя',
-        security: [['bearerAuth' => []]],
+        path: '/users',
+        summary: 'Список пользователей с фильтрацией',
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['users'],
+        parameters: [
+            new OA\Parameter(name: 'ids', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'limit', in: 'query', schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'offset', in: 'query', schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'orderBy', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'email', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'surname', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'name', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'patronymic', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'isOwner', in: 'query', schema: new OA\Schema(type: 'boolean')),
+            new OA\Parameter(name: 'passportId', in: 'query', schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'post', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'createdFrom', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'createdTo', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'updatedFrom', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'updatedTo', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'syncFrom', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'syncTo', in: 'query', schema: new OA\Schema(type: 'string')),
+        ],
         responses: [
-            new OA\Response(
-                response: 200,
-                description: 'Успешный запрос',
-                content: new OA\JsonContent(
-                    properties: [
-                        new OA\Property(
-                            property: 'item',
-                            ref: '#/components/schemas/User'
-                        )
-                    ],
-                    type: 'object'
-                )
-            ),
-            new OA\Response(
-                response: 401,
-                description: 'Требуется авторизация',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
-            ),
-            new OA\Response(
-                response: 404,
-                description: 'Пользователь не найден',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
-            )
-        ]
+            new OA\Response(response: 200, description: 'Успешно', content: new OA\JsonContent(ref: '#/components/schemas/Collection')),
+        ],
     )]
-    public function actionMe(): ItemDto
+    /**
+     * @throws NotInstantiableException
+     * @throws InvalidConfigException
+     */
+    public function actionIndex(): CollectionDto
     {
-        try {
-            $user = $this->getCurrentUserHandler->handle(new GetCurrentUserQuery());
+        $params = Yii::$app->request->get();
+        $filters = new UserFiltersDto(
+            ids: $params['ids'] ?? null,
+            limit: $this->getLimit(),
+            offset: isset($params['offset']) ? (int)$params['offset'] : null,
+            orderBy: $params['orderBy'] ?? null,
+            email: $params['email'] ?? null,
+            surname: $params['surname'] ?? null,
+            name: $params['name'] ?? null,
+            patronymic: $params['patronymic'] ?? null,
+            isOwner: isset($params['isOwner']) ? filter_var($params['isOwner'], FILTER_VALIDATE_BOOLEAN) : null,
+            passportId: isset($params['passportId']) ? (int)$params['passportId'] : null,
+            post: $params['post'] ?? null,
+            syncFrom: $params['syncFrom'] ?? null,
+            syncTo: $params['syncTo'] ?? null,
+            createdFrom: $params['createdFrom'] ?? null,
+            createdTo: $params['createdTo'] ?? null,
+            updatedFrom: $params['updatedFrom'] ?? null,
+            updatedTo: $params['updatedTo'] ?? null,
+        );
 
-            return $this->item(UserDto::fromEntity($user));
+        $query = new ListUserQuery($filters);
+        $handler = Yii::$container->get(ListUserHandler::class);
+        $items = $handler->handle($query);
 
-        } catch (UserNotFoundException $e) {
-            throw new NotFoundHttpException('User not found');
-        }
+        $total = Yii::$container->get(IUserRepository::class)
+            ->countWithFilters($filters);
+
+        return $this->collection(
+            $items,
+            $total,
+            $filters->offset ? (int)($filters->offset / ($filters->limit ?: 1)) + 1 : 1,
+            $filters->limit,
+        );
     }
 
-    #[OA\Post(
-        path: '/user/login',
-        description: 'Аутентификация пользователя через Passport',
-        summary: 'Вход в систему',
-        requestBody: new OA\RequestBody(
-            required: true,
-            content: new OA\JsonContent(
-                required: ['login', 'password'],
-                properties: [
-                    new OA\Property(property: 'login', type: 'string', example: 'user@example.com'),
-                    new OA\Property(property: 'password', type: 'string', example: 'password123'),
-                ],
-                type: 'object'
-            )
-        ),
+    #[OA\Get(
+        path: '/users/sync',
+        summary: 'Принудительная синхронизация текущего авторизированного пользователя',
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['users'],
         responses: [
-            new OA\Response(
-                response: 200,
-                description: 'Успешная аутентификация',
-                content: new OA\JsonContent(
-                    properties: [
-                        new OA\Property(property: 'token', type: 'string', example: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...'),
-                        new OA\Property(property: 'expires_in', type: 'integer', example: 3600),
-                    ],
-                    type: 'object'
-                )
-            ),
-            new OA\Response(
-                response: 401,
-                description: 'Неверные учетные данные',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
-            ),
-            new OA\Response(
-                response: 422,
-                description: 'Ошибка валидации',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
-            )
-        ]
+            new OA\Response(response: 200, description: 'Успешно', content: new OA\JsonContent(ref: '#/components/schemas/Success')),
+            new OA\Response(response: 404, description: 'Пользователь не найден'),
+        ],
     )]
-    public function actionLogin(): ErrorDto|array
+    /**
+     * @throws NotInstantiableException
+     * @throws InvalidConfigException
+     * @throws ValidationException
+     * @throws Throwable
+     */
+    public function actionSync(): SuccessDto|ErrorDto
     {
-        $request = Yii::$app->request;
-
-        $login = $request->post('login');
-        $password = $request->post('password');
-
-        if (empty($login) || empty($password)) {
-            return $this->error('Login and password are required', 422);
+        $passportId = $this->getUserId();
+        $token = Yii::$app->request->cookies->getValue("taskflow_access_token");
+        if (!is_string($token) || $token === '') {
+            return $this->error("Token not found.");
         }
-
-        $httpClient = new Client();
-
-        try {
-            $response = $httpClient->createRequest()
-                ->setMethod('POST')
-                ->setUrl('https://resume.thescript.agency/api/passport/v1/auth/login')
-                ->setData([
-                    'login' => $login,
-                    'password' => $password,
-                ])
-                ->setFormat(Client::FORMAT_JSON)
-                ->send();
-
-            $statusCode = $response->getStatusCode();
-            $data = $response->getData();
-
-            Yii::$app->response->statusCode = $statusCode;
-
-            return $data;
-
-        } catch (\Exception $e) {
-            Yii::error('Passport login failed: ' . $e->getMessage(), 'auth');
-            return $this->error('Authentication service unavailable', 503);
-        }
-    }
-
-    #[OA\Put(
-        path: '/user/me/company',
-        summary: 'Установить компанию и должность текущего пользователя',
-        security: [['bearerAuth' => []]],
-        requestBody: new OA\RequestBody(
-            required: true,
-            content: new OA\JsonContent(
-                properties: [
-                    new OA\Property(property: 'companyName', type: 'string'),
-                    new OA\Property(property: 'post', type: 'string', nullable: true)
-                ]
-            )
-        ),
-        tags: ['users'],
-        responses: [
-            new OA\Response(response: 200, description: 'Обновлено'),
-            new OA\Response(response: 422, description: 'Ошибка валидации')
-        ]
-    )]
-    public function actionUpdateCompany(): SuccessDto|ErrorDto|array
-    {
-        $userId = $this->getUserId();
-        if (!$userId) {
-            return $this->error('User not authenticated', 401);
-        }
-
-        $request = Yii::$app->request;
-        $companyName = $request->post('companyName');
-        $post = $request->post('post');
-
-        if (empty($companyName)) {
-            return $this->error('Company name is required', 422);
-        }
-
-        try {
-            // Поиск или создание компании
-            $companyNameObj = new CompanyName($companyName);
-            $company = $this->companyRepository->findByName($companyNameObj);
-            if (!$company) {
-                $company = new Company(
-                    new CompanyId(0),
-                    $companyNameObj,
-                    null
-                );
-                $company = $this->companyRepository->save($company);
-            }
-
-            // Обновление локального пользователя
-            $localUser = UserAR::find()->where(['user_id' => $userId])->one();
-            if (!$localUser) {
-                return $this->error('Local user not found', 404);
-            }
-
-            $localUser->company_id = $company->getId()->value();
-            $localUser->post = $post;
-            if (!$localUser->save()) {
-                throw new RuntimeException('Failed to update user company');
-            }
-
-        } catch (Throwable $e) {
-            Yii::error($e->getMessage(), 'user');
-            return $this->error('Failed to update company', 500);
-        }
-
-        return $this->success(null, 'Company updated');
+        $user = $this->passport->getUser($passportId, $token);
+        $command = new SyncUserCommand(
+            passportId: (int)$user->id,
+            surname: $user->surname,
+            name: $user->name,
+            email: $user->email,
+            isOwner: $user->isOwner,
+            patronymic: $user->patronymic,
+            post: $user->post,
+        );
+        $handler = Yii::$container->get(SyncUserHandler::class);
+        $handler->handle($command);
+        return $this->success();
     }
 }

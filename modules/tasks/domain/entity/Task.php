@@ -2,10 +2,10 @@
 
 namespace modules\tasks\domain\entity;
 
+use core\domain\valueObject\UserId;
 use modules\tasks\domain\valueObject\TaskId;
 use modules\tasks\domain\valueObject\ColumnId;
 use modules\tasks\domain\valueObject\PriorityId;
-use modules\tasks\domain\valueObject\UserId;
 use modules\tasks\domain\valueObject\Title;
 use DateTimeImmutable;
 

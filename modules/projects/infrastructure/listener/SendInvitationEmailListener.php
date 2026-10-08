@@ -4,7 +4,8 @@ namespace modules\projects\infrastructure\listener;
 
 use core\application\notification\Notification;
 use core\application\notification\NotificationHub;
-use core\application\port\IPassportGateway;
+use core\application\port\IUserRepository;
+use core\domain\valueObject\UserId;
 use modules\projects\domain\event\InvitationCreatedEvent;
 use modules\projects\domain\repository\IProjectRepository;
 use modules\projects\domain\valueObject\ProjectId;
@@ -13,16 +14,16 @@ class SendInvitationEmailListener
 {
     private NotificationHub $notificationHub;
     private IProjectRepository $projectRepository;
-    private IPassportGateway $passportGateway;
+    private IUserRepository $userRepository;
 
     public function __construct(
         NotificationHub $notificationHub,
         IProjectRepository $projectRepository,
-        IPassportGateway $passportGateway
+        IUserRepository $userRepository,
     ) {
         $this->notificationHub      = $notificationHub;
         $this->projectRepository    = $projectRepository;
-        $this->passportGateway      = $passportGateway;
+        $this->userRepository      = $userRepository;
     }
 
     public function handle(InvitationCreatedEvent $event): void
@@ -32,7 +33,7 @@ class SendInvitationEmailListener
         $project = $this->projectRepository->findById(new ProjectId($event->getProjectId()));
         $projectName = $project ? $project->getName() : 'Project';
 
-        $inviterData = $this->passportGateway->getUserById((string)$event->getInvitedBy(), \Yii::$app->user->identity->getJwtToken());
+        $inviterData = $this->userRepository->findById(new UserId($event->getInvitedBy()));
         $inviterName = $inviterData['ui_name'] ?? '';
         $inviterAvatar = $inviterData['avatar'] ?? '';
 
@@ -56,7 +57,7 @@ class SendInvitationEmailListener
             $event->getEmail(),
             $subject,
             $body,
-            ['invitationId' => $event->getAggregateId()]
+            ['invitationId' => $event->getAggregateId()],
         );
         $this->notificationHub->send($notification);
     }

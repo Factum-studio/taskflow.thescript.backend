@@ -1,21 +1,34 @@
 <?php
 
+declare(strict_types=1);
+
 namespace core\security;
 
-use core\domain\entity\User;
-use core\domain\valueObject\JwtToken;
 use yii\web\IdentityInterface;
 
+/**
+ * Identity of the authenticated OAuth subject.
+ *
+ * The ID is the external Passport subject (sub). The local service may map it
+ * to its own users table by passport_id.
+ */
 final class YiiIdentity implements IdentityInterface
 {
+    /**
+     * @param string[] $scopes
+     */
     public function __construct(
-        private readonly User $user,
-        private readonly ?JwtToken $jwtToken = null
-    ) {}
+        private readonly string $id,
+        private readonly string $clientId = '',
+        private readonly string $tokenId = '',
+        private readonly array  $scopes = [],
+        private readonly string $subjectType = 'user',
+    ) {
+    }
 
     public function getId(): string
     {
-        return $this->user->getId()->value();
+        return $this->id;
     }
 
     public function getAuthKey(): ?string
@@ -28,44 +41,46 @@ final class YiiIdentity implements IdentityInterface
         return false;
     }
 
-    public static function findIdentity($id)
+    public static function findIdentity($id): ?self
     {
         return null;
     }
 
-    public static function findIdentityByAccessToken($token, $type = null)
+    public static function findIdentityByAccessToken($token, $type = null): ?self
     {
         return null;
     }
 
-    public function getUser(): User
+    public function getClientId(): string
     {
-        return $this->user;
+        return $this->clientId;
     }
 
-    public function getJwtToken(): ?JwtToken
+    public function getTokenId(): string
     {
-        return $this->jwtToken;
+        return $this->tokenId;
     }
 
-    public function getFullName(): string
+    /**
+     * @return string[]
+     */
+    public function getScopes(): array
     {
-        return $this->user->getFullName();
+        return $this->scopes;
     }
 
-    public function getUiName(): string
+    public function hasScope(string $scope): bool
     {
-        return $this->user->getUiName();
+        return in_array($scope, $this->scopes, true);
     }
 
-    public function getContacts(): array
+    public function getSubjectType(): string
     {
-        return $this->user->getContacts();
+        return $this->subjectType;
     }
 
-    public function getPostName(): ?string
+    public function isUser(): bool
     {
-        $post = $this->user->getPost();
-        return $post?->getName();
+        return $this->subjectType === 'user';
     }
 }

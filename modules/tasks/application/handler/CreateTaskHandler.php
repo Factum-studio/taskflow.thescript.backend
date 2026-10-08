@@ -2,6 +2,7 @@
 
 namespace modules\tasks\application\handler;
 
+use core\domain\valueObject\UserId;
 use InvalidArgumentException;
 use modules\tasks\application\assembler\TaskDtoAssembler;
 use modules\tasks\application\command\CreateTaskCommand;
@@ -17,7 +18,6 @@ use modules\tasks\domain\valueObject\ColumnId;
 use modules\tasks\domain\valueObject\PriorityId;
 use modules\tasks\domain\valueObject\TaskId;
 use modules\tasks\domain\valueObject\Title;
-use modules\tasks\domain\valueObject\UserId;
 use DateTimeImmutable;
 use RuntimeException;
 

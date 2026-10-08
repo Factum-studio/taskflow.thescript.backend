@@ -1,28 +1,33 @@
 <?php
 
-/**
- * TODO: По мере реализации раскомментировать соответствующий конфиг подключения модулей
- */
+declare(strict_types=1);
 
+/**
+ * @example
+ * 'module-name'=>[
+ *      'class' =>'modules\module-name\Module',
+ *      'controllerNamespace' => 'modules\module-name\presentation\controller',
+ * ],
+ */
 return [
-//    'clients'=>[
-//        'class'=>'modules\clients\Module',
-//    ],
-    'tasks'=>[
-        'class'=>'modules\tasks\Module',
-        'controllerNamespace' => 'modules\tasks\presentation\controller',
+    'auth' => [
+        'class' => 'modules\passport\auth\Module',
+        'controllerNamespace' => 'modules\passport\auth\presentation\controller',
     ],
-    'projects'=>[
-        'class'=>'modules\projects\Module',
-        'controllerNamespace' => 'modules\projects\presentation\controller',
+    'rbac' => [
+        'class' => 'modules\\rbac\\Module',
+        'controllerNamespace' => 'modules\\rbac\\presentation\\controller',
     ],
-//    'kanban'=>[
-//        'class'=>'modules\kanban\Module',
-//    ],
-//    'analytics'=>[
-//        'class'=>'modules\analytics\Module',
-//    ],
-//    'files'=>[
-//        'class'=>'modules\files\Module',
-//    ],
+    'tasks' => [
+        'class' => 'modules\\tasks\\Module',
+        'controllerNamespace' => 'modules\\tasks\\presentation\\controller',
+    ],
+    'projects' => [
+        'class' => 'modules\\projects\\Module',
+        'controllerNamespace' => 'modules\\projects\\presentation\\controller',
+    ],
+    'feedback' => [
+        'class' => 'modules\\feedback\\Module',
+        'controllerNamespace' => 'modules\\feedback\\presentation\\controller',
+    ],
 ];

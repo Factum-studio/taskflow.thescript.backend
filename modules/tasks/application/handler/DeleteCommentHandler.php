@@ -31,11 +31,11 @@ class DeleteCommentHandler
         }
 
         // Только автор может удалять коммент TODO: унифицировать через интерфейс
-        if ($comment->getUserId()->getValue() !== $command->userId) {
+        if ($comment->getUserId()->value() !== $command->userId) {
             throw new InvalidArgumentException("You are not allowed to delete this comment.");
         }
         //TODO: разделить проверки для комментариев
-        if (!$this->taskAccess->canCommentOnTask($command->userId, $comment->getTaskId()->getValue())) {
+        if (!$this->taskAccess->canCommentOnTask($command->userId, $comment->getTaskId()->value())) {
             throw new RuntimeException('You are not allowed to delete comments on this task');
         }
 

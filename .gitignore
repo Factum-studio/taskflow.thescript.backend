@@ -37,7 +37,11 @@ tests/_support/_generated
 
 #vagrant folder
 /.vagrant
+/vagrant
 
+#dev scancore
 scancore_output.txt
-
 stats*
+
+#linter
+.php-cs-fixer.cache

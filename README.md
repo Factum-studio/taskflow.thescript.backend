@@ -2,7 +2,7 @@
 
 [![PHP Version](https://img.shields.io/badge/PHP-8.1%2B-777BB4?logo=php)](https://php.net)
 [![Yii Framework](https://img.shields.io/badge/Yii-2.0-40b3d8?logo=yii)](https://www.yiiframework.com/)
-[![License: Script Agency](https://img.shields.io/badge/License-Script%20Agency%201.0-blue.svg)](./LICENSE.md)
+[![License: Script Agency](https://img.shields.io/badge/License-Script%20Agency%20Proprietary-blue.svg)](./LICENSE.md)
 
 **TASKFLOW CRM** - это мощная и гибкая CRM-система для управления задачами, личными проектами, а так же проектами в креативных агентствах. 
 Построена на принципах Domain-Driven Design (DDD) и Clean Architecture, что обеспечивает высокую масштабируемость и поддерживаемость кодовой базы.

@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\domain\entity;
 
+use core\domain\valueObject\UserId;
 use DateTimeImmutable;
 use modules\projects\domain\valueObject\ProjectId;
-use modules\projects\domain\valueObject\UserId;
 use modules\projects\domain\valueObject\UserRole;
 use InvalidArgumentException;
 
@@ -25,7 +27,7 @@ class ProjectUser
         ?UserId $invitedBy = null,
         ?DateTimeImmutable $invitedAt = null,
         ?DateTimeImmutable $acceptedAt = null,
-        ?DateTimeImmutable $joinedAt = null
+        ?DateTimeImmutable $joinedAt = null,
     ) {
         $this->projectId    = $projectId;
         $this->userId       = $userId;
@@ -36,13 +38,34 @@ class ProjectUser
         $this->joinedAt     = $joinedAt ?? new DateTimeImmutable();
     }
 
-    public function getProjectId(): ProjectId { return $this->projectId; }
-    public function getUserId(): UserId { return $this->userId; }
-    public function getRole(): UserRole { return $this->role; }
-    public function getInvitedBy(): ?UserId { return $this->invitedBy; }
-    public function getInvitedAt(): ?DateTimeImmutable { return $this->invitedAt; }
-    public function getAcceptedAt(): ?DateTimeImmutable { return $this->acceptedAt; }
-    public function getJoinedAt(): DateTimeImmutable { return $this->joinedAt; }
+    public function getProjectId(): ProjectId
+    {
+        return $this->projectId;
+    }
+    public function getUserId(): UserId
+    {
+        return $this->userId;
+    }
+    public function getRole(): UserRole
+    {
+        return $this->role;
+    }
+    public function getInvitedBy(): ?UserId
+    {
+        return $this->invitedBy;
+    }
+    public function getInvitedAt(): ?DateTimeImmutable
+    {
+        return $this->invitedAt;
+    }
+    public function getAcceptedAt(): ?DateTimeImmutable
+    {
+        return $this->acceptedAt;
+    }
+    public function getJoinedAt(): DateTimeImmutable
+    {
+        return $this->joinedAt;
+    }
 
     public function changeRole(UserRole $newRole): void
     {

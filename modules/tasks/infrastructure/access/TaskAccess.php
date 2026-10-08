@@ -23,7 +23,7 @@ class TaskAccess implements ITaskAccess
         if (!$column) {
             return [];
         }
-        $boardId = $column->getBoardId()->getValue();
+        $boardId = $column->getBoardId()->value();
         $projectId = $this->projectAccess->getProjectIdByBoardId($boardId);
         if ($projectId) {
             return [$projectId];
@@ -96,7 +96,7 @@ class TaskAccess implements ITaskAccess
         if (!$column) {
             return false;
         }
-        return $this->projectAccess->canManageBoard($userId, $column->getBoardId()->getValue());
+        return $this->projectAccess->canManageBoard($userId, $column->getBoardId()->value());
     }
 
     public function canDeleteColumn(int $userId, int $columnId): bool
@@ -112,7 +112,7 @@ class TaskAccess implements ITaskAccess
             return false;
         }
 
-        return $this->projectAccess->canManageBoard($userId, $column->getBoardId()->getValue());
+        return $this->projectAccess->canManageBoard($userId, $column->getBoardId()->value());
     }
 
     public function canMoveTaskToColumn(int $userId, int $taskId, int $columnId): bool
@@ -126,7 +126,7 @@ class TaskAccess implements ITaskAccess
             return false;
         }
         // Задача и колонка должны принадлежать одной доске
-        if ($task->getBoardId() !== $column->getBoardId()->getValue()) {
+        if ($task->getBoardId() !== $column->getBoardId()->value()) {
             return false;
         }
         return $this->projectAccess->canViewBoard($userId, $task->getBoardId());

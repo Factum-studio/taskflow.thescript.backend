@@ -2,13 +2,13 @@
 
 namespace modules\projects\infrastructure\repository;
 
+use core\domain\valueObject\UserId;
 use DateTimeImmutable;
 use Exception;
 use modules\projects\domain\entity\Invitation;
 use modules\projects\domain\repository\IInvitationRepository;
 use modules\projects\domain\valueObject\InvitationStatus;
 use modules\projects\domain\valueObject\ProjectId;
-use modules\projects\domain\valueObject\UserId;
 use modules\projects\infrastructure\persistence\InvitationAR;
 use RuntimeException;
 use yii\db\Connection;
@@ -64,7 +64,7 @@ class DbInvitationRepository implements IInvitationRepository
     {
         $ar = InvitationAR::find()
             ->where([
-                'project_id' => $projectId->getValue(),
+                'project_id' => $projectId->value(),
                 'email' => $email,
                 'status' => InvitationStatus::PENDING,
             ])
@@ -93,11 +93,11 @@ class DbInvitationRepository implements IInvitationRepository
 
     private function mapEntityToAR(Invitation $invitation, InvitationAR $ar): void
     {
-        $ar->project_id = $invitation->getProjectId()->getValue();
+        $ar->project_id = $invitation->getProjectId()->value();
         $ar->email = $invitation->getEmail();
-        $ar->invited_by = $invitation->getInvitedBy()->getValue();
+        $ar->invited_by = $invitation->getInvitedBy()->value();
         $ar->token = $invitation->getToken();
-        $ar->status = $invitation->getStatus()->getValue();
+        $ar->status = $invitation->getStatus()->value();
         $ar->expires_at = $invitation->getExpiresAt()->format('Y-m-d H:i:s');
     }
 

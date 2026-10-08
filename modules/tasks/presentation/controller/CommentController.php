@@ -50,7 +50,10 @@ class CommentController extends BaseController
         path: '/task/{taskId}/comment',
         description: 'Возвращает все комментарии, привязанные к указанной задаче',
         summary: 'Список комментариев задачи',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['comments'],
         parameters: [
             new OA\Parameter(
@@ -109,7 +112,10 @@ class CommentController extends BaseController
     #[OA\Get(
         path: '/comment/{id}',
         summary: 'Получить комментарий по ID',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['comments'],
         parameters: [
             new OA\Parameter(
@@ -163,7 +169,10 @@ class CommentController extends BaseController
     #[OA\Post(
         path: '/task/{taskId}/comment',
         summary: 'Добавить комментарий к задаче',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/AddCommentRequest')
@@ -245,7 +254,10 @@ class CommentController extends BaseController
     #[OA\Put(
         path: '/comment/{id}',
         summary: 'Обновить комментарий',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/UpdateCommentRequest')
@@ -332,7 +344,10 @@ class CommentController extends BaseController
     #[OA\Delete(
         path: '/comment/{id}',
         summary: 'Удалить комментарий',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['comments'],
         parameters: [
             new OA\Parameter(

@@ -58,7 +58,10 @@ class TimeIntervalController extends BaseController
     #[OA\Get(
         path: '/time-interval',
         summary: 'Список временных интервалов',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['time-intervals'],
         parameters: [
             new OA\Parameter(name: 'taskId', in: 'query', required: false, schema: new OA\Schema(type: 'integer')),
@@ -118,7 +121,10 @@ class TimeIntervalController extends BaseController
     #[OA\Post(
         path: '/time-interval/start',
         summary: 'Запустить таймер (начать интервал)',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/StartTimerRequest')
@@ -179,7 +185,10 @@ class TimeIntervalController extends BaseController
     #[OA\Post(
         path: '/time-interval/stop',
         summary: 'Остановить таймер (завершить интервал)',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/StopTimerRequest')
@@ -244,7 +253,10 @@ class TimeIntervalController extends BaseController
     #[OA\Post(
         path: '/time-interval',
         summary: 'Ручной ввод интервала',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(ref: '#/components/schemas/LogIntervalRequest')
@@ -311,7 +323,10 @@ class TimeIntervalController extends BaseController
     #[OA\Get(
         path: '/time-interval/daily-summary',
         summary: 'Ежедневная сводка по времени',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['time-intervals'],
         parameters: [
             new OA\Parameter(name: 'userId', in: 'query', required: true, schema: new OA\Schema(type: 'integer')),
@@ -368,7 +383,10 @@ class TimeIntervalController extends BaseController
     #[OA\Get(
         path: '/task/{taskId}/time-summary',
         summary: 'Сводка по времени задачи с разбивкой на блоки (диаграмма занятости)',
-        security: [['bearerAuth' => []]],
+        security: [
+            ['bearerAuth' => []],
+            ['accessTokenCookie' => []],
+        ],
         tags: ['time-intervals'],
         parameters: [
             new OA\Parameter(name: 'taskId', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),

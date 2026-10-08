@@ -1,11 +1,13 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @OA\Info(
- *     title="TASKFLOW CRM API",
- *     version="1.0.0",
- *     description="CRM API for TASKFLOW project",
+ *     title="TASKFLOW.thescript",
+ *     version="2.0.0",
+ *     description="CRM API для управления задачами системы МОПС",
  *     @OA\Contact(
- *         email="support@example.com"
+ *         email="company@thescript.agency"
  *     )
  * )
  * @OA\Server(
@@ -13,7 +15,7 @@
  *     description="API dev server"
  * )
  * @OA\Server(
- *     url="https://api.taskflow.thescript.agency",
+ *     url="https://api.resume.thescript.agency",
  *     description="API prod server"
  * )
  * @OA\OpenApi(
@@ -24,7 +26,23 @@
  *     type="http",
  *     scheme="bearer",
  *     bearerFormat="JWT",
- *     description="Используйте JWT токен для аутентификации"
- * ),
+ *     description="Bearer access token в заголовке Authorization"
+ * )
+ * @OA\SecurityScheme(
+ *     securityScheme="accessTokenCookie",
+ *     type="apiKey",
+ *     in="cookie",
+ *     name="access_token",
+ *     description="HttpOnly access token cookie"
+ * )
+ * @OA\SecurityScheme(
+ *     securityScheme="refreshTokenCookie",
+ *     type="apiKey",
+ *     in="cookie",
+ *     name="refresh_token",
+ *     description="HttpOnly refresh token cookie"
+ * )
  */
-class InfoDefinitions {}
+class InfoDefinitions
+{
+}
