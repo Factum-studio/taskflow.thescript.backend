@@ -288,6 +288,26 @@ final class PassportHttpClient implements PassportAuthPort
 
     /**
      * @throws Exception
+     * @throws InvalidConfigException
+     */
+    public function introspect(string $accessToken): array
+    {
+        $response = $this->client->createRequest()
+            ->setMethod('POST')
+            ->setUrl(rtrim($this->baseUrl, '/') . '/token/introspect')
+            ->addHeaders(['Authorization' => 'Bearer ' . $accessToken])
+            ->setFormat(Client::FORMAT_JSON)
+            ->setData(['token' => $accessToken])
+            ->send();
+
+        return [
+            'status' => $response->getStatusCode(),
+            'body' => $response->getContent(),
+        ];
+    }
+
+    /**
+     * @throws Exception
      */
     private function parseTokenResponse(Response $response): PassportTokenDto
     {
