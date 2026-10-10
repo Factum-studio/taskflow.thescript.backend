@@ -194,6 +194,45 @@ final class AuthController extends BaseController
         return Yii::$app->response;
     }
 
+    #[OA\Get(
+        path: '/auth/introspect',
+        description: 'Отправляет запрос на интроспекцию токена',
+        summary: 'proxy интроспекции токена',
+        tags: ['auth'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Результат интроспекции токена',
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Пользователь не аутентифицирован',
+                content: new OA\JsonContent(ref: '#/components/schemas/Error'),
+            ),
+        ],
+    )]
+    /**
+     * @throws NotInstantiableException
+     * @throws InvalidConfigException
+     * @throws BadRequestHttpException
+     */
+    public function actionIntrospect(): Response
+    {
+        $params = require dirname(__DIR__, 2) . '/config/params.php';
+        $accessToken = Yii::$app->request->cookies->getValue($params['access_token_cookie_name']);
+        if (!is_string($accessToken) || $accessToken === '') {
+            throw new BadRequestHttpException('Access token is missing');
+        }
+
+        $result = Yii::$container->get(PassportAuthPort::class)->introspect($accessToken);
+
+        Yii::$app->response->statusCode = $result['status'];
+        Yii::$app->response->format = Response::FORMAT_RAW;
+        Yii::$app->response->data = $result['body'];
+
+        return Yii::$app->response;
+    }
+
     private function setTokenCookie(string $name, string $value, int $ttl): void
     {
         Yii::$app->response->cookies->add(new Cookie([

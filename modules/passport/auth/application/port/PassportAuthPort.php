@@ -23,4 +23,9 @@ interface PassportAuthPort
      * @return array{status:int, headers:array<string, string[]>, body:string}
      */
     public function logout(?string $cookieHeader, ?string $authorization): array;
+
+    /**
+     * @return array{status:int, body:string}
+     */
+    public function introspect(string $accessToken): array;
 }
