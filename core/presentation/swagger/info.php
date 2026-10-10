@@ -15,7 +15,7 @@ declare(strict_types=1);
  *     description="API dev server"
  * )
  * @OA\Server(
- *     url="https://api.resume.thescript.agency",
+ *     url="https://api.taskflow.thescript.agency",
  *     description="API prod server"
  * )
  * @OA\OpenApi(
