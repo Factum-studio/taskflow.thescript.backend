@@ -266,6 +266,7 @@ final class PassportAuthMiddleware
             'secure' => true,
             'sameSite' => Cookie::SAME_SITE_LAX,
             'path' => '/',
+            'domain' => '.taskflow.thescript.agency',
             'expire' => time() + $expiresIn,
         ]));
 
@@ -277,6 +278,7 @@ final class PassportAuthMiddleware
                 'secure' => true,
                 'sameSite' => Cookie::SAME_SITE_LAX,
                 'path' => '/',
+                'domain' => '.taskflow.thescript.agency',
                 'expire' => time() + (int)($_ENV['OAUTH2_REFRESH_TOKEN_TTL'] ?? 2592000),
             ]));
         }

@@ -242,6 +242,7 @@ final class AuthController extends BaseController
             'secure' => true,
             'sameSite' => Cookie::SAME_SITE_LAX,
             'path' => '/',
+            'domain' => '.taskflow.thescript.agency',
             'expire' => time() + max(1, $ttl),
         ]));
     }
