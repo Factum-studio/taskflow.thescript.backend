@@ -11,6 +11,8 @@ use modules\projects\domain\valueObject\ProjectId;
 use modules\projects\domain\valueObject\BoardId;
 use modules\projects\domain\entity\Project;
 use modules\projects\domain\entity\Board;
+use modules\company\domain\repository\ICompanyMemberRepository;
+use modules\company\domain\valueObject\CompanyId;
 
 class ProjectAccess implements IProjectAccess
 {
@@ -20,7 +22,8 @@ class ProjectAccess implements IProjectAccess
     public function __construct(
         private IProjectRepository $projectRepository,
         private IBoardRepository $boardRepository,
-        private IProjectUserRepository $projectUserRepository
+        private IProjectUserRepository $projectUserRepository,
+        private ICompanyMemberRepository $companyMemberRepository,
     ) {}
 
     public function getUserProjectIds(int $userId): array
@@ -154,11 +157,16 @@ class ProjectAccess implements IProjectAccess
         return true;
     }
 
-    // TODO выделить в отдельный сервис или привязывать проекты к компании
+    /**
+     * Проверяет, находятся ли два пользователя в одной компании.
+     */
     private function getUserCompanyId(int $userId): ?int
     {
-        $userAR = \core\infrastructure\persistence\UserAR::findOne(['user_id' => $userId]);
-        return $userAR?->company_id;
+        $members = $this->companyMemberRepository->findByUser(new \core\domain\valueObject\UserId($userId));
+        if (empty($members)) {
+            return null;
+        }
+        return $members[0]->getCompanyId()->value();
     }
 
     public function canRemoveUser(int $userId, int $targetUserId, int $projectId): bool
