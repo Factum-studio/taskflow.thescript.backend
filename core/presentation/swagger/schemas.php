@@ -503,3 +503,34 @@ class ProjectsSchemaDefinitions {}
  * )
  */
 class FeedbackSchemas {}
+
+/**
+ *  @OA\Schema(
+ *     schema="CreateCompanyRequest",
+ *     @OA\Property(property="name", type="string"),
+ *     @OA\Property(property="email", type="string", nullable="true"),
+ *     @OA\Property(property="website", type="string", nullable="true"),
+ *     @OA\Property(property="phone", type="string", nullable="true"),
+ *     @OA\Property(property="country", type="string", nullable="true"),
+ *     @OA\Property(property="city", type="string", nullable="true"),
+ *     @OA\Property(property="address", type="string", nullable="true"),
+ *     @OA\Property(property="taxNum", type="string", nullable="true"),
+ *     @OA\Property(property="registrationNum", type="string", nullable="true"),
+ *     @OA\Property(property="description", type="string", nullable="true"),
+ * )
+ *
+ * @OA\Schema(
+ *     schema="UpdateCompanyRequest",
+ *     @OA\Property(property="name", type="string", nullable="true"),
+ *     @OA\Property(property="email", type="string", nullable="true"),
+ *     @OA\Property(property="website", type="string", nullable="true"),
+ *     @OA\Property(property="phone", type="string", nullable="true"),
+ *     @OA\Property(property="country", type="string", nullable="true"),
+ *     @OA\Property(property="city", type="string", nullable="true"),
+ *     @OA\Property(property="address", type="string", nullable="true"),
+ *     @OA\Property(property="taxNum", type="string", nullable="true"),
+ *     @OA\Property(property="registrationNum", type="string", nullable="true"),
+ *     @OA\Property(property="description", type="string", nullable="true"),
+ * )
+ */
+class CompanySchemas {}
