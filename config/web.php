@@ -14,6 +14,7 @@ $container      = __DIR__ . '/container.php';
 $diConfigs          = [
     __DIR__ . '/../modules/passport/auth/config/di.php',
     __DIR__ . '/../modules/rbac/config/di.php',
+    __DIR__ . '/../modules/company/config/di.php',
     __DIR__ . '/../modules/projects/config/di.php',
     __DIR__ . '/../modules/tasks/config/di.php',
     __DIR__ . '/../modules/feedback/config/di.php',
@@ -98,6 +99,7 @@ $config = [
                 require __DIR__ . '/../modules/projects/config/routing.php',
                 require __DIR__ . '/../modules/tasks/config/routing.php',
                 require __DIR__ . '/../modules/feedback/config/routing.php',
+                require __DIR__ . '/../modules/company/config/routing.php',
                 [
                     // Role
                     'GET roles'                     => 'role/index',
