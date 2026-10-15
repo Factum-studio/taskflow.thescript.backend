@@ -100,6 +100,7 @@ $config = [
                 require __DIR__ . '/../modules/tasks/config/routing.php',
                 require __DIR__ . '/../modules/feedback/config/routing.php',
                 require __DIR__ . '/../modules/company/config/routing.php',
+                require __DIR__ . '/../modules/passport/proxy/config/routing.php',
                 [
                     // Role
                     'GET roles'                     => 'role/index',
