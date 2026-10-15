@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\presentation\controller;
 
 use core\application\dto\CollectionDto;
@@ -33,7 +35,7 @@ use yii\web\UnauthorizedHttpException;
 
 #[OA\Tag(
     name: 'board-columns',
-    description: 'Управление колонками досок (статусами задач)'
+    description: 'Управление колонками досок (статусами задач)',
 )]
 class BoardColumnController extends BaseController
 {
@@ -46,7 +48,7 @@ class BoardColumnController extends BaseController
         private readonly GetBoardColumnsHandler $getListHandler,
         private readonly GetBoardColumnHandler $getOneHandler,
         private readonly ReorderBoardColumnsHandler $reorderHandler,
-        $config = []
+        $config = [],
     ) {
         parent::__construct($id, $module, $config);
     }
@@ -66,8 +68,8 @@ class BoardColumnController extends BaseController
                 description: 'ID доски',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -78,18 +80,18 @@ class BoardColumnController extends BaseController
                         new OA\Property(
                             property: 'items',
                             type: 'array',
-                            items: new OA\Items(ref: '#/components/schemas/BoardColumn')
+                            items: new OA\Items(ref: '#/components/schemas/BoardColumn'),
                         ),
                         new OA\Property(
                             property: '_meta',
-                            ref: '#/components/schemas/Collection/properties/_meta'
-                        )
+                            ref: '#/components/schemas/Collection/properties/_meta',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
-            new OA\Response(response: 401, description: 'Требуется авторизация')
-        ]
+            new OA\Response(response: 401, description: 'Требуется авторизация'),
+        ],
     )]
     /**
      * @throws UnauthorizedHttpException
@@ -102,7 +104,7 @@ class BoardColumnController extends BaseController
         }
         $query = new GetBoardColumnsQuery(
             boardId: $boardId,
-            userId: $userId
+            userId: $userId,
         );
         $columns = $this->getListHandler->handle($query);
         return $this->collection($columns);
@@ -122,8 +124,8 @@ class BoardColumnController extends BaseController
                 description: 'ID колонки',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -133,15 +135,15 @@ class BoardColumnController extends BaseController
                     properties: [
                         new OA\Property(
                             property: 'item',
-                            ref: '#/components/schemas/BoardColumn'
-                        )
+                            ref: '#/components/schemas/BoardColumn',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
-            new OA\Response(response: 404, description: 'Колонка не найдена')
-        ]
+            new OA\Response(response: 404, description: 'Колонка не найдена'),
+        ],
     )]
     /**
      * @throws NotFoundHttpException
@@ -155,7 +157,7 @@ class BoardColumnController extends BaseController
         }
         $query = new GetBoardColumnQuery(
             id: $id,
-            userId: $userId
+            userId: $userId,
         );
         try {
             $column = $this->getOneHandler->handle($query);
@@ -174,7 +176,7 @@ class BoardColumnController extends BaseController
         ],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/CreateBoardColumnRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/CreateBoardColumnRequest'),
         ),
         tags: ['board-columns'],
         parameters: [
@@ -183,8 +185,8 @@ class BoardColumnController extends BaseController
                 description: 'ID доски',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -194,15 +196,15 @@ class BoardColumnController extends BaseController
                     properties: [
                         new OA\Property(
                             property: 'item',
-                            ref: '#/components/schemas/BoardColumn'
-                        )
+                            ref: '#/components/schemas/BoardColumn',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
-            new OA\Response(response: 422, description: 'Ошибка валидации')
-        ]
+            new OA\Response(response: 422, description: 'Ошибка валидации'),
+        ],
     )]
     /**
      * @throws ServerErrorHttpException
@@ -229,7 +231,7 @@ class BoardColumnController extends BaseController
             isActive: $request->isActive ?? true,
             isFinal: $request->isFinal ?? false,
             color: $request->color,
-            workflowId: $request->workflowId
+            workflowId: $request->workflowId,
         );
 
         try {
@@ -253,7 +255,7 @@ class BoardColumnController extends BaseController
         ],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/UpdateBoardColumnRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/UpdateBoardColumnRequest'),
         ),
         tags: ['board-columns'],
         parameters: [
@@ -262,8 +264,8 @@ class BoardColumnController extends BaseController
                 description: 'ID колонки',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -273,16 +275,16 @@ class BoardColumnController extends BaseController
                     properties: [
                         new OA\Property(
                             property: 'item',
-                            ref: '#/components/schemas/BoardColumn'
-                        )
+                            ref: '#/components/schemas/BoardColumn',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
             new OA\Response(response: 404, description: 'Колонка не найдена'),
-            new OA\Response(response: 422, description: 'Ошибка валидации')
-        ]
+            new OA\Response(response: 422, description: 'Ошибка валидации'),
+        ],
     )]
     /**
      * @throws NotFoundHttpException
@@ -310,7 +312,7 @@ class BoardColumnController extends BaseController
             isActive: $request->isActive,
             isFinal: $request->isFinal,
             color: $request->color,
-            workflowId: $request->workflowId
+            workflowId: $request->workflowId,
         );
 
         try {
@@ -341,8 +343,8 @@ class BoardColumnController extends BaseController
                 description: 'ID колонки',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -351,14 +353,14 @@ class BoardColumnController extends BaseController
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: 'data', type: 'null'),
-                        new OA\Property(property: 'message', type: 'string', example: 'Column deleted')
+                        new OA\Property(property: 'message', type: 'string', example: 'Column deleted'),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
-            new OA\Response(response: 404, description: 'Колонка не найдена')
-        ]
+            new OA\Response(response: 404, description: 'Колонка не найдена'),
+        ],
     )]
     /**
      * @throws NotFoundHttpException
@@ -394,7 +396,7 @@ class BoardColumnController extends BaseController
         ],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/ReorderBoardColumnsRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/ReorderBoardColumnsRequest'),
         ),
         tags: ['board-columns'],
         parameters: [
@@ -403,8 +405,8 @@ class BoardColumnController extends BaseController
                 description: 'ID доски',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -413,14 +415,14 @@ class BoardColumnController extends BaseController
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: 'data', type: 'null'),
-                        new OA\Property(property: 'message', type: 'string', example: 'Columns reordered')
+                        new OA\Property(property: 'message', type: 'string', example: 'Columns reordered'),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
-            new OA\Response(response: 422, description: 'Ошибка валидации')
-        ]
+            new OA\Response(response: 422, description: 'Ошибка валидации'),
+        ],
     )]
     /**
      * @throws NotFoundHttpException

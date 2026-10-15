@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use InvalidArgumentException;
@@ -16,7 +18,7 @@ class DeleteStickerHandler
 
     public function __construct(
         IStickerRepository $stickerRepository,
-        IProjectAccess $projectAccess
+        IProjectAccess $projectAccess,
     ) {
         $this->stickerRepository    = $stickerRepository;
         $this->projectAccess        = $projectAccess;

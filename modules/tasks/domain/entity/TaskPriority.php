@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\domain\entity;
 
 use modules\tasks\domain\valueObject\PriorityId;
@@ -15,7 +17,7 @@ class TaskPriority
         PriorityId $id,
         int $value,
         string $label,
-        ?string $color = null
+        ?string $color = null,
     ) {
         $this->id       = $id;
         $this->value    = $value;

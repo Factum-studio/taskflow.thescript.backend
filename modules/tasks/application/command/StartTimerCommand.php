@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\command;
 
 use DateTimeImmutable;
@@ -15,7 +17,7 @@ class StartTimerCommand
         int $taskId,
         int $userId,
         ?DateTimeImmutable $startTime = null,
-        ?string $comment = null
+        ?string $comment = null,
     ) {
         $this->taskId       = $taskId;
         $this->userId       = $userId;

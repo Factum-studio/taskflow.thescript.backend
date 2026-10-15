@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use core\domain\valueObject\UserId;
@@ -30,7 +32,7 @@ class AddCommentHandler
         ITaskRepository $taskRepository,
         CommentDtoAssembler $commentDtoAssembler,
         IEventDispatcher $eventDispatcher,
-        ITaskAccess $taskAccess
+        ITaskAccess $taskAccess,
     ) {
         $this->commentRepository    = $commentRepository;
         $this->taskRepository       = $taskRepository;
@@ -58,7 +60,7 @@ class AddCommentHandler
             new CommentId(0),
             $taskId,
             new UserId($command->userId),
-            $command->content
+            $command->content,
         );
 
         $savedComment = $this->commentRepository->save($comment);

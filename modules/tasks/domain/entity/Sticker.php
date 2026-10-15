@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\domain\entity;
 
 use core\domain\valueObject\UserId;
@@ -30,7 +32,7 @@ class Sticker
         ?array $data = null,
         ?string $color = null,
         ?DateTimeImmutable $createdAt = null,
-        ?DateTimeImmutable $updatedAt = null
+        ?DateTimeImmutable $updatedAt = null,
     ) {
         if ($type->isUser() && $projectId === null) {
             throw new InvalidArgumentException('User sticker must be assigned to a project');
@@ -46,15 +48,42 @@ class Sticker
         $this->updatedAt    = $updatedAt ?? new DateTimeImmutable();
     }
 
-    public function getId(): StickerId { return $this->id; }
-    public function getName(): StickerName { return $this->name; }
-    public function getType(): StickerType { return $this->type; }
-    public function getProjectId(): ?int { return $this->projectId; }
-    public function getData(): ?array { return $this->data; }
-    public function getColor(): ?string { return $this->color; }
-    public function getCreatedBy(): UserId { return $this->createdBy; }
-    public function getCreatedAt(): DateTimeImmutable { return $this->createdAt; }
-    public function getUpdatedAt(): DateTimeImmutable { return $this->updatedAt; }
+    public function getId(): StickerId
+    {
+        return $this->id;
+    }
+    public function getName(): StickerName
+    {
+        return $this->name;
+    }
+    public function getType(): StickerType
+    {
+        return $this->type;
+    }
+    public function getProjectId(): ?int
+    {
+        return $this->projectId;
+    }
+    public function getData(): ?array
+    {
+        return $this->data;
+    }
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+    public function getCreatedBy(): UserId
+    {
+        return $this->createdBy;
+    }
+    public function getCreatedAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+    public function getUpdatedAt(): DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
 
     public function rename(StickerName $newName): void
     {

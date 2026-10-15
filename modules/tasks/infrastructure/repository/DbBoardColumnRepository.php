@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\infrastructure\repository;
 
 use DateTimeImmutable;
@@ -97,7 +99,7 @@ class DbBoardColumnRepository implements IBoardColumnRepository
             $ar->color,
             $ar->workflow_id,
             new DateTimeImmutable($ar->created_at),
-            new DateTimeImmutable($ar->updated_at)
+            new DateTimeImmutable($ar->updated_at),
         );
     }
 }

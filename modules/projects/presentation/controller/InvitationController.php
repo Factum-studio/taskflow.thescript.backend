@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\presentation\controller;
 
 use core\application\dto\ErrorDto;
@@ -20,7 +22,7 @@ use OpenApi\Attributes as OA;
 
 #[OA\Tag(
     name: 'project-invitations',
-    description: 'Управление приглашениями в проект'
+    description: 'Управление приглашениями в проект',
 )]
 class InvitationController extends BaseController
 {
@@ -30,7 +32,7 @@ class InvitationController extends BaseController
         private readonly InviteUserHandler $inviteUserHandler,
         private readonly AcceptInvitationHandler $acceptInvitationHandler,
         private readonly CancelInvitationHandler $cancelInvitationHandler,
-        $config = []
+        $config = [],
     ) {
         parent::__construct($id, $module, $config);
     }
@@ -51,20 +53,20 @@ class InvitationController extends BaseController
                 required: ['email'],
                 properties: [
                     new OA\Property(property: 'email', type: 'string', example: 'user@example.com'),
-                ]
-            )
+                ],
+            ),
         ),
         tags: ['project-invitations'],
         parameters: [
-            new OA\Parameter(name: 'id', description: 'ID проекта', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+            new OA\Parameter(name: 'id', description: 'ID проекта', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
             new OA\Response(response: 200, description: 'Приглашение отправлено'),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
             new OA\Response(response: 403, description: 'Нет прав'),
             new OA\Response(response: 404, description: 'Проект не найден'),
-            new OA\Response(response: 422, description: 'Ошибка валидации')
-        ]
+            new OA\Response(response: 422, description: 'Ошибка валидации'),
+        ],
     )]
     public function actionInvite(int $id): SuccessDto|ErrorDto|array
     {
@@ -83,7 +85,7 @@ class InvitationController extends BaseController
             projectId: $id,
             invitedBy: $userId,
             email: $request->email,
-            userId: $request->userId
+            userId: $request->userId,
         );
 
         try {
@@ -114,16 +116,16 @@ class InvitationController extends BaseController
                 required: ['token'],
                 properties: [
                     new OA\Property(property: 'token', type: 'string', example: 'abc123...'),
-                ]
-            )
+                ],
+            ),
         ),
         tags: ['project-invitations'],
         responses: [
             new OA\Response(response: 200, description: 'Приглашение принято'),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
             new OA\Response(response: 404, description: 'Приглашение не найдено'),
-            new OA\Response(response: 422, description: 'Ошибка валидации')
-        ]
+            new OA\Response(response: 422, description: 'Ошибка валидации'),
+        ],
     )]
     public function actionAccept(): SuccessDto|ErrorDto|array
     {
@@ -167,14 +169,14 @@ class InvitationController extends BaseController
         tags: ['project-invitations'],
         parameters: [
             new OA\Parameter(name: 'id', description: 'ID проекта', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
-            new OA\Parameter(name: 'email', description: 'Email приглашённого', in: 'path', required: true, schema: new OA\Schema(type: 'string'))
+            new OA\Parameter(name: 'email', description: 'Email приглашённого', in: 'path', required: true, schema: new OA\Schema(type: 'string')),
         ],
         responses: [
             new OA\Response(response: 200, description: 'Приглашение отменено'),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
             new OA\Response(response: 403, description: 'Нет прав'),
-            new OA\Response(response: 404, description: 'Приглашение не найдено')
-        ]
+            new OA\Response(response: 404, description: 'Приглашение не найдено'),
+        ],
     )]
     public function actionCancel(int $id, string $email): SuccessDto|ErrorDto|array
     {

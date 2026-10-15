@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\application\command;
 
 class ChangeMemberRoleCommand
@@ -13,7 +15,7 @@ class ChangeMemberRoleCommand
         int $projectId,
         int $userId,
         string $newRole,
-        int $changedBy
+        int $changedBy,
     ) {
         $this->projectId    = $projectId;
         $this->userId       = $userId;

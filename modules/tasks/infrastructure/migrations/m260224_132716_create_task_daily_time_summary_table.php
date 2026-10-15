@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\infrastructure\migrations;
 
 use yii\db\Migration;
@@ -30,7 +32,7 @@ class m260224_132716_create_task_daily_time_summary_table extends Migration
             '{{%tasks}}',
             'id',
             'CASCADE',
-            'CASCADE'
+            'CASCADE',
         );
 
         $this->createIndex('idx-task_daily_time_summary-task_user_date', '{{%task_daily_time_summary}}', ['task_id', 'user_id', 'date'], true);

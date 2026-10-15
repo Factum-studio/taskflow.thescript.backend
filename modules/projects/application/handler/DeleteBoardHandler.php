@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\application\handler;
 
 use modules\projects\application\command\DeleteBoardCommand;
@@ -15,7 +17,7 @@ class DeleteBoardHandler
 
     public function __construct(
         IBoardRepository $boardRepository,
-        IProjectAccess $projectAccess
+        IProjectAccess $projectAccess,
     ) {
         $this->boardRepository  = $boardRepository;
         $this->projectAccess    = $projectAccess;

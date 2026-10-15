@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\presentation\controller;
 
 use core\application\dto\CollectionDto;
@@ -23,7 +25,7 @@ use OpenApi\Attributes as OA;
 
 #[OA\Tag(
     name: 'task-stickers',
-    description: 'Управление стикерами на задачах'
+    description: 'Управление стикерами на задачах',
 )]
 class TaskStickerController extends BaseController
 {
@@ -33,7 +35,7 @@ class TaskStickerController extends BaseController
         private readonly GetTaskStickersHandler $getTaskStickersHandler,
         private readonly AttachStickerToTaskHandler $attachStickerHandler,
         private readonly DetachStickerFromTaskHandler $detachStickerHandler,
-        $config = []
+        $config = [],
     ) {
         parent::__construct($id, $module, $config);
     }
@@ -52,8 +54,8 @@ class TaskStickerController extends BaseController
                 description: 'ID задачи',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -64,19 +66,19 @@ class TaskStickerController extends BaseController
                         new OA\Property(
                             property: 'items',
                             type: 'array',
-                            items: new OA\Items(ref: '#/components/schemas/Sticker')
+                            items: new OA\Items(ref: '#/components/schemas/Sticker'),
                         ),
                         new OA\Property(
                             property: '_meta',
-                            ref: '#/components/schemas/Collection/properties/_meta'
-                        )
+                            ref: '#/components/schemas/Collection/properties/_meta',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
-            new OA\Response(response: 404, description: 'Задача не найдена')
-        ]
+            new OA\Response(response: 404, description: 'Задача не найдена'),
+        ],
     )]
     /**
      * @throws NotFoundHttpException
@@ -101,7 +103,7 @@ class TaskStickerController extends BaseController
         ],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/AttachStickerRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/AttachStickerRequest'),
         ),
         tags: ['task-stickers'],
         parameters: [
@@ -110,8 +112,8 @@ class TaskStickerController extends BaseController
                 description: 'ID задачи',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -120,15 +122,15 @@ class TaskStickerController extends BaseController
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: 'data', type: 'null'),
-                        new OA\Property(property: 'message', type: 'string', example: 'Sticker attached')
+                        new OA\Property(property: 'message', type: 'string', example: 'Sticker attached'),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
             new OA\Response(response: 404, description: 'Задача или стикер не найдены'),
-            new OA\Response(response: 422, description: 'Ошибка валидации')
-        ]
+            new OA\Response(response: 422, description: 'Ошибка валидации'),
+        ],
     )]
     /**
      * @throws NotFoundHttpException
@@ -177,15 +179,15 @@ class TaskStickerController extends BaseController
                 description: 'ID задачи',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
+                schema: new OA\Schema(type: 'integer'),
             ),
             new OA\Parameter(
                 name: 'stickerId',
                 description: 'ID стикера',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -194,14 +196,14 @@ class TaskStickerController extends BaseController
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: 'data', type: 'null'),
-                        new OA\Property(property: 'message', type: 'string', example: 'Sticker detached')
+                        new OA\Property(property: 'message', type: 'string', example: 'Sticker detached'),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
-            new OA\Response(response: 404, description: 'Задача или стикер не найдены')
-        ]
+            new OA\Response(response: 404, description: 'Задача или стикер не найдены'),
+        ],
     )]
     /**
      * @throws NotFoundHttpException

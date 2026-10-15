@@ -19,7 +19,8 @@ class GetCompanyHandler
         private ICompanyRepository $companyRepository,
         private CompanyDtoAssembler $companyDtoAssembler,
         private ICompanyAccess $companyAccess,
-    ) {}
+    ) {
+    }
 
     /**
      * @throws ValidationException

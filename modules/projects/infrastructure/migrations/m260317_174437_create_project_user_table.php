@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace modules\projects\infrastructure\migrations;
 
 use yii\db\Migration;
@@ -31,7 +34,7 @@ class m260317_174437_create_project_user_table extends Migration
             '{{%project}}',
             'id',
             'CASCADE',
-            'CASCADE'
+            'CASCADE',
         );
 
         $this->createIndex('idx-project_user-user_id', '{{%project_user}}', 'user_id');

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use core\domain\valueObject\UserId;
@@ -24,7 +26,7 @@ class AssignTaskHandler
         ITaskRepository $taskRepository,
         TaskDtoAssembler $taskDtoAssembler,
         IEventDispatcher $eventDispatcher,
-        ITaskAccess $taskAccess
+        ITaskAccess $taskAccess,
     ) {
         $this->taskRepository   = $taskRepository;
         $this->taskDtoAssembler = $taskDtoAssembler;
@@ -51,7 +53,7 @@ class AssignTaskHandler
         $savedTask = $this->taskRepository->save($task);
 
         $this->eventDispatcher->dispatch(
-            new TaskAssignedEvent($savedTask, $oldAssignee, $command->assignedBy)
+            new TaskAssignedEvent($savedTask, $oldAssignee, $command->assignedBy),
         );
 
         return $this->taskDtoAssembler->toDto($savedTask);

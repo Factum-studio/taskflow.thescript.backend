@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\query;
 
 class ListStickersQuery
@@ -13,7 +15,7 @@ class ListStickersQuery
         int $userId,
         ?string $type = null,
         ?int $projectId = null,
-        ?int $createdBy = null
+        ?int $createdBy = null,
     ) {
         $this->userId       = $userId;
         $this->type         = $type;

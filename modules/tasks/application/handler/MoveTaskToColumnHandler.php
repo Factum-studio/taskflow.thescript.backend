@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use modules\tasks\application\assembler\TaskDtoAssembler;
@@ -24,7 +26,7 @@ class MoveTaskToColumnHandler
         ITaskRepository $taskRepository,
         TaskDtoAssembler $taskDtoAssembler,
         IEventDispatcher $eventDispatcher,
-        ITaskAccess $taskAccess
+        ITaskAccess $taskAccess,
     ) {
         $this->taskRepository   = $taskRepository;
         $this->taskDtoAssembler = $taskDtoAssembler;
@@ -51,7 +53,7 @@ class MoveTaskToColumnHandler
         $savedTask = $this->taskRepository->save($task);
 
         $this->eventDispatcher->dispatch(
-            new TaskMovedToColumnEvent($savedTask, $oldColumn, $command->movedBy ?? null)
+            new TaskMovedToColumnEvent($savedTask, $oldColumn, $command->movedBy ?? null),
         );
 
         return $this->taskDtoAssembler->toDto($savedTask);

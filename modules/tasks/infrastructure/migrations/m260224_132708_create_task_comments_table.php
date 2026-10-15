@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\infrastructure\migrations;
 
 use yii\db\Migration;
@@ -30,7 +32,7 @@ class m260224_132708_create_task_comments_table extends Migration
             '{{%tasks}}',
             'id',
             'CASCADE',
-            'CASCADE'
+            'CASCADE',
         );
 
         $this->createIndex('idx-task_comments-task_id', '{{%task_comments}}', 'task_id');

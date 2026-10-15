@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\command;
 
 use DateTimeImmutable;
@@ -17,7 +19,7 @@ class LogManualIntervalCommand
         int $userId,
         DateTimeImmutable $startTime,
         DateTimeImmutable $endTime,
-        ?string $comment = null
+        ?string $comment = null,
     ) {
         $this->taskId       = $taskId;
         $this->userId       = $userId;

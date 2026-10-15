@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\application\command;
 
 class UpdateProjectCommand
@@ -13,7 +15,7 @@ class UpdateProjectCommand
         int $id,
         int $updatedBy,
         ?string $name = null,
-        ?array $settings = null
+        ?array $settings = null,
     ) {
         $this->id           = $id;
         $this->updatedBy    = $updatedBy;

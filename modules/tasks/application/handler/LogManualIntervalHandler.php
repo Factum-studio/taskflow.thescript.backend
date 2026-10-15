@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use core\domain\valueObject\UserId;
@@ -27,7 +29,7 @@ class LogManualIntervalHandler
         ITimeIntervalRepository $intervalRepository,
         ITaskRepository $taskRepository,
         TimeIntervalDtoAssembler $dtoAssembler,
-        IEventDispatcher $eventDispatcher
+        IEventDispatcher $eventDispatcher,
     ) {
         $this->intervalRepository   = $intervalRepository;
         $this->taskRepository       = $taskRepository;
@@ -55,7 +57,7 @@ class LogManualIntervalHandler
             new TimeIntervalId(0),
             $taskId,
             $userId,
-            $start
+            $start,
         );
         $interval->stop($end, $command->comment);
 

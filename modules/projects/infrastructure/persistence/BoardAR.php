@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\infrastructure\persistence;
 
 use yii\db\ActiveRecord;

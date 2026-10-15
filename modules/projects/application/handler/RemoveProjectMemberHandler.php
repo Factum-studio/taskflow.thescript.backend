@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\application\handler;
 
 use core\domain\valueObject\UserId;
@@ -20,7 +22,7 @@ class RemoveProjectMemberHandler
     public function __construct(
         IProjectUserRepository $projectUserRepository,
         IProjectAccess $projectAccess,
-        IEventDispatcher $eventDispatcher
+        IEventDispatcher $eventDispatcher,
     ) {
         $this->projectUserRepository    = $projectUserRepository;
         $this->projectAccess            = $projectAccess;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\query;
 
 class GetStickerQuery
@@ -9,7 +11,7 @@ class GetStickerQuery
 
     public function __construct(
         int $id,
-        int $userId
+        int $userId,
     ) {
         $this->id       = $id;
         $this->userId   = $userId;

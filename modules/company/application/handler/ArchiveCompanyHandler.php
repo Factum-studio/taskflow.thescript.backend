@@ -19,7 +19,8 @@ class ArchiveCompanyHandler
         private ICompanyRepository $companyRepository,
         private ICompanyAccess $companyAccess,
         private IEventDispatcher $eventDispatcher,
-    ) {}
+    ) {
+    }
 
     /**
      * @throws ValidationException

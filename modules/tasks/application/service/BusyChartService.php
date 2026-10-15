@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\service;
 
 use DateTimeImmutable;
@@ -73,6 +75,7 @@ class BusyChartService
                 } else {
                     return $time->setTime((int)$time->format('H') + 1, 0);
                 }
+                // no break
             default:
                 return $time;
         }
@@ -80,14 +83,14 @@ class BusyChartService
 
     private function mergeIntervals(array $rounded): array
     {
-        usort($rounded, fn($a, $b) => $a->start <=> $b->start);
+        usort($rounded, fn ($a, $b) => $a->start <=> $b->start);
         $merged = [];
         foreach ($rounded as $item) {
             if (empty($merged)) {
                 $merged[] = clone $item;
                 continue;
             }
-            $last = $merged[count($merged)-1];
+            $last = $merged[count($merged) - 1];
             if ($item->start <= $last->end) {
                 // пересекаются или соприкасаются
                 $last->end = max($last->end, $item->end);
@@ -96,19 +99,19 @@ class BusyChartService
                 $merged[] = clone $item;
             }
         }
-        return array_map(fn($seg) => new BusySegmentDto(
+        return array_map(fn ($seg) => new BusySegmentDto(
             $seg->start->format('Y-m-d H:i:s'),
             $seg->end->format('Y-m-d H:i:s'),
-            is_array($seg->taskId) ? $seg->taskId : [$seg->taskId]
+            is_array($seg->taskId) ? $seg->taskId : [$seg->taskId],
         ), $merged);
     }
 
     private function separateIntervals(array $rounded): array
     {
-        return array_map(fn($item) => new BusySegmentDto(
+        return array_map(fn ($item) => new BusySegmentDto(
             $item->start->format('Y-m-d H:i:s'),
             $item->end->format('Y-m-d H:i:s'),
-            [$item->taskId]
+            [$item->taskId],
         ), $rounded);
     }
 
@@ -119,7 +122,7 @@ class BusyChartService
             $events[] = ['time' => $item->start, 'type' => 'start', 'taskId' => $item->taskId];
             $events[] = ['time' => $item->end, 'type' => 'end', 'taskId' => $item->taskId];
         }
-        usort($events, fn($a, $b) => $a['time'] <=> $b['time'] ?: ($a['type'] === 'start' ? -1 : 1));
+        usort($events, fn ($a, $b) => $a['time'] <=> $b['time'] ?: ($a['type'] === 'start' ? -1 : 1));
 
         $active = [];
         $result = [];
@@ -130,7 +133,7 @@ class BusyChartService
                 $result[] = new BusySegmentDto(
                     $lastTime->format('Y-m-d H:i:s'),
                     $currentTime->format('Y-m-d H:i:s'),
-                    array_values($active)
+                    array_values($active),
                 );
             }
             if ($event['type'] === 'start') {

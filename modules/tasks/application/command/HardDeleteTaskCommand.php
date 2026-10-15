@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\command;
 
 class HardDeleteTaskCommand
@@ -9,7 +11,7 @@ class HardDeleteTaskCommand
 
     public function __construct(
         int $id,
-        int $deletedBy
+        int $deletedBy,
     ) {
         $this->id           = $id;
         $this->deletedBy    = $deletedBy;

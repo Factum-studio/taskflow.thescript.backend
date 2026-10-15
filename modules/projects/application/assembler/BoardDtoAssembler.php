@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\application\assembler;
 
 use modules\projects\domain\entity\Board;

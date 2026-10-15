@@ -20,7 +20,8 @@ class RemoveCompanyMemberHandler
         private ICompanyMemberRepository $memberRepository,
         private ICompanyAccess $companyAccess,
         private IEventDispatcher $eventDispatcher,
-    ) {}
+    ) {
+    }
 
     /**
      * @throws ValidationException
@@ -33,7 +34,7 @@ class RemoveCompanyMemberHandler
 
         $member = $this->memberRepository->find(
             new CompanyId($command->companyId),
-            new UserId($command->targetUserId)
+            new UserId($command->targetUserId),
         );
 
         if ($member === null) {
@@ -43,7 +44,7 @@ class RemoveCompanyMemberHandler
         $this->memberRepository->remove($member);
 
         $this->eventDispatcher->dispatch(
-            new CompanyMemberRemovedEvent($command->companyId, $command->targetUserId)
+            new CompanyMemberRemovedEvent($command->companyId, $command->targetUserId),
         );
     }
 }

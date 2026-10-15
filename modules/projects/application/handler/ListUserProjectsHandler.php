@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\application\handler;
 
 use core\domain\valueObject\UserId;
@@ -15,7 +17,7 @@ class ListUserProjectsHandler
 
     public function __construct(
         IProjectRepository $projectRepository,
-        ProjectDtoAssembler $projectDtoAssembler
+        ProjectDtoAssembler $projectDtoAssembler,
     ) {
         $this->projectRepository = $projectRepository;
         $this->projectDtoAssembler = $projectDtoAssembler;

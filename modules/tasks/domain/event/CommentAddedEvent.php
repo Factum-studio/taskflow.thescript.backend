@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\domain\event;
 
 use DateTimeImmutable;

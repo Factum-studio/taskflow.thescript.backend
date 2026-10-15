@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use modules\tasks\application\command\UpdateBoardColumnCommand;
@@ -19,7 +21,7 @@ class UpdateBoardColumnHandler
     public function __construct(
         IBoardColumnRepository $columnRepository,
         BoardColumnDtoAssembler $dtoAssembler,
-        ITaskAccess $taskAccess
+        ITaskAccess $taskAccess,
     ) {
         $this->columnRepository = $columnRepository;
         $this->dtoAssembler     = $dtoAssembler;

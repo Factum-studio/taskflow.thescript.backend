@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use modules\tasks\application\assembler\TaskDtoAssembler;
@@ -23,7 +25,7 @@ class RestoreTaskHandler
         ITaskRepository $taskRepository,
         TaskDtoAssembler $taskDtoAssembler,
         IEventDispatcher $eventDispatcher,
-        ITaskAccess $taskAccess
+        ITaskAccess $taskAccess,
     ) {
         $this->taskRepository   = $taskRepository;
         $this->taskDtoAssembler = $taskDtoAssembler;
@@ -47,7 +49,7 @@ class RestoreTaskHandler
         $savedTask = $this->taskRepository->save($task);
 
         $this->eventDispatcher->dispatch(
-            new TaskRestoredEvent($savedTask, $command->restoredBy)
+            new TaskRestoredEvent($savedTask, $command->restoredBy),
         );
 
         return $this->taskDtoAssembler->toDto($savedTask);

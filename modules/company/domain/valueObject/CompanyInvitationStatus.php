@@ -28,10 +28,22 @@ final class CompanyInvitationStatus
         return $this->value;
     }
 
-    public function isPending(): bool { return $this->value === self::PENDING; }
-    public function isAccepted(): bool { return $this->value === self::ACCEPTED; }
-    public function isExpired(): bool { return $this->value === self::EXPIRED; }
-    public function isCancelled(): bool { return $this->value === self::CANCELLED; }
+    public function isPending(): bool
+    {
+        return $this->value === self::PENDING;
+    }
+    public function isAccepted(): bool
+    {
+        return $this->value === self::ACCEPTED;
+    }
+    public function isExpired(): bool
+    {
+        return $this->value === self::EXPIRED;
+    }
+    public function isCancelled(): bool
+    {
+        return $this->value === self::CANCELLED;
+    }
 
     public function equals(self $other): bool
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\infrastructure\migrations;
 
 use yii\db\Migration;
@@ -25,15 +27,15 @@ class m260224_132704_create_task_statuses_table extends Migration
         ]);
 
         // CHECK THIS
-//        $this->addForeignKey(
-//            'fk-task_statuses-workflow_id',
-//            '{{%task_statuses}}',
-//            'workflow_id',
-//            '{{%workflows}}',
-//            'id',
-//            'SET NULL',
-//            'CASCADE'
-//        );
+        //        $this->addForeignKey(
+        //            'fk-task_statuses-workflow_id',
+        //            '{{%task_statuses}}',
+        //            'workflow_id',
+        //            '{{%workflows}}',
+        //            'id',
+        //            'SET NULL',
+        //            'CASCADE'
+        //        );
 
         $statuses = [
             ['to_work', 'К работе', 10],
@@ -59,7 +61,7 @@ class m260224_132704_create_task_statuses_table extends Migration
      */
     public function safeDown()
     {
-//        $this->dropForeignKey('fk-task_statuses-workflow_id', '{{%task_statuses}}');
+        //        $this->dropForeignKey('fk-task_statuses-workflow_id', '{{%task_statuses}}');
         $this->dropTable('{{%task_statuses}}');
     }
 }

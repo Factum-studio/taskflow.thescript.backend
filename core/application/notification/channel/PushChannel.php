@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace core\application\notification\channel;
 
 use core\application\notification\INotification;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\infrastructure\repository;
 
 use core\domain\valueObject\Date;
@@ -54,7 +56,7 @@ class DbDailySummaryRepository implements IDailySummaryRepository
             $userId,
             $date,
             new Duration(0),
-            new DateTimeImmutable($ar->updated_at)
+            new DateTimeImmutable($ar->updated_at),
         );
     }
 
@@ -118,7 +120,7 @@ class DbDailySummaryRepository implements IDailySummaryRepository
             new UserId((int)$ar->user_id),
             Date::fromString($ar->date),
             new Duration((int)$ar->total_duration),
-            new DateTimeImmutable($ar->updated_at)
+            new DateTimeImmutable($ar->updated_at),
         );
     }
 }

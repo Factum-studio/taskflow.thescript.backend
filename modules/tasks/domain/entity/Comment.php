@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\domain\entity;
 
 use core\domain\valueObject\UserId;
@@ -23,7 +25,7 @@ class Comment
         UserId $userId,
         string $content,
         ?DateTimeImmutable $createdAt = null,
-        ?DateTimeImmutable $updatedAt = null
+        ?DateTimeImmutable $updatedAt = null,
     ) {
         $this->setContent($content);
         $this->id           = $id;

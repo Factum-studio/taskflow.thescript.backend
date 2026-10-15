@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use modules\projects\application\port\IProjectAccess;
@@ -19,7 +21,7 @@ class GetStickerHandler
     public function __construct(
         IStickerRepository $stickerRepository,
         StickerDtoAssembler $stickerDtoAssembler,
-        IProjectAccess $projectAccess
+        IProjectAccess $projectAccess,
     ) {
         $this->stickerRepository    = $stickerRepository;
         $this->stickerDtoAssembler  = $stickerDtoAssembler;

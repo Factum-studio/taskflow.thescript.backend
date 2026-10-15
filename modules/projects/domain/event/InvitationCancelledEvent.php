@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\domain\event;
 
 use DateTimeImmutable;
@@ -22,9 +24,24 @@ class InvitationCancelledEvent implements IProjectDomainEvent
         $this->occurredAt   = new DateTimeImmutable();
     }
 
-    public function getAggregateId(): int { return $this->invitationId; }
-    public function getProjectId(): int { return $this->projectId; }
-    public function getEmail(): string { return $this->email; }
-    public function getCancelledBy(): int { return $this->cancelledBy; }
-    public function getOccurredAt(): DateTimeImmutable { return $this->occurredAt; }
+    public function getAggregateId(): int
+    {
+        return $this->invitationId;
+    }
+    public function getProjectId(): int
+    {
+        return $this->projectId;
+    }
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+    public function getCancelledBy(): int
+    {
+        return $this->cancelledBy;
+    }
+    public function getOccurredAt(): DateTimeImmutable
+    {
+        return $this->occurredAt;
+    }
 }

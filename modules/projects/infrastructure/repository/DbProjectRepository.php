@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\infrastructure\repository;
 
 use core\domain\valueObject\UserId;
@@ -68,7 +70,7 @@ class DbProjectRepository implements IProjectRepository
             ->leftJoin('{{%project_user}}', 'project.id = project_user.project_id')
             ->where(['or',
                 ['project.owner_id' => $userId->value()],
-                ['project_user.user_id' => $userId->value()]
+                ['project_user.user_id' => $userId->value()],
             ])
             ->all();
         return array_map([$this, 'mapARToEntity'], $ars);
@@ -114,7 +116,7 @@ class DbProjectRepository implements IProjectRepository
             new UserId((int)$ar->owner_id),
             new Settings($ar->settings ?? []),
             new DateTimeImmutable($ar->created_at),
-            new DateTimeImmutable($ar->updated_at)
+            new DateTimeImmutable($ar->updated_at),
         );
     }
 }

@@ -27,7 +27,8 @@ class InviteUserHandler
         private ICompanyInvitationRepository $invitationRepository,
         private ICompanyAccess $companyAccess,
         private IEventDispatcher $eventDispatcher,
-    ) {}
+    ) {
+    }
 
     /**
      * @throws Exception
@@ -51,7 +52,7 @@ class InviteUserHandler
         // Проверка на существующее приглашение
         $existing = $this->invitationRepository->findPendingByCompanyAndEmail(
             new CompanyId($command->companyId),
-            $command->email
+            $command->email,
         );
 
         if ($existing !== null) {
@@ -75,7 +76,7 @@ class InviteUserHandler
         $this->invitationRepository->save($invitation);
 
         $this->eventDispatcher->dispatch(
-            new CompanyInvitationCreatedEvent($command->companyId, $command->email, $command->invitedBy)
+            new CompanyInvitationCreatedEvent($command->companyId, $command->email, $command->invitedBy),
         );
     }
 }

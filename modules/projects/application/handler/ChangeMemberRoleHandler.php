@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\application\handler;
 
 use core\domain\valueObject\UserId;
@@ -21,7 +23,7 @@ class ChangeMemberRoleHandler
     public function __construct(
         IProjectUserRepository $projectUserRepository,
         ProjectUserDtoAssembler $projectUserDtoAssembler,
-        IProjectAccess $projectAccess
+        IProjectAccess $projectAccess,
     ) {
         $this->projectUserRepository    = $projectUserRepository;
         $this->projectUserDtoAssembler  = $projectUserDtoAssembler;

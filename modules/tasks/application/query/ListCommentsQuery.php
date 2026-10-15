@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\query;
 
 class ListCommentsQuery
@@ -9,7 +11,7 @@ class ListCommentsQuery
 
     public function __construct(
         int $taskId,
-        int $userId
+        int $userId,
     ) {
         $this->taskId = $taskId;
         $this->userId = $userId;

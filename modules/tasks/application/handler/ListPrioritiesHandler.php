@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use modules\tasks\application\assembler\TaskPriorityDtoAssembler;
@@ -14,7 +16,7 @@ class ListPrioritiesHandler
 
     public function __construct(
         ITaskPriorityRepository $priorityRepository,
-        TaskPriorityDtoAssembler $dtoAssembler
+        TaskPriorityDtoAssembler $dtoAssembler,
     ) {
         $this->priorityRepository   = $priorityRepository;
         $this->dtoAssembler         = $dtoAssembler;

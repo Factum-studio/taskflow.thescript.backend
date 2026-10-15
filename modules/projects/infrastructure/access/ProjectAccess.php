@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\infrastructure\access;
 
 use core\domain\valueObject\UserId;
@@ -24,18 +26,19 @@ class ProjectAccess implements IProjectAccess
         private IBoardRepository $boardRepository,
         private IProjectUserRepository $projectUserRepository,
         private ICompanyMemberRepository $companyMemberRepository,
-    ) {}
+    ) {
+    }
 
     public function getUserProjectIds(int $userId): array
     {
         $projects = $this->projectRepository->findByUser(new UserId($userId));
-        return array_map(fn(Project $p) => $p->getId()->value(), $projects);
+        return array_map(fn (Project $p) => $p->getId()->value(), $projects);
     }
 
     public function getProjectBoardIds(int $projectId): array
     {
         $boards = $this->boardRepository->findByProject(new ProjectId($projectId));
-        return array_map(fn(Board $b) => $b->getId()->value(), $boards);
+        return array_map(fn (Board $b) => $b->getId()->value(), $boards);
     }
 
     public function getProjectIdByBoardId(int $boardId): ?int
@@ -246,7 +249,7 @@ class ProjectAccess implements IProjectAccess
     {
         $projectUser = $this->projectUserRepository->find(
             new ProjectId($projectId),
-            new UserId($userId)
+            new UserId($userId),
         );
         return $projectUser !== null;
     }
@@ -255,7 +258,7 @@ class ProjectAccess implements IProjectAccess
     {
         $projectUser = $this->projectUserRepository->find(
             new ProjectId($projectId),
-            new UserId($userId)
+            new UserId($userId),
         );
         return $projectUser && $projectUser->getRole()->isAdmin();
     }
@@ -269,7 +272,7 @@ class ProjectAccess implements IProjectAccess
     private function countAdmins(int $projectId): int
     {
         $members = $this->projectUserRepository->findByProject(new ProjectId($projectId));
-        $admins = array_filter($members, fn($m) => $m->getRole()->isAdmin());
+        $admins = array_filter($members, fn ($m) => $m->getRole()->isAdmin());
         return count($admins);
     }
 }

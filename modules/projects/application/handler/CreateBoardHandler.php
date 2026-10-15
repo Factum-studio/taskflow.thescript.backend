@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\application\handler;
 
 use core\domain\valueObject\UserId;
@@ -31,7 +33,7 @@ class CreateBoardHandler
         IProjectRepository $projectRepository,
         BoardDtoAssembler $boardDtoAssembler,
         IProjectAccess $projectAccess,
-        IEventDispatcher $eventDispatcher
+        IEventDispatcher $eventDispatcher,
     ) {
         $this->boardRepository      = $boardRepository;
         $this->projectRepository    = $projectRepository;
@@ -61,7 +63,7 @@ class CreateBoardHandler
             $command->description,
             new Settings($command->settings ?? []),
             new DateTimeImmutable(),
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
         );
 
         $savedBoard = $this->boardRepository->save($board);

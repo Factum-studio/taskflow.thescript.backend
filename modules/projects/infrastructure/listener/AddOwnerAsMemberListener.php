@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\infrastructure\listener;
 
 use core\domain\valueObject\UserId;
@@ -30,19 +32,19 @@ class AddOwnerAsMemberListener
                 null,
                 null,
                 new DateTimeImmutable(),
-                new DateTimeImmutable()
+                new DateTimeImmutable(),
             );
 
             $this->projectUserRepository->save($projectUser);
 
             Yii::info(
                 "User {$event->getOwnerId()} added as admin to project {$event->getAggregateId()}",
-                'projects'
+                'projects',
             );
         } catch (\Exception $e) {
             Yii::error(
                 "Failed to add owner as project member: " . $e->getMessage(),
-                'projects'
+                'projects',
             );
         }
     }

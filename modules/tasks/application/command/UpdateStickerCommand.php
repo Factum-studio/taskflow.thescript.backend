@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\command;
 
 class UpdateStickerCommand
@@ -15,7 +17,7 @@ class UpdateStickerCommand
         int $updatedBy,
         ?string $name = null,
         ?array $data = null,
-        ?string $color = null
+        ?string $color = null,
     ) {
         $this->id           = $id;
         $this->updatedBy    = $updatedBy;

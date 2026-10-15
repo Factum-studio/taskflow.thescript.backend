@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\application\handler;
 
 use modules\projects\application\command\DeleteProjectCommand;
@@ -15,7 +17,7 @@ class DeleteProjectHandler
 
     public function __construct(
         IProjectRepository $projectRepository,
-        IProjectAccess $projectAccess
+        IProjectAccess $projectAccess,
     ) {
         $this->projectRepository    = $projectRepository;
         $this->projectAccess        = $projectAccess;

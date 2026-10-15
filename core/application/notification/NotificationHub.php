@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace core\application\notification;
 
 use core\application\notification\Channel\EmailChannel;
@@ -16,7 +18,7 @@ class NotificationHub
     public function __construct(
         EmailChannel $emailChannel,
         TelegramChannel $telegramChannel,
-        PushChannel $pushChannel
+        PushChannel $pushChannel,
     ) {
         $this->emailChannel     = $emailChannel;
         $this->telegramChannel  = $telegramChannel;

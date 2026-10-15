@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\application\handler;
 
 use core\application\port\IUserRepository;
@@ -25,7 +27,7 @@ class AcceptInvitationHandler
         IInvitationRepository $invitationRepository,
         IProjectUserRepository $projectUserRepository,
         IEventDispatcher $eventDispatcher,
-        IUserRepository $userRepository
+        IUserRepository $userRepository,
     ) {
         $this->invitationRepository     = $invitationRepository;
         $this->projectUserRepository    = $projectUserRepository;
@@ -62,7 +64,7 @@ class AcceptInvitationHandler
             $invitation->getInvitedBy(),
             $invitation->getCreatedAt(),
             new DateTimeImmutable(),
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
         );
         $this->projectUserRepository->save($projectUser);
 

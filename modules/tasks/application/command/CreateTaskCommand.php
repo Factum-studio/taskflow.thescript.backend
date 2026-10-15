@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\command;
 
 use DateTimeImmutable;
@@ -29,7 +31,7 @@ class CreateTaskCommand
         ?DateTimeImmutable $plannedStart = null,
         ?DateTimeImmutable $plannedEnd = null,
         ?int $assignedTo = null,
-        ?int $parentId = null
+        ?int $parentId = null,
     ) {
         $this->title        = $title;
         $this->columnId     = $columnId;

@@ -18,6 +18,12 @@ class CompanyVerifiedEvent implements ICompanyDomainEvent
         $this->occurredAt = new DateTimeImmutable();
     }
 
-    public function getAggregateId(): int { return $this->companyId; }
-    public function getOccurredAt(): DateTimeImmutable { return $this->occurredAt; }
+    public function getAggregateId(): int
+    {
+        return $this->companyId;
+    }
+    public function getOccurredAt(): DateTimeImmutable
+    {
+        return $this->occurredAt;
+    }
 }

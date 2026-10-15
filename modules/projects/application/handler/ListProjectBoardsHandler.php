@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\application\handler;
 
 use modules\projects\application\assembler\BoardDtoAssembler;
@@ -19,7 +21,7 @@ class ListProjectBoardsHandler
     public function __construct(
         IBoardRepository $boardRepository,
         BoardDtoAssembler $boardDtoAssembler,
-        IProjectAccess $projectAccess
+        IProjectAccess $projectAccess,
     ) {
         $this->boardRepository      = $boardRepository;
         $this->boardDtoAssembler    = $boardDtoAssembler;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\presentation\controller;
 
 use core\application\dto\CollectionDto;
@@ -44,7 +46,7 @@ use yii\web\ServerErrorHttpException;
 
 #[OA\Tag(
     name: 'tasks',
-    description: 'Управление задачами'
+    description: 'Управление задачами',
 )]
 class TaskController extends BaseController
 {
@@ -60,7 +62,7 @@ class TaskController extends BaseController
         private readonly SoftDeleteTaskHandler $softDeleteTaskHandler,
         private readonly RestoreTaskHandler $restoreTaskHandler,
         private readonly HardDeleteTaskHandler $hardDeleteTaskHandler,
-        $config = []
+        $config = [],
     ) {
         parent::__construct($id, $module, $config);
     }
@@ -80,56 +82,56 @@ class TaskController extends BaseController
                 description: 'Фильтр по колонке(статусу)',
                 in: 'query',
                 required: false,
-                schema: new OA\Schema(type: 'integer')
+                schema: new OA\Schema(type: 'integer'),
             ),
             new OA\Parameter(
                 name: 'assignedTo',
                 description: 'Фильтр по исполнителю',
                 in: 'query',
                 required: false,
-                schema: new OA\Schema(type: 'integer')
+                schema: new OA\Schema(type: 'integer'),
             ),
             new OA\Parameter(
                 name: 'createdBy',
                 description: 'Фильтр по создателю',
                 in: 'query',
                 required: false,
-                schema: new OA\Schema(type: 'integer')
+                schema: new OA\Schema(type: 'integer'),
             ),
             new OA\Parameter(
                 name: 'boardId',
                 description: 'Фильтр по доске',
                 in: 'query',
                 required: false,
-                schema: new OA\Schema(type: 'integer')
+                schema: new OA\Schema(type: 'integer'),
             ),
             new OA\Parameter(
                 name: 'parentId',
                 description: 'Фильтр по родительской задаче',
                 in: 'query',
                 required: false,
-                schema: new OA\Schema(type: 'integer')
+                schema: new OA\Schema(type: 'integer'),
             ),
             new OA\Parameter(
                 name: 'onlyComplete',
                 description: 'Только завершённые',
                 in: 'query',
                 required: false,
-                schema: new OA\Schema(type: 'boolean')
+                schema: new OA\Schema(type: 'boolean'),
             ),
             new OA\Parameter(
                 name: 'onlyOverdue',
                 description: 'Только просроченные задачи',
                 in: 'query',
                 required: false,
-                schema: new OA\Schema(type: 'boolean')
+                schema: new OA\Schema(type: 'boolean'),
             ),
             new OA\Parameter(
                 name: 'includeDeleted',
                 description: 'Включать удалённые задачи',
                 in: 'query',
                 required: false,
-                schema: new OA\Schema(type: 'boolean')
+                schema: new OA\Schema(type: 'boolean'),
             ),
         ],
         responses: [
@@ -141,22 +143,22 @@ class TaskController extends BaseController
                         new OA\Property(
                             property: 'items',
                             type: 'array',
-                            items: new OA\Items(ref: '#/components/schemas/Task')
+                            items: new OA\Items(ref: '#/components/schemas/Task'),
                         ),
                         new OA\Property(
                             property: '_meta',
-                            ref: '#/components/schemas/Collection/properties/_meta'
-                        )
+                            ref: '#/components/schemas/Collection/properties/_meta',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(
                 response: 401,
                 description: 'Требуется авторизация',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
-            )
-        ]
+                content: new OA\JsonContent(ref: '#/components/schemas/Error'),
+            ),
+        ],
     )]
     public function actionIndex(): ErrorDto|CollectionDto
     {
@@ -228,8 +230,8 @@ class TaskController extends BaseController
                 description: 'ID задачи',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -239,23 +241,23 @@ class TaskController extends BaseController
                     properties: [
                         new OA\Property(
                             property: 'item',
-                            ref: '#/components/schemas/Task'
-                        )
+                            ref: '#/components/schemas/Task',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(
                 response: 401,
                 description: 'Требуется авторизация',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+                content: new OA\JsonContent(ref: '#/components/schemas/Error'),
             ),
             new OA\Response(
                 response: 404,
                 description: 'Задача не найдена',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
-            )
-        ]
+                content: new OA\JsonContent(ref: '#/components/schemas/Error'),
+            ),
+        ],
     )]
     /**
      * @throws NotFoundHttpException
@@ -284,7 +286,7 @@ class TaskController extends BaseController
         ],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/CreateTaskRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/CreateTaskRequest'),
         ),
         tags: ['tasks'],
         responses: [
@@ -295,28 +297,28 @@ class TaskController extends BaseController
                     properties: [
                         new OA\Property(
                             property: 'item',
-                            ref: '#/components/schemas/Task'
-                        )
+                            ref: '#/components/schemas/Task',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(
                 response: 401,
                 description: 'Требуется авторизация',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+                content: new OA\JsonContent(ref: '#/components/schemas/Error'),
             ),
             new OA\Response(
                 response: 422,
                 description: 'Ошибка валидации',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+                content: new OA\JsonContent(ref: '#/components/schemas/Error'),
             ),
             new OA\Response(
                 response: 500,
                 description: 'Внутренняя ошибка',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
-            )
-        ]
+                content: new OA\JsonContent(ref: '#/components/schemas/Error'),
+            ),
+        ],
     )]
     /**
      * @throws ServerErrorHttpException
@@ -350,7 +352,7 @@ class TaskController extends BaseController
             plannedStart: $plannedStart,
             plannedEnd: $plannedEnd,
             assignedTo: $request->assignedTo,
-            parentId: $request->parentId
+            parentId: $request->parentId,
         );
 
         try {
@@ -372,7 +374,7 @@ class TaskController extends BaseController
         ],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/UpdateTaskRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/UpdateTaskRequest'),
         ),
         tags: ['tasks'],
         parameters: [
@@ -381,8 +383,8 @@ class TaskController extends BaseController
                 description: 'ID задачи',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -392,33 +394,33 @@ class TaskController extends BaseController
                     properties: [
                         new OA\Property(
                             property: 'item',
-                            ref: '#/components/schemas/Task'
-                        )
+                            ref: '#/components/schemas/Task',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(
                 response: 401,
                 description: 'Требуется авторизация',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+                content: new OA\JsonContent(ref: '#/components/schemas/Error'),
             ),
             new OA\Response(
                 response: 404,
                 description: 'Задача не найдена',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+                content: new OA\JsonContent(ref: '#/components/schemas/Error'),
             ),
             new OA\Response(
                 response: 422,
                 description: 'Ошибка валидации',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+                content: new OA\JsonContent(ref: '#/components/schemas/Error'),
             ),
             new OA\Response(
                 response: 500,
                 description: 'Внутренняя ошибка',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
-            )
-        ]
+                content: new OA\JsonContent(ref: '#/components/schemas/Error'),
+            ),
+        ],
     )]
     /**
      * @throws NotFoundHttpException
@@ -454,7 +456,7 @@ class TaskController extends BaseController
             plannedEnd: $plannedEnd,
             assignedTo: $updateRequest->assignedTo,
             boardId: $updateRequest->boardId,
-            parentId: $updateRequest->parentId
+            parentId: $updateRequest->parentId,
         );
 
         try {
@@ -478,7 +480,7 @@ class TaskController extends BaseController
         ],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/MoveTaskToColumnRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/MoveTaskToColumnRequest'),
         ),
         tags: ['tasks'],
         parameters: [
@@ -487,8 +489,8 @@ class TaskController extends BaseController
                 description: 'ID задачи',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -498,33 +500,33 @@ class TaskController extends BaseController
                     properties: [
                         new OA\Property(
                             property: 'item',
-                            ref: '#/components/schemas/Task'
-                        )
+                            ref: '#/components/schemas/Task',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(
                 response: 401,
                 description: 'Требуется авторизация',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+                content: new OA\JsonContent(ref: '#/components/schemas/Error'),
             ),
             new OA\Response(
                 response: 404,
                 description: 'Задача не найдена',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+                content: new OA\JsonContent(ref: '#/components/schemas/Error'),
             ),
             new OA\Response(
                 response: 422,
                 description: 'Ошибка валидации',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+                content: new OA\JsonContent(ref: '#/components/schemas/Error'),
             ),
             new OA\Response(
                 response: 500,
                 description: 'Внутренняя ошибка',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
-            )
-        ]
+                content: new OA\JsonContent(ref: '#/components/schemas/Error'),
+            ),
+        ],
     )]
     /**
      * @throws NotFoundHttpException
@@ -546,7 +548,7 @@ class TaskController extends BaseController
         $command = new MoveTaskToColumnCommand(
             id: $id,
             columnId: $request->columnId,
-            movedBy: $userId
+            movedBy: $userId,
         );
 
         try {
@@ -570,7 +572,7 @@ class TaskController extends BaseController
         ],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/AssignTaskRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/AssignTaskRequest'),
         ),
         tags: ['tasks'],
         parameters: [
@@ -579,8 +581,8 @@ class TaskController extends BaseController
                 description: 'ID задачи',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -590,33 +592,33 @@ class TaskController extends BaseController
                     properties: [
                         new OA\Property(
                             property: 'item',
-                            ref: '#/components/schemas/Task'
-                        )
+                            ref: '#/components/schemas/Task',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(
                 response: 401,
                 description: 'Требуется авторизация',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+                content: new OA\JsonContent(ref: '#/components/schemas/Error'),
             ),
             new OA\Response(
                 response: 404,
                 description: 'Задача не найдена',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+                content: new OA\JsonContent(ref: '#/components/schemas/Error'),
             ),
             new OA\Response(
                 response: 422,
                 description: 'Ошибка валидации',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+                content: new OA\JsonContent(ref: '#/components/schemas/Error'),
             ),
             new OA\Response(
                 response: 500,
                 description: 'Внутренняя ошибка',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
-            )
-        ]
+                content: new OA\JsonContent(ref: '#/components/schemas/Error'),
+            ),
+        ],
     )]
     /**
      * @throws NotFoundHttpException
@@ -638,7 +640,7 @@ class TaskController extends BaseController
         $command = new AssignTaskCommand(
             id: $id,
             assignedTo: $request->assignedTo,
-            assignedBy: $userId
+            assignedBy: $userId,
         );
 
         try {
@@ -667,8 +669,8 @@ class TaskController extends BaseController
                 description: 'ID задачи',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -677,27 +679,27 @@ class TaskController extends BaseController
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: 'data', type: 'null'),
-                        new OA\Property(property: 'message', type: 'string', example: 'Task deleted')
+                        new OA\Property(property: 'message', type: 'string', example: 'Task deleted'),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(
                 response: 401,
                 description: 'Требуется авторизация',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+                content: new OA\JsonContent(ref: '#/components/schemas/Error'),
             ),
             new OA\Response(
                 response: 404,
                 description: 'Задача не найдена',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+                content: new OA\JsonContent(ref: '#/components/schemas/Error'),
             ),
             new OA\Response(
                 response: 500,
                 description: 'Внутренняя ошибка',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
-            )
-        ]
+                content: new OA\JsonContent(ref: '#/components/schemas/Error'),
+            ),
+        ],
     )]
     /**
      * @throws NotFoundHttpException
@@ -713,7 +715,7 @@ class TaskController extends BaseController
 
         $command = new SoftDeleteTaskCommand(
             id: $id,
-            deletedBy: $userId
+            deletedBy: $userId,
         );
 
         try {
@@ -742,8 +744,8 @@ class TaskController extends BaseController
                 description: 'ID задачи',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -753,28 +755,28 @@ class TaskController extends BaseController
                     properties: [
                         new OA\Property(
                             property: 'item',
-                            ref: '#/components/schemas/Task'
-                        )
+                            ref: '#/components/schemas/Task',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(
                 response: 401,
                 description: 'Требуется авторизация',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+                content: new OA\JsonContent(ref: '#/components/schemas/Error'),
             ),
             new OA\Response(
                 response: 404,
                 description: 'Задача не найдена',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+                content: new OA\JsonContent(ref: '#/components/schemas/Error'),
             ),
             new OA\Response(
                 response: 500,
                 description: 'Внутренняя ошибка',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
-            )
-        ]
+                content: new OA\JsonContent(ref: '#/components/schemas/Error'),
+            ),
+        ],
     )]
     /**
      * @throws NotFoundHttpException
@@ -790,7 +792,7 @@ class TaskController extends BaseController
 
         $command = new RestoreTaskCommand(
             id: $id,
-            restoredBy: $userId
+            restoredBy: $userId,
         );
 
         try {
@@ -819,8 +821,8 @@ class TaskController extends BaseController
                 description: 'ID задачи',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -829,27 +831,27 @@ class TaskController extends BaseController
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: 'data', type: 'null'),
-                        new OA\Property(property: 'message', type: 'string', example: 'Task permanently deleted')
+                        new OA\Property(property: 'message', type: 'string', example: 'Task permanently deleted'),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(
                 response: 401,
                 description: 'Требуется авторизация',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+                content: new OA\JsonContent(ref: '#/components/schemas/Error'),
             ),
             new OA\Response(
                 response: 404,
                 description: 'Задача не найдена',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+                content: new OA\JsonContent(ref: '#/components/schemas/Error'),
             ),
             new OA\Response(
                 response: 500,
                 description: 'Внутренняя ошибка',
-                content: new OA\JsonContent(ref: '#/components/schemas/Error')
-            )
-        ]
+                content: new OA\JsonContent(ref: '#/components/schemas/Error'),
+            ),
+        ],
     )]
     /**
      * @throws NotFoundHttpException
@@ -864,7 +866,7 @@ class TaskController extends BaseController
         }
 
         $command = new HardDeleteTaskCommand(
-            id: $id
+            id: $id,
         );
 
         try {

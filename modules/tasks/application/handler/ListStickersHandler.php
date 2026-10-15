@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use modules\projects\application\port\IProjectAccess;
@@ -18,7 +20,7 @@ class ListStickersHandler
     public function __construct(
         IStickerRepository $stickerRepository,
         StickerDtoAssembler $stickerDtoAssembler,
-        IProjectAccess $projectAccess
+        IProjectAccess $projectAccess,
     ) {
         $this->stickerRepository    = $stickerRepository;
         $this->stickerDtoAssembler  = $stickerDtoAssembler;
@@ -46,7 +48,7 @@ class ListStickersHandler
             $stickers = $this->stickerRepository->findSystemStickers();
         }
         if ($query->createdBy !== null) {
-            $stickers = array_filter($stickers, fn($s) => $s->getCreatedBy()->value() === $query->createdBy);
+            $stickers = array_filter($stickers, fn ($s) => $s->getCreatedBy()->value() === $query->createdBy);
         }
         return $this->stickerDtoAssembler->toDtoList(array_values($stickers));
     }

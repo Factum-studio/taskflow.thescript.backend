@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\application\handler;
 
 use core\domain\valueObject\UserId;
@@ -28,7 +30,7 @@ class CreateProjectHandler
         IProjectRepository $projectRepository,
         ProjectDtoAssembler $projectDtoAssembler,
         IProjectAccess $projectAccess,
-        IEventDispatcher $eventDispatcher
+        IEventDispatcher $eventDispatcher,
     ) {
         $this->projectRepository    = $projectRepository;
         $this->projectDtoAssembler  = $projectDtoAssembler;
@@ -49,7 +51,7 @@ class CreateProjectHandler
             new UserId($command->ownerId),
             new Settings($command->settings ?? []),
             new DateTimeImmutable(),
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
         );
 
         $savedProject = $this->projectRepository->save($project);

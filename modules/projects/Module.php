@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects;
 
 use yii\base\Module as BaseModule;

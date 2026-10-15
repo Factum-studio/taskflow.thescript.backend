@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\application\command;
 
 class CreateBoardCommand
@@ -15,7 +17,7 @@ class CreateBoardCommand
         string $name,
         int $createdBy,
         ?string $description = null,
-        array $settings = []
+        array $settings = [],
     ) {
         $this->projectId    = $projectId;
         $this->name         = $name;

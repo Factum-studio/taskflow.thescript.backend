@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'GET task' => 'tasks/task/index',
     'GET task/<id:\d+>' => 'tasks/task/view',

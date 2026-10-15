@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use modules\tasks\application\assembler\TaskDtoAssembler;
@@ -19,7 +21,7 @@ class GetTaskHandler
     public function __construct(
         ITaskRepository $taskRepository,
         TaskDtoAssembler $taskDtoAssembler,
-        ITaskAccess $taskAccess
+        ITaskAccess $taskAccess,
     ) {
         $this->taskRepository   = $taskRepository;
         $this->taskDtoAssembler = $taskDtoAssembler;

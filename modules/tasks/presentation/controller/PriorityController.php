@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\presentation\controller;
 
 use core\application\dto\CollectionDto;
@@ -10,7 +12,7 @@ use OpenApi\Attributes as OA;
 
 #[OA\Tag(
     name: 'task-priorities',
-    description: 'Справочник приоритетов задач'
+    description: 'Справочник приоритетов задач',
 )]
 class PriorityController extends BaseController
 {
@@ -18,7 +20,7 @@ class PriorityController extends BaseController
         $id,
         $module,
         private readonly ListPrioritiesHandler $listPrioritiesHandler,
-        $config = []
+        $config = [],
     ) {
         parent::__construct($id, $module, $config);
     }
@@ -40,18 +42,18 @@ class PriorityController extends BaseController
                         new OA\Property(
                             property: 'items',
                             type: 'array',
-                            items: new OA\Items(ref: '#/components/schemas/TaskPriority')
+                            items: new OA\Items(ref: '#/components/schemas/TaskPriority'),
                         ),
                         new OA\Property(
                             property: '_meta',
-                            ref: '#/components/schemas/Collection/properties/_meta'
-                        )
+                            ref: '#/components/schemas/Collection/properties/_meta',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
-            new OA\Response(response: 401, description: 'Требуется авторизация')
-        ]
+            new OA\Response(response: 401, description: 'Требуется авторизация'),
+        ],
     )]
     public function actionIndex(): CollectionDto|array
     {

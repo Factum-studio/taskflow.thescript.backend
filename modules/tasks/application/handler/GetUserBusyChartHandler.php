@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use core\domain\valueObject\UserId;
@@ -14,7 +16,7 @@ class GetUserBusyChartHandler
 
     public function __construct(
         ITimeIntervalRepository $intervalRepository,
-        BusyChartService $chartService
+        BusyChartService $chartService,
     ) {
         $this->intervalRepository   = $intervalRepository;
         $this->chartService         = $chartService;

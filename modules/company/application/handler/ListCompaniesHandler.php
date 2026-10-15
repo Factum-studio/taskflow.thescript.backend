@@ -15,7 +15,8 @@ class ListCompaniesHandler
     public function __construct(
         private ICompanyRepository $companyRepository,
         private CompanyDtoAssembler $companyDtoAssembler,
-    ) {}
+    ) {
+    }
 
     /**
      * @return CompanyDto[]

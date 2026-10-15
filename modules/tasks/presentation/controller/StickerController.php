@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\presentation\controller;
 
 use core\application\dto\CollectionDto;
@@ -29,7 +31,7 @@ use OpenApi\Attributes as OA;
 
 #[OA\Tag(
     name: 'stickers',
-    description: 'Управление стикерами (тегами)'
+    description: 'Управление стикерами (тегами)',
 )]
 class StickerController extends BaseController
 {
@@ -41,7 +43,7 @@ class StickerController extends BaseController
         private readonly DeleteStickerHandler $deleteStickerHandler,
         private readonly ListStickersHandler $listStickersHandler,
         private readonly GetStickerHandler $getStickerHandler,
-        $config = []
+        $config = [],
     ) {
         parent::__construct($id, $module, $config);
     }
@@ -60,21 +62,21 @@ class StickerController extends BaseController
                 description: 'Тип стикеров (системные или пользовательские)',
                 in: 'query',
                 required: false,
-                schema: new OA\Schema(type: 'string', enum: ['system', 'user'])
+                schema: new OA\Schema(type: 'string', enum: ['system', 'user']),
             ),
             new OA\Parameter(
                 name: 'projectId',
                 description: 'ID проекта (обязателен для type=user)',
                 in: 'query',
                 required: false,
-                schema: new OA\Schema(type: 'integer')
+                schema: new OA\Schema(type: 'integer'),
             ),
             new OA\Parameter(
                 name: 'createdBy',
                 description: 'Фильтр по создателю',
                 in: 'query',
                 required: false,
-                schema: new OA\Schema(type: 'integer')
+                schema: new OA\Schema(type: 'integer'),
             ),
         ],
         responses: [
@@ -86,18 +88,18 @@ class StickerController extends BaseController
                         new OA\Property(
                             property: 'items',
                             type: 'array',
-                            items: new OA\Items(ref: '#/components/schemas/Sticker')
+                            items: new OA\Items(ref: '#/components/schemas/Sticker'),
                         ),
                         new OA\Property(
                             property: '_meta',
-                            ref: '#/components/schemas/Collection/properties/_meta'
-                        )
+                            ref: '#/components/schemas/Collection/properties/_meta',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
-            new OA\Response(response: 401, description: 'Требуется авторизация')
-        ]
+            new OA\Response(response: 401, description: 'Требуется авторизация'),
+        ],
     )]
     public function actionIndex(): CollectionDto|array
     {
@@ -105,7 +107,7 @@ class StickerController extends BaseController
         $query = new ListStickersQuery(
             type: $request->get('type'),
             projectId: $request->get('projectId') ? (int)$request->get('projectId') : null,
-            createdBy: $request->get('createdBy') ? (int)$request->get('createdBy') : null
+            createdBy: $request->get('createdBy') ? (int)$request->get('createdBy') : null,
         );
         $stickers = $this->listStickersHandler->handle($query);
         return $this->collection($stickers);
@@ -125,8 +127,8 @@ class StickerController extends BaseController
                 description: 'ID стикера',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -136,15 +138,15 @@ class StickerController extends BaseController
                     properties: [
                         new OA\Property(
                             property: 'item',
-                            ref: '#/components/schemas/Sticker'
-                        )
+                            ref: '#/components/schemas/Sticker',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
-            new OA\Response(response: 404, description: 'Стикер не найден')
-        ]
+            new OA\Response(response: 404, description: 'Стикер не найден'),
+        ],
     )]
     /**
      * @throws NotFoundHttpException
@@ -169,7 +171,7 @@ class StickerController extends BaseController
         ],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/CreateStickerRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/CreateStickerRequest'),
         ),
         tags: ['stickers'],
         responses: [
@@ -180,15 +182,15 @@ class StickerController extends BaseController
                     properties: [
                         new OA\Property(
                             property: 'item',
-                            ref: '#/components/schemas/Sticker'
-                        )
+                            ref: '#/components/schemas/Sticker',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
-            new OA\Response(response: 422, description: 'Ошибка валидации')
-        ]
+            new OA\Response(response: 422, description: 'Ошибка валидации'),
+        ],
     )]
     /**
      * @throws ServerErrorHttpException
@@ -212,7 +214,7 @@ class StickerController extends BaseController
             createdBy: $userId,
             projectId: $request->projectId,
             data: $request->data,
-            color: $request->color
+            color: $request->color,
         );
 
         try {
@@ -236,7 +238,7 @@ class StickerController extends BaseController
         ],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/UpdateStickerRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/UpdateStickerRequest'),
         ),
         tags: ['stickers'],
         parameters: [
@@ -245,8 +247,8 @@ class StickerController extends BaseController
                 description: 'ID стикера',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -256,17 +258,17 @@ class StickerController extends BaseController
                     properties: [
                         new OA\Property(
                             property: 'item',
-                            ref: '#/components/schemas/Sticker'
-                        )
+                            ref: '#/components/schemas/Sticker',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
             new OA\Response(response: 403, description: 'Доступ запрещён (не автор)'),
             new OA\Response(response: 404, description: 'Стикер не найден'),
-            new OA\Response(response: 422, description: 'Ошибка валидации')
-        ]
+            new OA\Response(response: 422, description: 'Ошибка валидации'),
+        ],
     )]
     /**
      * @throws NotFoundHttpException
@@ -290,7 +292,7 @@ class StickerController extends BaseController
             updatedBy: $userId,
             name: $request->name,
             data: $request->data,
-            color: $request->color
+            color: $request->color,
         );
 
         try {
@@ -321,8 +323,8 @@ class StickerController extends BaseController
                 description: 'ID стикера',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -331,15 +333,15 @@ class StickerController extends BaseController
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: 'data', type: 'null'),
-                        new OA\Property(property: 'message', type: 'string', example: 'Sticker deleted')
+                        new OA\Property(property: 'message', type: 'string', example: 'Sticker deleted'),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
             new OA\Response(response: 403, description: 'Доступ запрещён (не автор)'),
-            new OA\Response(response: 404, description: 'Стикер не найден')
-        ]
+            new OA\Response(response: 404, description: 'Стикер не найден'),
+        ],
     )]
     /**
      * @throws NotFoundHttpException

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use modules\tasks\application\command\HardDeleteTaskCommand;
@@ -15,7 +17,7 @@ class HardDeleteTaskHandler
 
     public function __construct(
         ITaskRepository $taskRepository,
-        ITaskAccess $taskAccess
+        ITaskAccess $taskAccess,
     ) {
         $this->taskRepository   = $taskRepository;
         $this->taskAccess       = $taskAccess;

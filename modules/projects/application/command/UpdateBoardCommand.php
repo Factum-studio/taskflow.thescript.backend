@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\application\command;
 
 class UpdateBoardCommand
@@ -15,7 +17,7 @@ class UpdateBoardCommand
         int $updatedBy,
         ?string $name = null,
         ?string $description = null,
-        ?array $settings = null
+        ?array $settings = null,
     ) {
         $this->id           = $id;
         $this->updatedBy    = $updatedBy;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use DateTimeImmutable;
@@ -25,7 +27,7 @@ class StopTimerHandler
         ITimeIntervalRepository $intervalRepository,
         ITaskRepository $taskRepository,
         TimeIntervalDtoAssembler $dtoAssembler,
-        IEventDispatcher $eventDispatcher
+        IEventDispatcher $eventDispatcher,
     ) {
         $this->intervalRepository   = $intervalRepository;
         $this->taskRepository       = $taskRepository;

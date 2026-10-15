@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use core\domain\valueObject\UserId;
@@ -29,7 +31,7 @@ class UpdateTaskHandler
         ITaskRepository $taskRepository,
         TaskDtoAssembler $taskDtoAssembler,
         IEventDispatcher $eventDispatcher,
-        ITaskAccess $taskAccess
+        ITaskAccess $taskAccess,
     ) {
         $this->taskRepository   = $taskRepository;
         $this->taskDtoAssembler = $taskDtoAssembler;
@@ -129,20 +131,20 @@ class UpdateTaskHandler
         if (!empty($changedFields)) {
             // Диспатчим общее событие обновления
             $this->eventDispatcher->dispatch(
-                new TaskUpdatedEvent($savedTask, $changedFields, $updatedBy)
+                new TaskUpdatedEvent($savedTask, $changedFields, $updatedBy),
             );
 
             // Если изменилась колонка – диспатчим отдельное событие
             if (isset($changedFields['columnId'])) {
                 $this->eventDispatcher->dispatch(
-                    new TaskMovedToColumnEvent($savedTask, $oldColumn, $updatedBy)
+                    new TaskMovedToColumnEvent($savedTask, $oldColumn, $updatedBy),
                 );
             }
 
             // Если изменился исполнитель – диспатчим событие назначения
             if (isset($changedFields['assignedTo'])) {
                 $this->eventDispatcher->dispatch(
-                    new TaskAssignedEvent($savedTask, $oldAssignee, $updatedBy)
+                    new TaskAssignedEvent($savedTask, $oldAssignee, $updatedBy),
                 );
             }
         }

@@ -40,13 +40,34 @@ class CompanyMember
 
     // -------- Getters --------
 
-    public function getCompanyId(): CompanyId { return $this->companyId; }
-    public function getUserId(): UserId { return $this->userId; }
-    public function getRole(): CompanyMemberRole { return $this->role; }
-    public function getInvitedBy(): ?UserId { return $this->invitedBy; }
-    public function getInvitedAt(): ?DateTimeImmutable { return $this->invitedAt; }
-    public function getAcceptedAt(): ?DateTimeImmutable { return $this->acceptedAt; }
-    public function getJoinedAt(): DateTimeImmutable { return $this->joinedAt; }
+    public function getCompanyId(): CompanyId
+    {
+        return $this->companyId;
+    }
+    public function getUserId(): UserId
+    {
+        return $this->userId;
+    }
+    public function getRole(): CompanyMemberRole
+    {
+        return $this->role;
+    }
+    public function getInvitedBy(): ?UserId
+    {
+        return $this->invitedBy;
+    }
+    public function getInvitedAt(): ?DateTimeImmutable
+    {
+        return $this->invitedAt;
+    }
+    public function getAcceptedAt(): ?DateTimeImmutable
+    {
+        return $this->acceptedAt;
+    }
+    public function getJoinedAt(): DateTimeImmutable
+    {
+        return $this->joinedAt;
+    }
 
     // -------- Mutators --------
 

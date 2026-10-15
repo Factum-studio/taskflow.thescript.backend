@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\presentation\controller;
 
 use core\application\dto\CollectionDto;
@@ -29,7 +31,7 @@ use yii\web\UnauthorizedHttpException;
 
 #[OA\Tag(
     name: 'projects',
-    description: 'Управление проектами'
+    description: 'Управление проектами',
 )]
 class ProjectController extends BaseController
 {
@@ -41,7 +43,7 @@ class ProjectController extends BaseController
         private readonly DeleteProjectHandler $deleteProjectHandler,
         private readonly GetProjectHandler $getProjectHandler,
         private readonly ListUserProjectsHandler $listUserProjectsHandler,
-        $config = []
+        $config = [],
     ) {
         parent::__construct($id, $module, $config);
     }
@@ -64,18 +66,18 @@ class ProjectController extends BaseController
                         new OA\Property(
                             property: 'items',
                             type: 'array',
-                            items: new OA\Items(ref: '#/components/schemas/Project')
+                            items: new OA\Items(ref: '#/components/schemas/Project'),
                         ),
                         new OA\Property(
                             property: '_meta',
-                            ref: '#/components/schemas/Collection/properties/_meta'
-                        )
+                            ref: '#/components/schemas/Collection/properties/_meta',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
-            new OA\Response(response: 401, description: 'Требуется авторизация')
-        ]
+            new OA\Response(response: 401, description: 'Требуется авторизация'),
+        ],
     )]
     public function actionIndex(): CollectionDto|ErrorDto|array
     {
@@ -104,8 +106,8 @@ class ProjectController extends BaseController
                 description: 'ID проекта',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -115,15 +117,15 @@ class ProjectController extends BaseController
                     properties: [
                         new OA\Property(
                             property: 'item',
-                            ref: '#/components/schemas/Project'
-                        )
+                            ref: '#/components/schemas/Project',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
-            new OA\Response(response: 404, description: 'Проект не найден')
-        ]
+            new OA\Response(response: 404, description: 'Проект не найден'),
+        ],
     )]
     /**
      * @throws NotFoundHttpException
@@ -154,7 +156,7 @@ class ProjectController extends BaseController
         ],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/CreateProjectRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/CreateProjectRequest'),
         ),
         tags: ['projects'],
         responses: [
@@ -165,15 +167,15 @@ class ProjectController extends BaseController
                     properties: [
                         new OA\Property(
                             property: 'item',
-                            ref: '#/components/schemas/Project'
-                        )
+                            ref: '#/components/schemas/Project',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
-            new OA\Response(response: 422, description: 'Ошибка валидации')
-        ]
+            new OA\Response(response: 422, description: 'Ошибка валидации'),
+        ],
     )]
     /**
      * @throws ServerErrorHttpException
@@ -195,7 +197,7 @@ class ProjectController extends BaseController
             name: $request->name,
             type: $request->type,
             ownerId: $userId,
-            settings: $request->settings ?? []
+            settings: $request->settings ?? [],
         );
 
         try {
@@ -217,7 +219,7 @@ class ProjectController extends BaseController
         ],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/UpdateProjectRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/UpdateProjectRequest'),
         ),
         tags: ['projects'],
         parameters: [
@@ -226,8 +228,8 @@ class ProjectController extends BaseController
                 description: 'ID проекта',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -237,17 +239,17 @@ class ProjectController extends BaseController
                     properties: [
                         new OA\Property(
                             property: 'item',
-                            ref: '#/components/schemas/Project'
-                        )
+                            ref: '#/components/schemas/Project',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
             new OA\Response(response: 403, description: 'Доступ запрещён'),
             new OA\Response(response: 404, description: 'Проект не найден'),
-            new OA\Response(response: 422, description: 'Ошибка валидации')
-        ]
+            new OA\Response(response: 422, description: 'Ошибка валидации'),
+        ],
     )]
     /**
      * @throws NotFoundHttpException
@@ -270,7 +272,7 @@ class ProjectController extends BaseController
             id: $id,
             updatedBy: $userId,
             name: $request->name,
-            settings: $request->settings
+            settings: $request->settings,
         );
 
         try {
@@ -305,8 +307,8 @@ class ProjectController extends BaseController
                 description: 'ID проекта',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -315,15 +317,15 @@ class ProjectController extends BaseController
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: 'data', type: 'null'),
-                        new OA\Property(property: 'message', type: 'string', example: 'Project deleted')
+                        new OA\Property(property: 'message', type: 'string', example: 'Project deleted'),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
             new OA\Response(response: 403, description: 'Доступ запрещён'),
-            new OA\Response(response: 404, description: 'Проект не найден')
-        ]
+            new OA\Response(response: 404, description: 'Проект не найден'),
+        ],
     )]
     /**
      * @throws NotFoundHttpException

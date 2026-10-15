@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\infrastructure\repository;
 
 use core\domain\valueObject\UserId;
@@ -162,7 +164,7 @@ class DbTimeIntervalRepository implements ITimeIntervalRepository
             $ar->comment,
             $ar->type,
             new DateTimeImmutable($ar->created_at),
-            new DateTimeImmutable($ar->updated_at)
+            new DateTimeImmutable($ar->updated_at),
         );
     }
 }

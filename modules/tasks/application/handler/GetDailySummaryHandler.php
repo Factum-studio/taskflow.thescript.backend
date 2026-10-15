@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use core\domain\valueObject\Date;
@@ -15,7 +17,7 @@ class GetDailySummaryHandler
 
     public function __construct(
         IDailySummaryRepository $dailySummaryRepository,
-        DailySummaryDtoAssembler $dtoAssembler
+        DailySummaryDtoAssembler $dtoAssembler,
     ) {
         $this->dailySummaryRepository   = $dailySummaryRepository;
         $this->dtoAssembler             = $dtoAssembler;

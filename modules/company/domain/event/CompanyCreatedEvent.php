@@ -22,8 +22,20 @@ class CompanyCreatedEvent implements ICompanyDomainEvent
         $this->occurredAt = new DateTimeImmutable();
     }
 
-    public function getAggregateId(): int { return $this->companyId; }
-    public function getOwnerId(): int { return $this->ownerId; }
-    public function getCompanyName(): string { return $this->companyName; }
-    public function getOccurredAt(): DateTimeImmutable { return $this->occurredAt; }
+    public function getAggregateId(): int
+    {
+        return $this->companyId;
+    }
+    public function getOwnerId(): int
+    {
+        return $this->ownerId;
+    }
+    public function getCompanyName(): string
+    {
+        return $this->companyName;
+    }
+    public function getOccurredAt(): DateTimeImmutable
+    {
+        return $this->occurredAt;
+    }
 }

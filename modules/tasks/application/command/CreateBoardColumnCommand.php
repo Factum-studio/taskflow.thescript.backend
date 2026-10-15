@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\command;
 
 class CreateBoardColumnCommand
@@ -23,7 +25,7 @@ class CreateBoardColumnCommand
         bool $isActive = true,
         bool $isFinal = false,
         ?string $color = null,
-        ?int $workflowId = null
+        ?int $workflowId = null,
     ) {
         $this->boardId      = $boardId;
         $this->name         = $name;

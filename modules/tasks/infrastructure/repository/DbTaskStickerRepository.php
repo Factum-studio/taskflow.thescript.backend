@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\infrastructure\repository;
 
 use modules\tasks\domain\repository\ITaskStickerRepository;
@@ -54,7 +56,7 @@ class DbTaskStickerRepository implements ITaskStickerRepository
             ->where(['task_id' => $taskId->value()])
             ->asArray()
             ->all();
-        return array_map(fn($row) => new StickerId((int)$row['sticker_id']), $rows);
+        return array_map(fn ($row) => new StickerId((int)$row['sticker_id']), $rows);
     }
 
     public function isAttached(TaskId $taskId, StickerId $stickerId): bool

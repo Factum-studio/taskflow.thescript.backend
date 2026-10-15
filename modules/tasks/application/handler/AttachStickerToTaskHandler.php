@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use InvalidArgumentException;
@@ -27,7 +29,7 @@ class AttachStickerToTaskHandler
         ITaskRepository $taskRepository,
         IStickerRepository $stickerRepository,
         IEventDispatcher $eventDispatcher,
-        ITaskAccess $taskAccess
+        ITaskAccess $taskAccess,
     ) {
         $this->taskStickerRepository    = $taskStickerRepository;
         $this->taskRepository           = $taskRepository;

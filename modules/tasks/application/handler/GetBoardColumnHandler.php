@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use modules\projects\application\port\IProjectAccess;
@@ -20,7 +22,7 @@ class GetBoardColumnHandler
     public function __construct(
         IBoardColumnRepository $columnRepository,
         BoardColumnDtoAssembler $dtoAssembler,
-        IProjectAccess $projectAccess
+        IProjectAccess $projectAccess,
     ) {
         $this->columnRepository = $columnRepository;
         $this->dtoAssembler     = $dtoAssembler;

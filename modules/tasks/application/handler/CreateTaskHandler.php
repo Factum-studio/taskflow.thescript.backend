@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use core\domain\valueObject\UserId;
@@ -36,7 +38,7 @@ class CreateTaskHandler
         IEventDispatcher $eventDispatcher,
         IBoardColumnRepository $columnRepository,
         ITaskPriorityRepository $priorityRepository,
-        ITaskAccess $taskAccess
+        ITaskAccess $taskAccess,
     ) {
         $this->taskRepository       = $taskRepository;
         $this->taskDtoAssembler     = $taskDtoAssembler;
@@ -84,7 +86,7 @@ class CreateTaskHandler
             false,
             new DateTimeImmutable(),
             new DateTimeImmutable(),
-            null
+            null,
         );
 
         $savedTask = $this->taskRepository->save($task);

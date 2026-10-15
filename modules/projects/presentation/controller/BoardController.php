@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\presentation\controller;
 
 use core\application\dto\CollectionDto;
@@ -29,7 +31,7 @@ use yii\web\UnauthorizedHttpException;
 
 #[OA\Tag(
     name: 'boards',
-    description: 'Управление досками проектов(projects)'
+    description: 'Управление досками проектов(projects)',
 )]
 class BoardController extends BaseController
 {
@@ -41,7 +43,7 @@ class BoardController extends BaseController
         private readonly DeleteBoardHandler $deleteBoardHandler,
         private readonly GetBoardHandler $getBoardHandler,
         private readonly ListProjectBoardsHandler $listBoardsHandler,
-        $config = []
+        $config = [],
     ) {
         parent::__construct($id, $module, $config);
     }
@@ -61,8 +63,8 @@ class BoardController extends BaseController
                 description: 'ID проекта',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -73,19 +75,19 @@ class BoardController extends BaseController
                         new OA\Property(
                             property: 'items',
                             type: 'array',
-                            items: new OA\Items(ref: '#/components/schemas/Board')
+                            items: new OA\Items(ref: '#/components/schemas/Board'),
                         ),
                         new OA\Property(
                             property: '_meta',
-                            ref: '#/components/schemas/Collection/properties/_meta'
-                        )
+                            ref: '#/components/schemas/Collection/properties/_meta',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
-            new OA\Response(response: 404, description: 'Проект не найден')
-        ]
+            new OA\Response(response: 404, description: 'Проект не найден'),
+        ],
     )]
     /**
      * @throws NotFoundHttpException
@@ -121,8 +123,8 @@ class BoardController extends BaseController
                 description: 'ID доски',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -132,15 +134,15 @@ class BoardController extends BaseController
                     properties: [
                         new OA\Property(
                             property: 'item',
-                            ref: '#/components/schemas/Board'
-                        )
+                            ref: '#/components/schemas/Board',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
-            new OA\Response(response: 404, description: 'Доска не найдена')
-        ]
+            new OA\Response(response: 404, description: 'Доска не найдена'),
+        ],
     )]
     /**
      * @throws NotFoundHttpException
@@ -171,7 +173,7 @@ class BoardController extends BaseController
         ],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/CreateBoardRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/CreateBoardRequest'),
         ),
         tags: ['boards'],
         parameters: [
@@ -180,8 +182,8 @@ class BoardController extends BaseController
                 description: 'ID проекта',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -191,17 +193,17 @@ class BoardController extends BaseController
                     properties: [
                         new OA\Property(
                             property: 'item',
-                            ref: '#/components/schemas/Board'
-                        )
+                            ref: '#/components/schemas/Board',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
             new OA\Response(response: 403, description: 'Доступ запрещён'),
             new OA\Response(response: 404, description: 'Проект не найден'),
-            new OA\Response(response: 422, description: 'Ошибка валидации')
-        ]
+            new OA\Response(response: 422, description: 'Ошибка валидации'),
+        ],
     )]
     /**
      * @throws NotFoundHttpException
@@ -225,7 +227,7 @@ class BoardController extends BaseController
             name: $request->name,
             createdBy: $userId,
             description: $request->description,
-            settings: $request->settings
+            settings: $request->settings,
         );
 
         try {
@@ -255,7 +257,7 @@ class BoardController extends BaseController
         ],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/UpdateBoardRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/UpdateBoardRequest'),
         ),
         tags: ['boards'],
         parameters: [
@@ -264,8 +266,8 @@ class BoardController extends BaseController
                 description: 'ID доски',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -275,17 +277,17 @@ class BoardController extends BaseController
                     properties: [
                         new OA\Property(
                             property: 'item',
-                            ref: '#/components/schemas/Board'
-                        )
+                            ref: '#/components/schemas/Board',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
             new OA\Response(response: 403, description: 'Доступ запрещён'),
             new OA\Response(response: 404, description: 'Доска не найдена'),
-            new OA\Response(response: 422, description: 'Ошибка валидации')
-        ]
+            new OA\Response(response: 422, description: 'Ошибка валидации'),
+        ],
     )]
     /**
      * @throws NotFoundHttpException
@@ -309,7 +311,7 @@ class BoardController extends BaseController
             updatedBy: $userId,
             name: $request->name,
             description: $request->description,
-            settings: $request->settings
+            settings: $request->settings,
         );
 
         try {
@@ -344,8 +346,8 @@ class BoardController extends BaseController
                 description: 'ID доски',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -354,15 +356,15 @@ class BoardController extends BaseController
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: 'data', type: 'null'),
-                        new OA\Property(property: 'message', type: 'string', example: 'Board deleted')
+                        new OA\Property(property: 'message', type: 'string', example: 'Board deleted'),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
             new OA\Response(response: 403, description: 'Доступ запрещён'),
-            new OA\Response(response: 404, description: 'Доска не найдена')
-        ]
+            new OA\Response(response: 404, description: 'Доска не найдена'),
+        ],
     )]
     /**
      * @throws NotFoundHttpException

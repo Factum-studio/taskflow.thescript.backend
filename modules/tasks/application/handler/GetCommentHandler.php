@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use modules\tasks\application\assembler\CommentDtoAssembler;
@@ -20,7 +22,7 @@ class GetCommentHandler
     public function __construct(
         ICommentRepository $commentRepository,
         CommentDtoAssembler $commentDtoAssembler,
-        ITaskAccess $taskAccess
+        ITaskAccess $taskAccess,
     ) {
         $this->commentRepository    = $commentRepository;
         $this->commentDtoAssembler  = $commentDtoAssembler;

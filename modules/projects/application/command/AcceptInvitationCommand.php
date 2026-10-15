@@ -1,7 +1,8 @@
 <?php
 
-namespace modules\projects\application\command;
+declare(strict_types=1);
 
+namespace modules\projects\application\command;
 
 class AcceptInvitationCommand
 {

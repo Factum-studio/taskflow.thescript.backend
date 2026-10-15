@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\query;
 
 use DateTimeImmutable;
@@ -19,7 +21,7 @@ class GetTaskTimeSummaryQuery
         ?DateTimeImmutable $from = null,
         ?DateTimeImmutable $to = null,
         string $granularity = 'minute',
-        string $mode = 'merged'
+        string $mode = 'merged',
     ) {
         $this->taskId       = $taskId;
         $this->userId       = $userId;

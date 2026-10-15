@@ -35,7 +35,7 @@ class UserController extends BaseController
         $id,
         $module,
         private readonly PassportAuthPort $passport,
-        $config = []
+        $config = [],
     ) {
         parent::__construct($id, $module, $config);
     }

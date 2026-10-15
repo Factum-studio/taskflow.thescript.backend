@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\infrastructure\listener;
 
 use modules\tasks\domain\event\TaskAssignedEvent;

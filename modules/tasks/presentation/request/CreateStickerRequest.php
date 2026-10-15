@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\presentation\request;
 
 use yii\base\Model;
@@ -22,7 +24,7 @@ class CreateStickerRequest extends Model
             ['data', 'safe'],
             ['color', 'string', 'max' => 20],
             // если type = user - projectId обязателен
-            ['projectId', 'required', 'when' => function($model) {
+            ['projectId', 'required', 'when' => function ($model) {
                 return $model->type === 'user';
             }, 'whenClient' => "function (attribute, value) {
                 return $('#createstickerrequest-type').val() === 'user';

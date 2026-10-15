@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\infrastructure\repository;
 
 use core\domain\valueObject\UserId;
@@ -102,7 +104,7 @@ class DbProjectUserRepository implements IProjectUserRepository
             $ar->invited_by ? new UserId((int)$ar->invited_by) : null,
             $ar->invited_at ? new DateTimeImmutable($ar->invited_at) : null,
             $ar->accepted_at ? new DateTimeImmutable($ar->accepted_at) : null,
-            $ar->joined_at ? new DateTimeImmutable($ar->joined_at) : null
+            $ar->joined_at ? new DateTimeImmutable($ar->joined_at) : null,
         );
     }
 }

@@ -21,8 +21,20 @@ class CompanyTransferOwnershipEvent implements ICompanyDomainEvent
         $this->occurredAt = new DateTimeImmutable();
     }
 
-    public function getAggregateId(): int { return $this->companyId; }
-    public function getPreviousOwnerId(): int { return $this->previousOwnerId; }
-    public function getNewOwnerId(): int { return $this->newOwnerId; }
-    public function getOccurredAt(): DateTimeImmutable { return $this->occurredAt; }
+    public function getAggregateId(): int
+    {
+        return $this->companyId;
+    }
+    public function getPreviousOwnerId(): int
+    {
+        return $this->previousOwnerId;
+    }
+    public function getNewOwnerId(): int
+    {
+        return $this->newOwnerId;
+    }
+    public function getOccurredAt(): DateTimeImmutable
+    {
+        return $this->occurredAt;
+    }
 }

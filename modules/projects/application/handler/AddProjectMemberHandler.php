@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\application\handler;
 
 use core\application\port\IUserRepository;
@@ -32,7 +34,7 @@ class AddProjectMemberHandler
         ProjectUserDtoAssembler $projectUserDtoAssembler,
         IProjectAccess $projectAccess,
         IUserRepository $userRepository,
-        IEventDispatcher $eventDispatcher
+        IEventDispatcher $eventDispatcher,
     ) {
         $this->projectUserRepository    = $projectUserRepository;
         $this->projectRepository        = $projectRepository;
@@ -72,7 +74,7 @@ class AddProjectMemberHandler
             new UserId($command->addedBy),
             new \DateTimeImmutable(),
             null,
-            new \DateTimeImmutable()
+            new \DateTimeImmutable(),
         );
 
         $this->projectUserRepository->save($projectUser);

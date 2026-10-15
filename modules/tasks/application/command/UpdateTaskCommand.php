@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\command;
 
 use DateTimeImmutable;
@@ -31,7 +33,7 @@ class UpdateTaskCommand
         ?DateTimeImmutable $plannedEnd = null,
         ?int $assignedTo = null,
         ?int $boardId = null,
-        ?int $parentId = null
+        ?int $parentId = null,
     ) {
         $this->id           = $id;
         $this->updatedBy    = $updatedBy;

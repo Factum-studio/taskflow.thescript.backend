@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\application\command;
 
 class CreateProjectCommand
@@ -13,7 +15,7 @@ class CreateProjectCommand
         string $name,
         string $type,
         int $ownerId,
-        array $settings = []
+        array $settings = [],
     ) {
         $this->name     = $name;
         $this->type     = $type;

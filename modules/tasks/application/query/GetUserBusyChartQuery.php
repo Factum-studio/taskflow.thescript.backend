@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\query;
 
 use DateTimeImmutable;
@@ -17,7 +19,7 @@ class GetUserBusyChartQuery
         DateTimeImmutable $from,
         DateTimeImmutable $to,
         string $granularity = 'minute',
-        string $mode = 'merged'
+        string $mode = 'merged',
     ) {
         $this->userId       = $userId;
         $this->from         = $from;

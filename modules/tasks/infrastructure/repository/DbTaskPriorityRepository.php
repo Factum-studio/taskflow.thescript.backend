@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\infrastructure\repository;
 
 use modules\tasks\domain\entity\TaskPriority;
@@ -35,7 +37,7 @@ class DbTaskPriorityRepository implements ITaskPriorityRepository
             new PriorityId((int)$ar->id),
             (int)$ar->value,
             $ar->label,
-            $ar->color
+            $ar->color,
         );
     }
 }

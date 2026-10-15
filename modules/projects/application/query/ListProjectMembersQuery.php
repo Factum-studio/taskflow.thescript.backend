@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\application\query;
 
 class ListProjectMembersQuery
@@ -9,7 +11,7 @@ class ListProjectMembersQuery
 
     public function __construct(
         int $projectId,
-        int $userId
+        int $userId,
     ) {
         $this->projectId    = $projectId;
         $this->userId       = $userId;

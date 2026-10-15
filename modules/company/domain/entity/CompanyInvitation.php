@@ -46,15 +46,42 @@ class CompanyInvitation
 
     // -------- Getters --------
 
-    public function getId(): int { return $this->id; }
-    public function getCompanyId(): CompanyId { return $this->companyId; }
-    public function getEmail(): string { return $this->email; }
-    public function getInvitedBy(): UserId { return $this->invitedBy; }
-    public function getToken(): string { return $this->token; }
-    public function getStatus(): CompanyInvitationStatus { return $this->status; }
-    public function getCreatedAt(): DateTimeImmutable { return $this->createdAt; }
-    public function getExpiresAt(): DateTimeImmutable { return $this->expiresAt; }
-    public function getUpdatedAt(): DateTimeImmutable { return $this->updatedAt; }
+    public function getId(): int
+    {
+        return $this->id;
+    }
+    public function getCompanyId(): CompanyId
+    {
+        return $this->companyId;
+    }
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+    public function getInvitedBy(): UserId
+    {
+        return $this->invitedBy;
+    }
+    public function getToken(): string
+    {
+        return $this->token;
+    }
+    public function getStatus(): CompanyInvitationStatus
+    {
+        return $this->status;
+    }
+    public function getCreatedAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+    public function getExpiresAt(): DateTimeImmutable
+    {
+        return $this->expiresAt;
+    }
+    public function getUpdatedAt(): DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
 
     // -------- Mutators --------
 

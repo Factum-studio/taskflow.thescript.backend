@@ -21,8 +21,20 @@ class CompanyInvitationCreatedEvent implements ICompanyDomainEvent
         $this->occurredAt = new DateTimeImmutable();
     }
 
-    public function getAggregateId(): int { return $this->companyId; }
-    public function getEmail(): string { return $this->email; }
-    public function getInvitedBy(): int { return $this->invitedBy; }
-    public function getOccurredAt(): DateTimeImmutable { return $this->occurredAt; }
+    public function getAggregateId(): int
+    {
+        return $this->companyId;
+    }
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+    public function getInvitedBy(): int
+    {
+        return $this->invitedBy;
+    }
+    public function getOccurredAt(): DateTimeImmutable
+    {
+        return $this->occurredAt;
+    }
 }

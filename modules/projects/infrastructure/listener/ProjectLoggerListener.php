@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\infrastructure\listener;
 
 use modules\projects\domain\event\BoardCreatedEvent;
@@ -22,7 +24,7 @@ class ProjectLoggerListener
     {
         Yii::info(
             "User {$event->getUserId()} added to project {$event->getAggregateId()} as {$event->getRole()} by user {$event->getAddedBy()}",
-            'projects'
+            'projects',
         );
     }
 
@@ -30,7 +32,7 @@ class ProjectLoggerListener
     {
         Yii::info(
             "User {$event->getUserId()} removed from project {$event->getAggregateId()} by user {$event->getRemovedBy()}",
-            'projects'
+            'projects',
         );
     }
 
@@ -38,7 +40,7 @@ class ProjectLoggerListener
     {
         Yii::info(
             "Board created: ID {$event->getAggregateId()} in project {$event->getProjectId()} by user {$event->getCreatedBy()}",
-            'projects'
+            'projects',
         );
     }
 

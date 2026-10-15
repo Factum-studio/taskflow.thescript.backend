@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\infrastructure\listener;
 
 use core\domain\valueObject\UserId;
@@ -28,7 +30,7 @@ class AutoTimerListener
     public function __construct(
         ITimeIntervalRepository $intervalRepository,
         ITaskRepository $taskRepository,
-        IBoardColumnRepository $columnRepository
+        IBoardColumnRepository $columnRepository,
     ) {
         $this->intervalRepository   = $intervalRepository;
         $this->taskRepository       = $taskRepository;
@@ -80,7 +82,7 @@ class AutoTimerListener
                     null,
                     null,
                     'Auto-started by moving to active column',
-                    TimeInterval::TYPE_TIMER
+                    TimeInterval::TYPE_TIMER,
                 );
                 $this->intervalRepository->save($interval);
                 Yii::info("Auto timer started for task {$taskId->value()} user {$userId->value()}", 'tasks');
@@ -98,7 +100,9 @@ class AutoTimerListener
     {
         $taskId = new TaskId($event->getAggregateId());
         $task = $this->taskRepository->findById($taskId);
-        if (!$task) return;
+        if (!$task) {
+            return;
+        }
 
         $oldAssigneeId = $event->getOldAssigneeId();
         $newAssigneeId = $event->getNewAssigneeId();
@@ -121,7 +125,7 @@ class AutoTimerListener
                     $active->getComment(),
                     $active->getType(),
                     $active->getCreatedAt(),
-                    $active->getUpdatedAt()
+                    $active->getUpdatedAt(),
                 );
                 $this->intervalRepository->save($active);
                 Yii::info("Auto timer moved from user {$oldAssigneeId} to {$newAssigneeId} for task {$taskId->value()}", 'tasks');
@@ -133,7 +137,9 @@ class AutoTimerListener
     {
         $taskId = new TaskId($event->getAggregateId());
         $task = $this->taskRepository->findById($taskId);
-        if (!$task) return;
+        if (!$task) {
+            return;
+        }
 
         $userId = $task->getAssignedTo() ?? $task->getCreatedBy();
         $active = $this->intervalRepository->findActiveByTaskAndUser($taskId, $userId, TimeInterval::TYPE_TIMER);

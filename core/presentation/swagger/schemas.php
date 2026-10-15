@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @OA\Schema(
  *     schema="Collection",
@@ -57,7 +59,9 @@
  *     @OA\Property(property="message", type="string")
  * )
  */
-class MainSchemasDefinitions {}
+class MainSchemasDefinitions
+{
+}
 
 /**
  * @OA\Schema(
@@ -74,7 +78,9 @@ class MainSchemasDefinitions {}
  *     @OA\Property(property="assignedBy", type="integer")
  * )
  */
-class UserCircutDefinitions {}
+class UserCircutDefinitions
+{
+}
 
 /**
  * @OA\Schema(
@@ -104,7 +110,9 @@ class UserCircutDefinitions {}
  *     @OA\Property(property="assigned_by", type="integer", format="int64")
  * )
  */
-class CoreDtoSchemaDefinitions {}
+class CoreDtoSchemaDefinitions
+{
+}
 
 /**
  * RBAC schemas
@@ -130,7 +138,9 @@ class CoreDtoSchemaDefinitions {}
  *     }
  * )
  */
-class RbacSchemaDefinitions {}
+class RbacSchemaDefinitions
+{
+}
 
 /**
  * @OA\Schema(
@@ -385,7 +395,9 @@ class RbacSchemaDefinitions {}
  *     @OA\Property(property="duration", type="integer", example=7200)
  * )
  */
-class TaskSchemaDefinitions {}
+class TaskSchemaDefinitions
+{
+}
 
 /**
  * @OA\Schema(
@@ -467,7 +479,9 @@ class TaskSchemaDefinitions {}
  *     @OA\Property(property="role", type="string", enum={"admin","member"}, example="admin")
  * )
  */
-class ProjectsSchemaDefinitions {}
+class ProjectsSchemaDefinitions
+{
+}
 
 /**
  * @OA\Schema(
@@ -502,7 +516,9 @@ class ProjectsSchemaDefinitions {}
  *     @OA\Property(property="totalTasks", type="integer")
  * )
  */
-class FeedbackSchemas {}
+class FeedbackSchemas
+{
+}
 
 /**
  *  @OA\Schema(
@@ -533,4 +549,6 @@ class FeedbackSchemas {}
  *     @OA\Property(property="description", type="string", nullable="true"),
  * )
  */
-class CompanySchemas {}
+class CompanySchemas
+{
+}

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\infrastructure\repository;
 
 use core\domain\valueObject\UserId;
@@ -77,7 +79,7 @@ class DbInvitationRepository implements IInvitationRepository
     {
         return InvitationAR::deleteAll(
             'status = :status AND expires_at < :now',
-            [':status' => InvitationStatus::PENDING, ':now' => date('Y-m-d H:i:s')]
+            [':status' => InvitationStatus::PENDING, ':now' => date('Y-m-d H:i:s')],
         );
     }
 
@@ -115,7 +117,7 @@ class DbInvitationRepository implements IInvitationRepository
             new InvitationStatus($ar->status),
             new DateTimeImmutable($ar->created_at),
             new DateTimeImmutable($ar->expires_at),
-            new DateTimeImmutable($ar->updated_at)
+            new DateTimeImmutable($ar->updated_at),
         );
     }
 }

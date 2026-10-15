@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\command;
 
 class CreateStickerCommand
@@ -17,7 +19,7 @@ class CreateStickerCommand
         int $createdBy,
         ?int $projectId = null,
         ?array $data = null,
-        ?string $color = null
+        ?string $color = null,
     ) {
         $this->name         = $name;
         $this->type         = $type;

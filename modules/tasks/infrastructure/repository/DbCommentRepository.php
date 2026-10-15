@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\infrastructure\repository;
 
 use core\domain\valueObject\UserId;
@@ -91,7 +93,7 @@ class DbCommentRepository implements ICommentRepository
             new UserId((int)$ar->user_id),
             $ar->content,
             new DateTimeImmutable($ar->created_at),
-            new DateTimeImmutable($ar->updated_at)
+            new DateTimeImmutable($ar->updated_at),
         );
     }
 }

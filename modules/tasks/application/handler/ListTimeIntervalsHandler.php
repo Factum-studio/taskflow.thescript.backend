@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use core\domain\valueObject\UserId;
@@ -16,7 +18,7 @@ class ListTimeIntervalsHandler
 
     public function __construct(
         ITimeIntervalRepository $timeIntervalRepository,
-        TimeIntervalDtoAssembler $dtoAssembler
+        TimeIntervalDtoAssembler $dtoAssembler,
     ) {
         $this->timeIntervalRepository   = $timeIntervalRepository;
         $this->dtoAssembler             = $dtoAssembler;
@@ -39,13 +41,13 @@ class ListTimeIntervalsHandler
                 new TaskId($query->taskId),
                 new UserId($query->userId),
                 $query->from,
-                $query->to
+                $query->to,
             );
         } elseif ($query->userId) {
             $intervals = $this->timeIntervalRepository->findByUser(
                 new UserId($query->userId),
                 $query->from ?? new DateTimeImmutable('-1 month'),
-                $query->to ?? new DateTimeImmutable()
+                $query->to ?? new DateTimeImmutable(),
             );
         } else {
             return [];

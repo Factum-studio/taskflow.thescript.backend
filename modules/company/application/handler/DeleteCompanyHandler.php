@@ -16,7 +16,8 @@ class DeleteCompanyHandler
     public function __construct(
         private ICompanyRepository $companyRepository,
         private ICompanyAccess $companyAccess,
-    ) {}
+    ) {
+    }
 
     /**
      * @throws ValidationException

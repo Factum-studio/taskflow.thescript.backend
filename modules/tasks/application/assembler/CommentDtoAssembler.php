@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\assembler;
 
 use modules\tasks\application\dto\CommentDto;

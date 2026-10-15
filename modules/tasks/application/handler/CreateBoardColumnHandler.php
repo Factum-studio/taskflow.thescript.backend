@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use modules\tasks\application\command\CreateBoardColumnCommand;
@@ -22,7 +24,7 @@ class CreateBoardColumnHandler
     public function __construct(
         IBoardColumnRepository $columnRepository,
         BoardColumnDtoAssembler $dtoAssembler,
-        ITaskAccess $taskAccess
+        ITaskAccess $taskAccess,
     ) {
         $this->columnRepository = $columnRepository;
         $this->dtoAssembler     = $dtoAssembler;
@@ -46,7 +48,7 @@ class CreateBoardColumnHandler
             $command->color,
             $command->workflowId,
             new DateTimeImmutable(),
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
         );
 
         $saved = $this->columnRepository->save($column);

@@ -19,7 +19,16 @@ class CompanyMemberRemovedEvent implements ICompanyDomainEvent
         $this->occurredAt = new DateTimeImmutable();
     }
 
-    public function getAggregateId(): int { return $this->companyId; }
-    public function getUserId(): int { return $this->userId; }
-    public function getOccurredAt(): DateTimeImmutable { return $this->occurredAt; }
+    public function getAggregateId(): int
+    {
+        return $this->companyId;
+    }
+    public function getUserId(): int
+    {
+        return $this->userId;
+    }
+    public function getOccurredAt(): DateTimeImmutable
+    {
+        return $this->occurredAt;
+    }
 }

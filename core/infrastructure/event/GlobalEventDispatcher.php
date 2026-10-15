@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace core\infrastructure\event;
 
 use core\application\port\IEventDispatcher;

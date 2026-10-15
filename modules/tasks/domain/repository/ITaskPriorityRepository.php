@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\domain\repository;
 
 use modules\tasks\domain\entity\TaskPriority;

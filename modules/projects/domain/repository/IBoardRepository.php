@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\domain\repository;
 
 use modules\projects\domain\entity\Board;

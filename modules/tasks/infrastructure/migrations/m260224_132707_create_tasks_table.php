@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\infrastructure\migrations;
 
 use yii\db\Migration;
@@ -38,7 +40,7 @@ class m260224_132707_create_tasks_table extends Migration
             '{{%task_statuses}}',
             'id',
             'RESTRICT',
-            'CASCADE'
+            'CASCADE',
         );
 
         $this->addForeignKey(
@@ -48,7 +50,7 @@ class m260224_132707_create_tasks_table extends Migration
             '{{%task_priorities}}',
             'id',
             'RESTRICT',
-            'CASCADE'
+            'CASCADE',
         );
 
         $this->addForeignKey(
@@ -58,7 +60,7 @@ class m260224_132707_create_tasks_table extends Migration
             '{{%tasks}}',
             'id',
             'SET NULL',
-            'CASCADE'
+            'CASCADE',
         );
 
         $this->createIndex('idx-tasks-status_id', '{{%tasks}}', 'status_id');

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\domain\entity;
 
 use core\domain\valueObject\Date;
@@ -24,7 +26,7 @@ class DailySummary
         UserId $userId,
         Date $date,
         Duration $totalDuration,
-        ?DateTimeImmutable $updatedAt = null
+        ?DateTimeImmutable $updatedAt = null,
     ) {
         $this->id               = $id;
         $this->taskId           = $taskId;
@@ -34,12 +36,30 @@ class DailySummary
         $this->updatedAt        = $updatedAt ?? new DateTimeImmutable();
     }
 
-    public function getId(): DailySummaryId { return $this->id; }
-    public function getTaskId(): TaskId { return $this->taskId; }
-    public function getUserId(): UserId { return $this->userId; }
-    public function getDate(): Date { return $this->date; }
-    public function getTotalDuration(): Duration { return $this->totalDuration; }
-    public function getUpdatedAt(): DateTimeImmutable { return $this->updatedAt; }
+    public function getId(): DailySummaryId
+    {
+        return $this->id;
+    }
+    public function getTaskId(): TaskId
+    {
+        return $this->taskId;
+    }
+    public function getUserId(): UserId
+    {
+        return $this->userId;
+    }
+    public function getDate(): Date
+    {
+        return $this->date;
+    }
+    public function getTotalDuration(): Duration
+    {
+        return $this->totalDuration;
+    }
+    public function getUpdatedAt(): DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
 
     public function addTime(Duration $additional): void
     {

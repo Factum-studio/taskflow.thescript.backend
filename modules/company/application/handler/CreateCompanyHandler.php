@@ -27,7 +27,8 @@ class CreateCompanyHandler
         private ICompanyMemberRepository $companyMemberRepository,
         private CompanyDtoAssembler $companyDtoAssembler,
         private IEventDispatcher $eventDispatcher,
-    ) {}
+    ) {
+    }
 
     /**
      * @throws ValidationException
@@ -56,7 +57,7 @@ class CreateCompanyHandler
             $command->registrationNum,
             $command->description,
             new DateTimeImmutable(),
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
         );
 
         $savedCompany = $this->companyRepository->save($company);

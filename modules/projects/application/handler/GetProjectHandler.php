@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\application\handler;
 
 use modules\projects\application\assembler\ProjectDtoAssembler;
@@ -19,7 +21,7 @@ class GetProjectHandler
     public function __construct(
         IProjectRepository $projectRepository,
         ProjectDtoAssembler $projectDtoAssembler,
-        IProjectAccess $projectAccess
+        IProjectAccess $projectAccess,
     ) {
         $this->projectRepository    = $projectRepository;
         $this->projectDtoAssembler  = $projectDtoAssembler;

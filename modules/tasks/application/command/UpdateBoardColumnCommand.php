@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\command;
 
 class UpdateBoardColumnCommand
@@ -23,7 +25,7 @@ class UpdateBoardColumnCommand
         ?bool $isActive = null,
         ?bool $isFinal = null,
         ?string $color = null,
-        ?int $workflowId = null
+        ?int $workflowId = null,
     ) {
         $this->id           = $id;
         $this->updatedBy    = $updatedBy;

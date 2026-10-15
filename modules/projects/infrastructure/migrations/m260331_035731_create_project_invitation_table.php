@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace modules\projects\infrastructure\migrations;
 
 use yii\db\Migration;
@@ -32,7 +35,7 @@ class m260331_035731_create_project_invitation_table extends Migration
             '{{%project}}',
             'id',
             'CASCADE',
-            'CASCADE'
+            'CASCADE',
         );
 
         $this->createIndex('idx-project_invitation-token', '{{%project_invitation}}', 'token');

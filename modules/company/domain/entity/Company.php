@@ -67,22 +67,70 @@ class Company
 
     // -------- Getters --------
 
-    public function getId(): CompanyId { return $this->id; }
-    public function getName(): string { return $this->name; }
-    public function getOwnerId(): UserId { return $this->ownerId; }
-    public function getStatus(): CompanyStatus { return $this->status; }
-    public function isVerified(): bool { return $this->verified; }
-    public function getEmail(): ?string { return $this->email; }
-    public function getWebsite(): ?string { return $this->website; }
-    public function getPhone(): ?string { return $this->phone; }
-    public function getCountry(): ?string { return $this->country; }
-    public function getCity(): ?string { return $this->city; }
-    public function getAddress(): ?string { return $this->address; }
-    public function getTaxNum(): ?string { return $this->taxNum; }
-    public function getRegistrationNum(): ?string { return $this->registrationNum; }
-    public function getDescription(): ?string { return $this->description; }
-    public function getCreatedAt(): DateTimeImmutable { return $this->createdAt; }
-    public function getUpdatedAt(): DateTimeImmutable { return $this->updatedAt; }
+    public function getId(): CompanyId
+    {
+        return $this->id;
+    }
+    public function getName(): string
+    {
+        return $this->name;
+    }
+    public function getOwnerId(): UserId
+    {
+        return $this->ownerId;
+    }
+    public function getStatus(): CompanyStatus
+    {
+        return $this->status;
+    }
+    public function isVerified(): bool
+    {
+        return $this->verified;
+    }
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+    public function getWebsite(): ?string
+    {
+        return $this->website;
+    }
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+    public function getTaxNum(): ?string
+    {
+        return $this->taxNum;
+    }
+    public function getRegistrationNum(): ?string
+    {
+        return $this->registrationNum;
+    }
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+    public function getCreatedAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+    public function getUpdatedAt(): DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
 
     // -------- Mutators --------
 

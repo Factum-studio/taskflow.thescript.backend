@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\query;
 
 class GetCommentQuery
@@ -9,7 +11,7 @@ class GetCommentQuery
 
     public function __construct(
         int $commentId,
-        int $userId
+        int $userId,
     ) {
         $this->commentId    = $commentId;
         $this->userId       = $userId;

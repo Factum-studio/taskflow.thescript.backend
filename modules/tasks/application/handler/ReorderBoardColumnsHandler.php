@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use modules\tasks\application\command\ReorderBoardColumnsCommand;
@@ -16,7 +18,7 @@ class ReorderBoardColumnsHandler
 
     public function __construct(
         IBoardColumnRepository $columnRepository,
-        ITaskAccess $taskAccess
+        ITaskAccess $taskAccess,
     ) {
         $this->columnRepository = $columnRepository;
         $this->taskAccess       = $taskAccess;

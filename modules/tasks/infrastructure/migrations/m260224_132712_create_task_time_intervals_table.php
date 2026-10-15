@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\infrastructure\migrations;
 
 use yii\db\Migration;
@@ -33,7 +35,7 @@ class m260224_132712_create_task_time_intervals_table extends Migration
             '{{%tasks}}',
             'id',
             'CASCADE',
-            'CASCADE'
+            'CASCADE',
         );
 
         $this->createIndex('idx-task_time_intervals-task_id', '{{%task_time_intervals}}', 'task_id');

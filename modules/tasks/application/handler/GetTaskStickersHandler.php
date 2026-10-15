@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use modules\tasks\application\assembler\StickerDtoAssembler;
@@ -25,7 +27,7 @@ class GetTaskStickersHandler
         IStickerRepository $stickerRepository,
         StickerDtoAssembler $stickerDtoAssembler,
         ITaskRepository $taskRepository,
-        ITaskAccess $taskAccess
+        ITaskAccess $taskAccess,
     ) {
         $this->taskStickerRepository    = $taskStickerRepository;
         $this->stickerRepository        = $stickerRepository;

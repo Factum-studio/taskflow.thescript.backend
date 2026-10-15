@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\presentation\controller;
 
 use core\application\dto\CollectionDto;
@@ -37,7 +39,7 @@ use OpenApi\Attributes as OA;
 
 #[OA\Tag(
     name: 'time-intervals',
-    description: 'Учёт времени и диаграммы занятости'
+    description: 'Учёт времени и диаграммы занятости',
 )]
 class TimeIntervalController extends BaseController
 {
@@ -50,7 +52,7 @@ class TimeIntervalController extends BaseController
         private readonly ListTimeIntervalsHandler $listTimeIntervalsHandler,
         private readonly GetDailySummaryHandler $getDailySummaryHandler,
         private readonly GetTaskTimeSummaryHandler $getTaskTimeSummaryHandler,
-        $config = []
+        $config = [],
     ) {
         parent::__construct($id, $module, $config);
     }
@@ -79,18 +81,18 @@ class TimeIntervalController extends BaseController
                         new OA\Property(
                             property: 'items',
                             type: 'array',
-                            items: new OA\Items(ref: '#/components/schemas/TimeInterval')
+                            items: new OA\Items(ref: '#/components/schemas/TimeInterval'),
                         ),
                         new OA\Property(
                             property: '_meta',
-                            ref: '#/components/schemas/Collection/properties/_meta'
-                        )
+                            ref: '#/components/schemas/Collection/properties/_meta',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
-            new OA\Response(response: 401, description: 'Требуется авторизация')
-        ]
+            new OA\Response(response: 401, description: 'Требуется авторизация'),
+        ],
     )]
     /**
      * @throws Exception
@@ -111,7 +113,7 @@ class TimeIntervalController extends BaseController
             userId: $request->userId,
             from: $from,
             to: $to,
-            activeOnly: $request->activeOnly ?? false
+            activeOnly: $request->activeOnly ?? false,
         );
 
         $intervals = $this->listTimeIntervalsHandler->handle($query);
@@ -127,7 +129,7 @@ class TimeIntervalController extends BaseController
         ],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/StartTimerRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/StartTimerRequest'),
         ),
         tags: ['time-intervals'],
         responses: [
@@ -138,15 +140,15 @@ class TimeIntervalController extends BaseController
                     properties: [
                         new OA\Property(
                             property: 'item',
-                            ref: '#/components/schemas/TimeInterval'
-                        )
+                            ref: '#/components/schemas/TimeInterval',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
-            new OA\Response(response: 422, description: 'Ошибка валидации')
-        ]
+            new OA\Response(response: 422, description: 'Ошибка валидации'),
+        ],
     )]
     /**
      * @throws ServerErrorHttpException
@@ -167,7 +169,7 @@ class TimeIntervalController extends BaseController
         $command = new StartTimerCommand(
             taskId: $request->taskId,
             userId: $userId,
-            comment: $request->comment
+            comment: $request->comment,
         );
 
         try {
@@ -191,7 +193,7 @@ class TimeIntervalController extends BaseController
         ],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/StopTimerRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/StopTimerRequest'),
         ),
         tags: ['time-intervals'],
         responses: [
@@ -202,16 +204,16 @@ class TimeIntervalController extends BaseController
                     properties: [
                         new OA\Property(
                             property: 'item',
-                            ref: '#/components/schemas/TimeInterval'
-                        )
+                            ref: '#/components/schemas/TimeInterval',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
             new OA\Response(response: 404, description: 'Активный интервал не найден'),
-            new OA\Response(response: 422, description: 'Ошибка валидации')
-        ]
+            new OA\Response(response: 422, description: 'Ошибка валидации'),
+        ],
     )]
     /**
      * @throws NotFoundHttpException
@@ -233,7 +235,7 @@ class TimeIntervalController extends BaseController
         $command = new StopTimerCommand(
             intervalId: $request->intervalId,
             userId: $userId,
-            comment: $request->comment
+            comment: $request->comment,
         );
 
         try {
@@ -259,7 +261,7 @@ class TimeIntervalController extends BaseController
         ],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/LogIntervalRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/LogIntervalRequest'),
         ),
         tags: ['time-intervals'],
         responses: [
@@ -270,15 +272,15 @@ class TimeIntervalController extends BaseController
                     properties: [
                         new OA\Property(
                             property: 'item',
-                            ref: '#/components/schemas/TimeInterval'
-                        )
+                            ref: '#/components/schemas/TimeInterval',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
-            new OA\Response(response: 422, description: 'Ошибка валидации')
-        ]
+            new OA\Response(response: 422, description: 'Ошибка валидации'),
+        ],
     )]
     /**
      * @throws ServerErrorHttpException
@@ -305,7 +307,7 @@ class TimeIntervalController extends BaseController
             userId: $userId,
             startTime: $start,
             endTime: $end,
-            comment: $request->comment
+            comment: $request->comment,
         );
 
         try {
@@ -341,19 +343,19 @@ class TimeIntervalController extends BaseController
                         new OA\Property(
                             property: 'items',
                             type: 'array',
-                            items: new OA\Items(ref: '#/components/schemas/DailySummary')
+                            items: new OA\Items(ref: '#/components/schemas/DailySummary'),
                         ),
                         new OA\Property(
                             property: '_meta',
-                            ref: '#/components/schemas/Collection/properties/_meta'
-                        )
+                            ref: '#/components/schemas/Collection/properties/_meta',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
-            new OA\Response(response: 422, description: 'Ошибка валидации')
-        ]
+            new OA\Response(response: 422, description: 'Ошибка валидации'),
+        ],
     )]
     /**
      * @throws ServerErrorHttpException
@@ -404,15 +406,15 @@ class TimeIntervalController extends BaseController
                     properties: [
                         new OA\Property(
                             property: 'item',
-                            ref: '#/components/schemas/TaskTimeSummary'
-                        )
+                            ref: '#/components/schemas/TaskTimeSummary',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
-            new OA\Response(response: 404, description: 'Задача не найдена')
-        ]
+            new OA\Response(response: 404, description: 'Задача не найдена'),
+        ],
     )]
     /**
      * @throws NotFoundHttpException
@@ -436,7 +438,7 @@ class TimeIntervalController extends BaseController
             from: $from,
             to: $to,
             granularity: $request->granularity,
-            mode: $request->mode
+            mode: $request->mode,
         );
 
         try {

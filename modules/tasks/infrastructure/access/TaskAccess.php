@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\infrastructure\access;
 
 use modules\tasks\application\port\ITaskAccess;
@@ -14,8 +16,9 @@ class TaskAccess implements ITaskAccess
     public function __construct(
         private ITaskRepository $taskRepository,
         private IBoardColumnRepository $columnRepository,
-        private IProjectAccess $projectAccess
-    ) {}
+        private IProjectAccess $projectAccess,
+    ) {
+    }
 
     public function getProjectIdsByColumnId(int $columnId): array
     {

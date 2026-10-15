@@ -25,7 +25,6 @@ use yii\di\NotInstantiableException;
 )]
 final class RolePermissionController extends BaseController
 {
-
     #[OA\Get(
         path: '/rbac/roles/{roleId}/permissions',
         summary: 'Permissions роли',

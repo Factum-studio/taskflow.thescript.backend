@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use core\domain\valueObject\UserId;
@@ -28,7 +30,7 @@ class CreateStickerHandler
         IStickerRepository $stickerRepository,
         StickerDtoAssembler $stickerDtoAssembler,
         IEventDispatcher $eventDispatcher,
-        IProjectAccess $projectAccess
+        IProjectAccess $projectAccess,
     ) {
         $this->stickerRepository    = $stickerRepository;
         $this->stickerDtoAssembler  = $stickerDtoAssembler;
@@ -60,7 +62,7 @@ class CreateStickerHandler
             $command->data,
             $command->color,
             new DateTimeImmutable(),
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
         );
 
         $savedSticker = $this->stickerRepository->save($sticker);

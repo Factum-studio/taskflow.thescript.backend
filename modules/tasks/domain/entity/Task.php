@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\domain\entity;
 
 use core\domain\valueObject\UserId;
@@ -46,7 +48,7 @@ class Task
         bool $complete = false,
         ?DateTimeImmutable $createdAt = null,
         ?DateTimeImmutable $updatedAt = null,
-        ?DateTimeImmutable $deletedAt = null
+        ?DateTimeImmutable $deletedAt = null,
     ) {
         $this->id           = $id;
         $this->title        = $title;
@@ -67,23 +69,74 @@ class Task
         $this->deletedAt    = $deletedAt;
     }
 
-    public function getId(): TaskId { return $this->id; }
-    public function getTitle(): Title { return $this->title; }
-    public function getDescription(): ?string { return $this->description; }
-    public function getColumnId(): ColumnId { return $this->columnId; }
-    public function getPriorityId(): PriorityId { return $this->priorityId; }
-    public function getDueDate(): ?DateTimeImmutable { return $this->dueDate; }
-    public function getPlannedStart(): ?DateTimeImmutable { return $this->plannedStart; }
-    public function getPlannedEnd(): ?DateTimeImmutable { return $this->plannedEnd; }
-    public function getCreatedBy(): UserId { return $this->createdBy; }
-    public function getAssignedTo(): ?UserId { return $this->assignedTo; }
-    public function getBoardId(): int { return $this->boardId; }
-    public function getParentId(): ?TaskId { return $this->parentId; }
-    public function isOverdue(): bool { return $this->overdue; }
-    public function isComplete(): bool { return $this->complete; }
-    public function getCreatedAt(): DateTimeImmutable { return $this->createdAt; }
-    public function getUpdatedAt(): DateTimeImmutable { return $this->updatedAt; }
-    public function getDeletedAt(): ?DateTimeImmutable { return $this->deletedAt; }
+    public function getId(): TaskId
+    {
+        return $this->id;
+    }
+    public function getTitle(): Title
+    {
+        return $this->title;
+    }
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+    public function getColumnId(): ColumnId
+    {
+        return $this->columnId;
+    }
+    public function getPriorityId(): PriorityId
+    {
+        return $this->priorityId;
+    }
+    public function getDueDate(): ?DateTimeImmutable
+    {
+        return $this->dueDate;
+    }
+    public function getPlannedStart(): ?DateTimeImmutable
+    {
+        return $this->plannedStart;
+    }
+    public function getPlannedEnd(): ?DateTimeImmutable
+    {
+        return $this->plannedEnd;
+    }
+    public function getCreatedBy(): UserId
+    {
+        return $this->createdBy;
+    }
+    public function getAssignedTo(): ?UserId
+    {
+        return $this->assignedTo;
+    }
+    public function getBoardId(): int
+    {
+        return $this->boardId;
+    }
+    public function getParentId(): ?TaskId
+    {
+        return $this->parentId;
+    }
+    public function isOverdue(): bool
+    {
+        return $this->overdue;
+    }
+    public function isComplete(): bool
+    {
+        return $this->complete;
+    }
+    public function getCreatedAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+    public function getUpdatedAt(): DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+    public function getDeletedAt(): ?DateTimeImmutable
+    {
+        return $this->deletedAt;
+    }
 
     public function changeTitle(Title $title): void
     {

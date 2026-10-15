@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use InvalidArgumentException;
@@ -24,7 +26,7 @@ class UpdateCommentHandler
         ICommentRepository $commentRepository,
         CommentDtoAssembler $commentDtoAssembler,
         IEventDispatcher $eventDispatcher,
-        ITaskAccess $taskAccess
+        ITaskAccess $taskAccess,
     ) {
         $this->commentRepository    = $commentRepository;
         $this->commentDtoAssembler  = $commentDtoAssembler;

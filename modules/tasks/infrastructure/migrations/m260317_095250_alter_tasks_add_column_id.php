@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\infrastructure\migrations;
 
 use yii\db\Migration;
@@ -31,7 +33,7 @@ class m260317_095250_alter_tasks_add_column_id extends Migration
             '{{%board_columns}}',
             'id',
             'RESTRICT',
-            'CASCADE'
+            'CASCADE',
         );
 
         // Удаляем таблицу task_statuses
@@ -52,7 +54,7 @@ class m260317_095250_alter_tasks_add_column_id extends Migration
             '{{%task_statuses}}',
             'id',
             'RESTRICT',
-            'CASCADE'
+            'CASCADE',
         );
 
         // Удаляем column_id и его ключи

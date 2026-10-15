@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use core\domain\valueObject\UserId;
@@ -23,7 +25,7 @@ class GetTaskTimeSummaryHandler
         ITimeIntervalRepository $timeIntervalRepository,
         ITaskRepository $taskRepository,
         BusyChartService $busyChartService,
-        TaskTimeSummaryDtoAssembler $dtoAssembler
+        TaskTimeSummaryDtoAssembler $dtoAssembler,
     ) {
         $this->timeIntervalRepository   = $timeIntervalRepository;
         $this->taskRepository           = $taskRepository;
@@ -47,7 +49,7 @@ class GetTaskTimeSummaryHandler
             $taskId,
             $userId,
             $query->from,
-            $query->to
+            $query->to,
         );
 
         $blocks = $this->busyChartService->build($intervals, $query->granularity, $query->mode);

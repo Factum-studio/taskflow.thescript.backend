@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\infrastructure\repository;
 
 use core\domain\valueObject\UserId;
@@ -155,7 +157,7 @@ class DbTaskRepository implements ITaskRepository
             (bool)$ar->complete,
             new DateTimeImmutable($ar->created_at),
             new DateTimeImmutable($ar->updated_at),
-            $ar->deleted_at ? new DateTimeImmutable($ar->deleted_at) : null
+            $ar->deleted_at ? new DateTimeImmutable($ar->deleted_at) : null,
         );
     }
 

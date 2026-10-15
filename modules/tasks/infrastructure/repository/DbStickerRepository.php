@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\infrastructure\repository;
 
 use core\domain\valueObject\UserId;
@@ -134,7 +136,7 @@ class DbStickerRepository implements IStickerRepository
             $ar->data,
             $ar->color,
             new DateTimeImmutable($ar->created_at),
-            new DateTimeImmutable($ar->updated_at)
+            new DateTimeImmutable($ar->updated_at),
         );
     }
 }

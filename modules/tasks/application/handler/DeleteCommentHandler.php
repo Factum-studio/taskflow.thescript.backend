@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use InvalidArgumentException;
@@ -16,7 +18,7 @@ class DeleteCommentHandler
 
     public function __construct(
         ICommentRepository $commentRepository,
-        ITaskAccess $taskAccess
+        ITaskAccess $taskAccess,
     ) {
         $this->commentRepository    = $commentRepository;
         $this->taskAccess           = $taskAccess;

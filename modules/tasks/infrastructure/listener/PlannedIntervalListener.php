@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\infrastructure\listener;
 
 use DateTimeImmutable;
@@ -19,7 +21,7 @@ class PlannedIntervalListener
 
     public function __construct(
         ITimeIntervalRepository $intervalRepository,
-        ITaskRepository $taskRepository
+        ITaskRepository $taskRepository,
     ) {
         $this->intervalRepository = $intervalRepository;
         $this->taskRepository = $taskRepository;
@@ -29,7 +31,9 @@ class PlannedIntervalListener
     {
         $taskId = new TaskId($event->getAggregateId());
         $task = $this->taskRepository->findById($taskId);
-        if (!$task) return;
+        if (!$task) {
+            return;
+        }
 
         $this->syncPlannedInterval($task);
     }
@@ -41,7 +45,9 @@ class PlannedIntervalListener
         if (array_intersect_key(['plannedStart' => 1, 'plannedEnd' => 1, 'assignedTo' => 1], $changed)) {
             $taskId = new TaskId($event->getAggregateId());
             $task = $this->taskRepository->findById($taskId);
-            if (!$task) return;
+            if (!$task) {
+                return;
+            }
 
             $this->syncPlannedInterval($task);
         }
@@ -79,7 +85,7 @@ class PlannedIntervalListener
                 $existing->getComment(),
                 TimeInterval::TYPE_PLAN,
                 $existing->getCreatedAt(),
-                new DateTimeImmutable()
+                new DateTimeImmutable(),
             );
             $this->intervalRepository->save($existing);
             Yii::info("Planned interval updated for task {$taskId->value()}", 'tasks');
@@ -93,7 +99,7 @@ class PlannedIntervalListener
                 $plannedEnd,
                 null,
                 null,
-                TimeInterval::TYPE_PLAN
+                TimeInterval::TYPE_PLAN,
             );
             $this->intervalRepository->save($interval);
             Yii::info("Planned interval created for task {$taskId->value()}", 'tasks');

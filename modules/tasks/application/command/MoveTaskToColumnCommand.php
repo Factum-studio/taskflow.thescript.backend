@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\command;
 
 class MoveTaskToColumnCommand
@@ -11,7 +13,7 @@ class MoveTaskToColumnCommand
     public function __construct(
         int $id,
         int $columnId,
-        int $movedBy
+        int $movedBy,
     ) {
         $this->id       = $id;
         $this->columnId = $columnId;

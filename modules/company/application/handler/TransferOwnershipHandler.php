@@ -24,7 +24,8 @@ class TransferOwnershipHandler
         private ICompanyMemberRepository $memberRepository,
         private ICompanyAccess $companyAccess,
         private IEventDispatcher $eventDispatcher,
-    ) {}
+    ) {
+    }
 
     /**
      * @throws ValidationException
@@ -43,7 +44,7 @@ class TransferOwnershipHandler
         // Проверяем, что новый владелец — участник компании
         $newOwnerMember = $this->memberRepository->find(
             new CompanyId($command->companyId),
-            new UserId($command->newOwnerId)
+            new UserId($command->newOwnerId),
         );
 
         if ($newOwnerMember === null) {
@@ -59,7 +60,7 @@ class TransferOwnershipHandler
         // Старый владелец становится администратором
         $oldOwnerMember = $this->memberRepository->find(
             new CompanyId($command->companyId),
-            new UserId($command->userId)
+            new UserId($command->userId),
         );
 
         if ($oldOwnerMember !== null) {
@@ -72,7 +73,7 @@ class TransferOwnershipHandler
         $this->memberRepository->save($newOwnerMember);
 
         $this->eventDispatcher->dispatch(
-            new CompanyTransferOwnershipEvent($command->companyId, $previousOwnerId, $command->newOwnerId)
+            new CompanyTransferOwnershipEvent($command->companyId, $previousOwnerId, $command->newOwnerId),
         );
     }
 }

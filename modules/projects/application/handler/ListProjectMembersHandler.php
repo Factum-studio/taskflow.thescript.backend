@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\application\handler;
 
 use modules\projects\application\assembler\ProjectUserDtoAssembler;
@@ -19,7 +21,7 @@ class ListProjectMembersHandler
     public function __construct(
         IProjectUserRepository $projectUserRepository,
         ProjectUserDtoAssembler $projectUserDtoAssembler,
-        IProjectAccess $projectAccess
+        IProjectAccess $projectAccess,
     ) {
         $this->projectUserRepository    = $projectUserRepository;
         $this->projectUserDtoAssembler  = $projectUserDtoAssembler;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\infrastructure\listener;
 
 use core\domain\event\UserFirstLoginEvent;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     // Проекты
     'GET project' => 'projects/project/index',

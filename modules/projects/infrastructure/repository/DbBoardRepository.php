@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\infrastructure\repository;
 
 use core\domain\valueObject\UserId;
@@ -104,7 +106,7 @@ class DbBoardRepository implements IBoardRepository
             $ar->description,
             new Settings($ar->settings ?? []),
             new DateTimeImmutable($ar->created_at),
-            new DateTimeImmutable($ar->updated_at)
+            new DateTimeImmutable($ar->updated_at),
         );
     }
 }

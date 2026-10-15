@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use modules\tasks\application\command\DetachStickerFromTaskCommand;
@@ -19,7 +21,7 @@ class DetachStickerFromTaskHandler
     public function __construct(
         ITaskStickerRepository $taskStickerRepository,
         ITaskRepository $taskRepository,
-        ITaskAccess $taskAccess
+        ITaskAccess $taskAccess,
     ) {
         $this->taskStickerRepository    = $taskStickerRepository;
         $this->taskRepository           = $taskRepository;

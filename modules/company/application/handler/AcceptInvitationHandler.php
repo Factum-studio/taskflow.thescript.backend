@@ -23,7 +23,8 @@ class AcceptInvitationHandler
         private ICompanyInvitationRepository $invitationRepository,
         private ICompanyMemberRepository $memberRepository,
         private IEventDispatcher $eventDispatcher,
-    ) {}
+    ) {
+    }
 
     /**
      * @throws ValidationException
@@ -53,16 +54,16 @@ class AcceptInvitationHandler
             new CompanyInvitationAcceptedEvent(
                 $invitation->getCompanyId()->value(),
                 $invitation->getEmail(),
-                $command->userId
-            )
+                $command->userId,
+            ),
         );
 
         $this->eventDispatcher->dispatch(
             new CompanyMemberAddedEvent(
                 $invitation->getCompanyId()->value(),
                 $command->userId,
-                CompanyMemberRole::MEMBER
-            )
+                CompanyMemberRole::MEMBER,
+            ),
         );
     }
 }

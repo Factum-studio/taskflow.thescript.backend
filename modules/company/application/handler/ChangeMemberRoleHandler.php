@@ -20,7 +20,8 @@ class ChangeMemberRoleHandler
         private ICompanyMemberRepository $memberRepository,
         private ICompanyAccess $companyAccess,
         private IEventDispatcher $eventDispatcher,
-    ) {}
+    ) {
+    }
 
     /**
      * @throws ValidationException
@@ -33,7 +34,7 @@ class ChangeMemberRoleHandler
 
         $member = $this->memberRepository->find(
             new CompanyId($command->companyId),
-            new UserId($command->targetUserId)
+            new UserId($command->targetUserId),
         );
 
         if ($member === null) {

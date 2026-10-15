@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\query;
 
 use DateTimeImmutable;
@@ -17,7 +19,7 @@ class ListTimeIntervalsQuery
         ?int $userId = null,
         ?DateTimeImmutable $from = null,
         ?DateTimeImmutable $to = null,
-        ?bool $activeOnly = false
+        ?bool $activeOnly = false,
     ) {
         $this->taskId       = $taskId;
         $this->userId       = $userId;

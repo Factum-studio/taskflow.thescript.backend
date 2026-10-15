@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\application\command;
 
 class InviteUserCommand
@@ -13,7 +15,7 @@ class InviteUserCommand
         int $projectId,
         int $invitedBy,
         ?string $email = null,
-        ?int $userId = null
+        ?int $userId = null,
     ) {
         $this->projectId    = $projectId;
         $this->email        = $email;

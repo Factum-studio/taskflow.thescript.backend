@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\command;
 
 use DateTimeImmutable;
@@ -15,7 +17,7 @@ class StopTimerCommand
         int $intervalId,
         int $userId,
         ?DateTimeImmutable $stopTime = null,
-        ?string $comment = null
+        ?string $comment = null,
     ) {
         $this->intervalId = $intervalId;
         $this->userId = $userId;

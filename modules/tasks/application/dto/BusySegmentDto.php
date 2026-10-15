@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\dto;
 
 class BusySegmentDto
@@ -14,7 +16,7 @@ class BusySegmentDto
         string $start,
         string $end,
         ?array $taskIds = null,
-        ?array $anchorPoints = null
+        ?array $anchorPoints = null,
     ) {
         $this->start        = $start;
         $this->end          = $end;

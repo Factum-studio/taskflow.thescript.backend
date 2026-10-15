@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use core\application\port\IEventDispatcher as GlobalEventDispatcher;
 use core\application\port\ITaskStatisticsService;
 use modules\tasks\application\service\TaskStatisticsService;
@@ -52,25 +54,25 @@ Yii::$container->set(IBoardColumnRepository::class, function () {
 Yii::$container->set(ITaskPriorityRepository::class, function () {
     return new DbTaskPriorityRepository(Yii::$app->db);
 });
-Yii::$container->set(ICommentRepository::class, function() {
+Yii::$container->set(ICommentRepository::class, function () {
     return new DbCommentRepository(Yii::$app->db);
 });
-Yii::$container->set(IStickerRepository::class, function() {
+Yii::$container->set(IStickerRepository::class, function () {
     return new DbStickerRepository(Yii::$app->db);
 });
-Yii::$container->set(ITaskStickerRepository::class, function() {
+Yii::$container->set(ITaskStickerRepository::class, function () {
     return new DbTaskStickerRepository(Yii::$app->db);
 });
-Yii::$container->set(ITimeIntervalRepository::class, function() {
+Yii::$container->set(ITimeIntervalRepository::class, function () {
     return new DbTimeIntervalRepository(Yii::$app->db);
 });
-Yii::$container->set(IDailySummaryRepository::class, function() {
+Yii::$container->set(IDailySummaryRepository::class, function () {
     return new DbDailySummaryRepository(Yii::$app->db);
 });
 
 Yii::$container->set(
     ITaskAccess::class,
-    TaskAccess::class
+    TaskAccess::class,
 );
 
 Yii::$container->set(TaskLoggerListener::class);
@@ -160,7 +162,7 @@ Yii::$container->set(TaskEventDispatcher::class, function (Container $container)
     return new DispatchingEventDecorator(
         $container->get(ModuleEventDispatcher::class),
         $container->get(GlobalEventDispatcher::class),
-        $forwardEvents
+        $forwardEvents,
     );
 });
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\domain\entity;
 
 use core\domain\valueObject\UserId;
@@ -35,7 +37,7 @@ class TimeInterval
         ?string $comment = null,
         string $type = self::TYPE_PLAN,
         ?DateTimeImmutable $createdAt = null,
-        ?DateTimeImmutable $updatedAt = null
+        ?DateTimeImmutable $updatedAt = null,
     ) {
         if ($endTime && $startTime > $endTime) {
             throw new InvalidArgumentException('Start time must be before end time');
@@ -55,16 +57,46 @@ class TimeInterval
         $this->updatedAt    = $updatedAt ?? new DateTimeImmutable();
     }
 
-    public function getId(): TimeIntervalId { return $this->id; }
-    public function getTaskId(): TaskId { return $this->taskId; }
-    public function getUserId(): UserId { return $this->userId; }
-    public function getStartTime(): DateTimeImmutable { return $this->startTime; }
-    public function getEndTime(): ?DateTimeImmutable { return $this->endTime; }
-    public function getDuration(): ?Duration { return $this->duration; }
-    public function getComment(): ?string { return $this->comment; }
-    public function getType(): string { return $this->type; }
-    public function getCreatedAt(): DateTimeImmutable { return $this->createdAt; }
-    public function getUpdatedAt(): DateTimeImmutable { return $this->updatedAt; }
+    public function getId(): TimeIntervalId
+    {
+        return $this->id;
+    }
+    public function getTaskId(): TaskId
+    {
+        return $this->taskId;
+    }
+    public function getUserId(): UserId
+    {
+        return $this->userId;
+    }
+    public function getStartTime(): DateTimeImmutable
+    {
+        return $this->startTime;
+    }
+    public function getEndTime(): ?DateTimeImmutable
+    {
+        return $this->endTime;
+    }
+    public function getDuration(): ?Duration
+    {
+        return $this->duration;
+    }
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+    public function getType(): string
+    {
+        return $this->type;
+    }
+    public function getCreatedAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+    public function getUpdatedAt(): DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
 
     public function stop(DateTimeImmutable $endTime, ?string $comment = null): void
     {

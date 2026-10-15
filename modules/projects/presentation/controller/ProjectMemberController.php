@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\projects\presentation\controller;
 
 use core\application\dto\CollectionDto;
@@ -27,18 +29,18 @@ use yii\web\UnauthorizedHttpException;
 
 #[OA\Tag(
     name: 'project-members',
-    description: 'Управление участниками проекта'
+    description: 'Управление участниками проекта',
 )]
 class ProjectMemberController extends BaseController
 {
     public function __construct(
-                                                    $id,
-                                                    $module,
+        $id,
+        $module,
         private readonly AddProjectMemberHandler    $addMemberHandler,
         private readonly RemoveProjectMemberHandler $removeMemberHandler,
         private readonly ChangeMemberRoleHandler    $changeRoleHandler,
         private readonly ListProjectMembersHandler  $listMembersHandler,
-                                                    $config = []
+        $config = [],
     ) {
         parent::__construct($id, $module, $config);
     }
@@ -58,8 +60,8 @@ class ProjectMemberController extends BaseController
                 description: 'ID проекта',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -70,19 +72,19 @@ class ProjectMemberController extends BaseController
                         new OA\Property(
                             property: 'items',
                             type: 'array',
-                            items: new OA\Items(ref: '#/components/schemas/ProjectUser')
+                            items: new OA\Items(ref: '#/components/schemas/ProjectUser'),
                         ),
                         new OA\Property(
                             property: '_meta',
-                            ref: '#/components/schemas/Collection/properties/_meta'
-                        )
+                            ref: '#/components/schemas/Collection/properties/_meta',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
-            new OA\Response(response: 404, description: 'Проект не найден')
-        ]
+            new OA\Response(response: 404, description: 'Проект не найден'),
+        ],
     )]
     /**
      * @throws NotFoundHttpException
@@ -113,7 +115,7 @@ class ProjectMemberController extends BaseController
         ],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/AddProjectMemberRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/AddProjectMemberRequest'),
         ),
         tags: ['project-members'],
         parameters: [
@@ -122,8 +124,8 @@ class ProjectMemberController extends BaseController
                 description: 'ID проекта',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -133,17 +135,17 @@ class ProjectMemberController extends BaseController
                     properties: [
                         new OA\Property(
                             property: 'item',
-                            ref: '#/components/schemas/ProjectUser'
-                        )
+                            ref: '#/components/schemas/ProjectUser',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
             new OA\Response(response: 403, description: 'Доступ запрещён'),
             new OA\Response(response: 404, description: 'Проект не найден'),
-            new OA\Response(response: 422, description: 'Ошибка валидации')
-        ]
+            new OA\Response(response: 422, description: 'Ошибка валидации'),
+        ],
     )]
     /**
      * @throws NotFoundHttpException
@@ -196,7 +198,7 @@ class ProjectMemberController extends BaseController
         ],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/ChangeProjectMemberRoleRequest')
+            content: new OA\JsonContent(ref: '#/components/schemas/ChangeProjectMemberRoleRequest'),
         ),
         tags: ['project-members'],
         parameters: [
@@ -205,15 +207,15 @@ class ProjectMemberController extends BaseController
                 description: 'ID проекта',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
+                schema: new OA\Schema(type: 'integer'),
             ),
             new OA\Parameter(
                 name: 'userId',
                 description: 'ID пользователя',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -223,17 +225,17 @@ class ProjectMemberController extends BaseController
                     properties: [
                         new OA\Property(
                             property: 'item',
-                            ref: '#/components/schemas/ProjectUser'
-                        )
+                            ref: '#/components/schemas/ProjectUser',
+                        ),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
             new OA\Response(response: 403, description: 'Доступ запрещён'),
             new OA\Response(response: 404, description: 'Проект или участник не найдены'),
-            new OA\Response(response: 422, description: 'Ошибка валидации')
-        ]
+            new OA\Response(response: 422, description: 'Ошибка валидации'),
+        ],
     )]
     /**
      * @throws NotFoundHttpException
@@ -256,7 +258,7 @@ class ProjectMemberController extends BaseController
             projectId: $projectId,
             userId: $userId,
             newRole: $request->role,
-            changedBy: $currentUserId
+            changedBy: $currentUserId,
         );
 
         try {
@@ -291,15 +293,15 @@ class ProjectMemberController extends BaseController
                 description: 'ID проекта',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
+                schema: new OA\Schema(type: 'integer'),
             ),
             new OA\Parameter(
                 name: 'userId',
                 description: 'ID пользователя',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'integer')
-            )
+                schema: new OA\Schema(type: 'integer'),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -308,15 +310,15 @@ class ProjectMemberController extends BaseController
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: 'data', type: 'null'),
-                        new OA\Property(property: 'message', type: 'string', example: 'Member removed')
+                        new OA\Property(property: 'message', type: 'string', example: 'Member removed'),
                     ],
-                    type: 'object'
-                )
+                    type: 'object',
+                ),
             ),
             new OA\Response(response: 401, description: 'Требуется авторизация'),
             new OA\Response(response: 403, description: 'Доступ запрещён'),
-            new OA\Response(response: 404, description: 'Проект или участник не найдены')
-        ]
+            new OA\Response(response: 404, description: 'Проект или участник не найдены'),
+        ],
     )]
     /**
      * @throws NotFoundHttpException

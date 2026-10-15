@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace modules\tasks\application\handler;
 
 use core\domain\valueObject\UserId;
@@ -28,7 +30,7 @@ class StartTimerHandler
         ITimeIntervalRepository $intervalRepository,
         ITaskRepository $taskRepository,
         TimeIntervalDtoAssembler $dtoAssembler,
-        IEventDispatcher $eventDispatcher
+        IEventDispatcher $eventDispatcher,
     ) {
         $this->intervalRepository   = $intervalRepository;
         $this->taskRepository       = $taskRepository;
@@ -62,7 +64,7 @@ class StartTimerHandler
             $startTime,
             null,
             null,
-            $command->comment
+            $command->comment,
         );
 
         $saved = $this->intervalRepository->save($interval);

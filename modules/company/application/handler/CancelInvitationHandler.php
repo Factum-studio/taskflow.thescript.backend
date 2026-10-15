@@ -16,7 +16,8 @@ class CancelInvitationHandler
         private ICompanyInvitationRepository $invitationRepository,
         private ICompanyAccess $companyAccess,
         private IEventDispatcher $eventDispatcher,
-    ) {}
+    ) {
+    }
 
     public function handle(CancelInvitationCommand $command): void
     {
