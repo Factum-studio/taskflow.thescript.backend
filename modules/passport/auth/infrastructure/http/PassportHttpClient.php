@@ -296,13 +296,12 @@ final class PassportHttpClient implements PassportAuthPort
             ->setMethod('POST')
             ->setUrl(rtrim($this->baseUrl, '/') . '/token/introspect')
             ->addHeaders(['Authorization' => 'Bearer ' . $accessToken])
-            ->setFormat(Client::FORMAT_JSON)
             ->setData(['token' => $accessToken])
             ->send();
 
         return [
             'status' => $response->getStatusCode(),
-            'body' => $response->getContent(),
+            'body' => $response->getData(),
         ];
     }
 

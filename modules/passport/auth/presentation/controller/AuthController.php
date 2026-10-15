@@ -227,7 +227,7 @@ final class AuthController extends BaseController
         $result = Yii::$container->get(PassportAuthPort::class)->introspect($accessToken);
 
         Yii::$app->response->statusCode = $result['status'];
-        Yii::$app->response->format = Response::FORMAT_RAW;
+        Yii::$app->response->format = Response::FORMAT_JSON;
         Yii::$app->response->data = $result['body'];
 
         return Yii::$app->response;
