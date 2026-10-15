@@ -34,4 +34,8 @@ return [
         'class' => 'modules\\company\\Module',
         'controllerNamespace' => 'modules\\company\\presentation\\controller',
     ],
+    'passport-proxy' => [
+        'class' => 'modules\\passport\\proxy\\Module',
+        'controllerNamespace' => 'modules\\passport\\proxy\\presentation\\controller',
+    ],
 ];
