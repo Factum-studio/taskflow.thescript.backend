@@ -9,7 +9,8 @@ declare(strict_types=1);
 return [
     'core\\infrastructure\\migrations',
     'modules\\rbac\\infrastructure\\migrations',
-    'modules\\tasks\\infrastructure\\migrations',       // TODO: special control this module
-    'modules\\projects\\infrastructure\\migrations',    // TODO: special control this module
-    'modules\\feedback\\infrastructure\\migrations',    // TODO: special control this module
+    'modules\\tasks\\infrastructure\\migrations',
+    'modules\\projects\\infrastructure\\migrations',
+    'modules\\feedback\\infrastructure\\migrations',
+    'modules\\company\\infrastructure\\migrations',
 ];

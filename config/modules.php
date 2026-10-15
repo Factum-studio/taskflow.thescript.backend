@@ -30,4 +30,8 @@ return [
         'class' => 'modules\\feedback\\Module',
         'controllerNamespace' => 'modules\\feedback\\presentation\\controller',
     ],
+    'company' => [
+        'class' => 'modules\\company\\Module',
+        'controllerNamespace' => 'modules\\company\\presentation\\controller',
+    ],
 ];
