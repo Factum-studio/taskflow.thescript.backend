@@ -8,7 +8,7 @@ use yii\base\Model;
 
 class CreateBoardRequest extends Model
 {
-    public string $name;
+    public ?string $name = null;
     public ?string $description = null;
     public ?array $settings = null;
 
