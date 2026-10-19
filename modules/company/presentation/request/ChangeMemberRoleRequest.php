@@ -8,7 +8,7 @@ use yii\base\Model;
 
 class ChangeMemberRoleRequest extends Model
 {
-    public string $role;
+    public ?string $role = null;
 
     public function rules(): array
     {
