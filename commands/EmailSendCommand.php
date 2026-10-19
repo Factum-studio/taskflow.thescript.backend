@@ -6,6 +6,7 @@ namespace app\commands;
 
 use core\application\notification\Notification;
 use core\application\notification\NotificationHub;
+use Throwable;
 use yii\console\Controller;
 use yii\console\ExitCode;
 use yii\helpers\Console;
@@ -33,7 +34,7 @@ class EmailSendCommand extends Controller
             $this->notificationHub->send($notification);
             $this->stdout("✓ Уведомление отправлено на {$email}\n", Console::FG_GREEN);
             return ExitCode::OK;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->stderr("Ошибка при отправке\n", Console::FG_RED);
             return ExitCode::UNSPECIFIED_ERROR;
         }

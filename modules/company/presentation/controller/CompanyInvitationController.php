@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace modules\company\presentation\controller;
 
 use core\application\dto\ErrorDto;
-use core\application\dto\ItemDto;
 use core\application\dto\SuccessDto;
 use core\presentation\controller\BaseController;
 use modules\company\application\command\AcceptInvitationCommand;

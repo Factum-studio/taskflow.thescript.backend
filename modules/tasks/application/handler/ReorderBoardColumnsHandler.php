@@ -8,7 +8,6 @@ use modules\tasks\application\command\ReorderBoardColumnsCommand;
 use modules\tasks\application\port\ITaskAccess;
 use modules\tasks\domain\repository\IBoardColumnRepository;
 use modules\tasks\domain\valueObject\BoardId;
-use modules\tasks\domain\valueObject\ColumnId;
 use RuntimeException;
 
 class ReorderBoardColumnsHandler

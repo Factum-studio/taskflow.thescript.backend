@@ -8,7 +8,6 @@ use modules\company\application\assembler\CompanyDtoAssembler;
 use modules\company\application\dto\CompanyDto;
 use modules\company\application\query\ListCompaniesQuery;
 use modules\company\domain\repository\ICompanyRepository;
-use RuntimeException;
 
 class ListCompaniesHandler
 {

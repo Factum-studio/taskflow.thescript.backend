@@ -6,7 +6,6 @@ namespace modules\company\presentation\controller;
 
 use core\application\dto\CollectionDto;
 use core\application\dto\ErrorDto;
-use core\application\dto\ItemDto;
 use core\application\dto\SuccessDto;
 use core\domain\exception\ValidationException;
 use core\presentation\controller\BaseController;
@@ -21,14 +20,12 @@ use modules\company\application\port\ICompanyAccess;
 use modules\company\domain\repository\ICompanyMemberRepository;
 use modules\company\domain\valueObject\CompanyId;
 use modules\company\presentation\request\ChangeMemberRoleRequest;
-use core\domain\valueObject\UserId;
 use RuntimeException;
 use Throwable;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 use OpenApi\Attributes as OA;
-use yii\web\UnauthorizedHttpException;
 
 #[OA\Tag(
     name: 'companies',
