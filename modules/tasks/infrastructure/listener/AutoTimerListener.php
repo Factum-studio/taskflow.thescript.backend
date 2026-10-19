@@ -24,9 +24,6 @@ class AutoTimerListener
     private ITaskRepository $taskRepository;
     private IBoardColumnRepository $columnRepository;
 
-    // Список системных статусов, которые считаются активными (по имени)
-    private array $activeStatusNames = ['in_progress', 'review', 'testing', 'blocked'];
-
     public function __construct(
         ITimeIntervalRepository $intervalRepository,
         ITaskRepository $taskRepository,
