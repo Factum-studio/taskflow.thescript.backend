@@ -38,7 +38,7 @@ class DbTaskRepository implements ITaskRepository
         if (!$ar->save()) {
             throw new RuntimeException('Failed to save task: ' . implode(', ', $ar->getFirstErrors()));
         }
-        if (!$task->getId() || $task->getId()->value() !== (int)$ar->id) {
+        if (!$task->getId()->value() <= 0 || $task->getId()->value() !== (int)$ar->id) {
             $task->setId(new TaskId((int)$ar->id));
         }
         return $task;

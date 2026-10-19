@@ -36,7 +36,7 @@ class DbCommentRepository implements ICommentRepository
         if (!$ar->save()) {
             throw new RuntimeException('Failed to save comment: ' . implode(', ', $ar->getFirstErrors()));
         }
-        if (!$comment->getId() || $comment->getId()->value() !== (int)$ar->id) {
+        if (!$comment->getId()->value() <= 0 || $comment->getId()->value() !== (int)$ar->id) {
             $comment->setId(new CommentId((int)$ar->id));
         }
         return $comment;
