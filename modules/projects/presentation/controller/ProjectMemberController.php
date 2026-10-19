@@ -92,7 +92,7 @@ class ProjectMemberController extends BaseController
      */
     public function actionIndex(int $projectId): CollectionDto|array
     {
-        $userId = $this->getUserId();
+        $userId = (int)$this->getUserId();
         if (!$userId) {
             throw new UnauthorizedHttpException('User not authenticated');
         }
@@ -159,7 +159,7 @@ class ProjectMemberController extends BaseController
             return $this->error('Validation failed', 422, $request->getErrors());
         }
 
-        $userId = $this->getUserId();
+        $userId = (int)$this->getUserId();
         if (!$userId) {
             return $this->error('User not authenticated', 401);
         }
@@ -249,7 +249,7 @@ class ProjectMemberController extends BaseController
             return $this->error('Validation failed', 422, $request->getErrors());
         }
 
-        $currentUserId = $this->getUserId();
+        $currentUserId = (int)$this->getUserId();
         if (!$currentUserId) {
             return $this->error('User not authenticated', 401);
         }
@@ -326,7 +326,7 @@ class ProjectMemberController extends BaseController
      */
     public function actionDelete(int $projectId, int $userId): SuccessDto|ErrorDto|array
     {
-        $currentUserId = $this->getUserId();
+        $currentUserId = (int)$this->getUserId();
         if (!$currentUserId) {
             return $this->error('User not authenticated', 401);
         }
