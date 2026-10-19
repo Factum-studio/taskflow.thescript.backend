@@ -39,7 +39,7 @@ class DbProjectRepository implements IProjectRepository
             throw new RuntimeException('Failed to save project: ' . implode(', ', $ar->getFirstErrors()));
         }
 
-        if (!$project->getId() || $project->getId()->value() !== (int)$ar->id) {
+        if (!$project->getId()->value() <= 0 || $project->getId()->value() !== (int)$ar->id) {
             $project->setId(new ProjectId((int)$ar->id));
         }
 

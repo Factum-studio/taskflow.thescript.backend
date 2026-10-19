@@ -39,7 +39,7 @@ class DbBoardRepository implements IBoardRepository
             throw new RuntimeException('Failed to save board: ' . implode(', ', $ar->getFirstErrors()));
         }
 
-        if (!$board->getId() || $board->getId()->value() !== (int)$ar->id) {
+        if ($board->getId()->value() !== (int)$ar->id) {
             $board->setId(new BoardId((int)$ar->id));
         }
 
