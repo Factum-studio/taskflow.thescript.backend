@@ -105,6 +105,7 @@ class StickerController extends BaseController
     {
         $request = Yii::$app->request;
         $query = new ListStickersQuery(
+            (int)$this->getUserId(),
             type: $request->get('type'),
             projectId: $request->get('projectId') ? (int)$request->get('projectId') : null,
             createdBy: $request->get('createdBy') ? (int)$request->get('createdBy') : null,
@@ -153,7 +154,7 @@ class StickerController extends BaseController
      */
     public function actionView(int $id): ItemDto|array
     {
-        $query = new GetStickerQuery($id);
+        $query = new GetStickerQuery($id, (int)$this->getUserId());
         try {
             $sticker = $this->getStickerHandler->handle($query);
         } catch (RuntimeException $e) {
@@ -203,7 +204,7 @@ class StickerController extends BaseController
             return $this->error('Validation failed', 422, $request->getErrors());
         }
 
-        $userId = $this->getUserId();
+        $userId = (int)$this->getUserId();
         if (!$userId) {
             return $this->error('User not authenticated', 401);
         }
@@ -282,7 +283,7 @@ class StickerController extends BaseController
             return $this->error('Validation failed', 422, $request->getErrors());
         }
 
-        $userId = $this->getUserId();
+        $userId = (int)$this->getUserId();
         if (!$userId) {
             return $this->error('User not authenticated', 401);
         }
@@ -349,7 +350,7 @@ class StickerController extends BaseController
      */
     public function actionDelete(int $id): ErrorDto|SuccessDto|array
     {
-        $userId = $this->getUserId();
+        $userId = (int)$this->getUserId();
         if (!$userId) {
             return $this->error('User not authenticated', 401);
         }

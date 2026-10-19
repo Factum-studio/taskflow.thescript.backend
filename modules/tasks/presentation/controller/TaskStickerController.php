@@ -85,7 +85,7 @@ class TaskStickerController extends BaseController
      */
     public function actionIndex(int $taskId): CollectionDto|array
     {
-        $query = new GetTaskStickersQuery($taskId);
+        $query = new GetTaskStickersQuery($taskId, (int)$this->getUserId());
         try {
             $stickers = $this->getTaskStickersHandler->handle($query);
         } catch (RuntimeException $e) {
@@ -144,7 +144,7 @@ class TaskStickerController extends BaseController
             return $this->error('Validation failed', 422, $request->getErrors());
         }
 
-        $userId = $this->getUserId();
+        $userId = (int)$this->getUserId();
         if (!$userId) {
             return $this->error('User not authenticated', 401);
         }
@@ -211,7 +211,7 @@ class TaskStickerController extends BaseController
      */
     public function actionDetach(int $taskId, int $stickerId): ErrorDto|SuccessDto|array
     {
-        $userId = $this->getUserId();
+        $userId = (int)$this->getUserId();
         if (!$userId) {
             return $this->error('User not authenticated', 401);
         }
