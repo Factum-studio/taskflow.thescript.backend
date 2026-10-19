@@ -8,7 +8,7 @@ use yii\base\Model;
 
 class AddCommentRequest extends Model
 {
-    public string $content;
+    public ?string $content = null;
 
     public function rules(): array
     {

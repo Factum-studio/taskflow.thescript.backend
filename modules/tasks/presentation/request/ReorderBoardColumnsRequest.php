@@ -9,7 +9,7 @@ use yii\base\Model;
 class ReorderBoardColumnsRequest extends Model
 {
     /** @var int[] */
-    public array $orderedIds;
+    public ?array $orderedIds = null;
 
     public function rules(): array
     {

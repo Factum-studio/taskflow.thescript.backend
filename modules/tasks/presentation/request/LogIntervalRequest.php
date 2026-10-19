@@ -8,9 +8,9 @@ use yii\base\Model;
 
 class LogIntervalRequest extends Model
 {
-    public int $taskId;
-    public string $startTime;
-    public string $endTime;
+    public ?int $taskId = null;
+    public ?string $startTime = null;
+    public ?string $endTime = null;
     public ?string $comment = null;
 
     public function rules(): array

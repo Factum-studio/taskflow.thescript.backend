@@ -8,8 +8,8 @@ use yii\base\Model;
 
 class DailySummaryRequest extends Model
 {
-    public int $userId;
-    public string $date;
+    public ?int $userId = null;
+    public ?string $date = null;
 
     public function rules(): array
     {

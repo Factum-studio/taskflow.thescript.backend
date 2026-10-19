@@ -8,7 +8,7 @@ use yii\base\Model;
 
 class MoveTaskToColumnRequest extends Model
 {
-    public int $columnId;
+    public ?int $columnId = null;
 
     public function rules(): array
     {
