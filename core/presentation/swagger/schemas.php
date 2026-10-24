@@ -552,3 +552,64 @@ class FeedbackSchemas
 class CompanySchemas
 {
 }
+
+/**
+ * @OA\Schema(
+ *     schema="CreateRoleRequest",
+ *     required={"name", "rank"},
+ *     @OA\Property(property="name", type="string", minLength=1, maxLength=100, description="Название роли"),
+ *     @OA\Property(property="rank", type="integer", minimum=1, maximum=999, description="Ранг роли (должен быть ниже ранга создающего)"),
+ * )
+ *
+ * @OA\Schema(
+ *     schema="UpdateRoleRequest",
+ *     @OA\Property(property="name", type="string", nullable="true"),
+ *     @OA\Property(property="rank", type="integer", nullable="true"),
+ * )
+ *
+ * @OA\Schema(
+ *     schema="SetRolePermissionsRequest",
+ *     required={"permissions"},
+ *     @OA\Property(
+ *         property="permissions",
+ *         type="array",
+ *         description="Полный список кодов разрешений роли (заменяет существующие)",
+ *         @OA\Items(type="string", example="task.create"),
+ *     ),
+ * )
+ *
+ * @OA\Schema(
+ *     schema="SetUserPermissionRequest",
+ *     required={"permission_code", "is_granted"},
+ *     @OA\Property(property="permission_code", type="string", minLength=1, maxLength=100, example="task.create"),
+ *     @OA\Property(property="is_granted", type="boolean", description="true — выдать разрешение, false — запретить"),
+ * )
+ *
+ * @OA\Schema(
+ *     schema="TransferOwnershipRequest",
+ *     required={"new_owner_id"},
+ *     @OA\Property(property="new_owner_id", type="integer", description="ID участника проекта, которому передаётся владение"),
+ * )
+ *
+ * @OA\Schema(
+ *     schema="ProjectRole",
+ *     @OA\Property(property="id", type="integer"),
+ *     @OA\Property(property="project_id", type="integer"),
+ *     @OA\Property(property="name", type="string"),
+ *     @OA\Property(property="slug", type="string"),
+ *     @OA\Property(property="rank", type="integer"),
+ *     @OA\Property(property="is_system", type="boolean"),
+ *     @OA\Property(property="is_preset", type="boolean"),
+ * )
+ *
+ * @OA\Schema(
+ *     schema="EffectivePermission",
+ *     @OA\Property(property="permission_code", type="string"),
+ *     @OA\Property(property="granted", type="boolean"),
+ *     @OA\Property(property="source", type="string", enum={"role", "override", "billing", "business_rule"}),
+ *     @OA\Property(property="source_detail", type="string"),
+ * )
+ */
+class ProjectRbacSchemas
+{
+}
