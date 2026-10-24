@@ -13,4 +13,5 @@ return [
     'modules\\projects\\infrastructure\\migrations',
     'modules\\feedback\\infrastructure\\migrations',
     'modules\\company\\infrastructure\\migrations',
+    'modules\\projectRbac\\infrastructure\\migrations',
 ];
