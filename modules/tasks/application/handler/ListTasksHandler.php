@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace modules\tasks\application\handler;
 
-use modules\projects\application\port\IProjectAccess;
+use modules\projectRbac\application\port\IProjectAccessService;
 use modules\tasks\application\assembler\TaskDtoAssembler;
 use modules\tasks\application\dto\TaskDto;
 use modules\tasks\application\query\ListTasksQuery;
@@ -14,12 +14,12 @@ class ListTasksHandler
 {
     private ITaskRepository $taskRepository;
     private TaskDtoAssembler $taskDtoAssembler;
-    private IProjectAccess $projectAccess;
+    private IProjectAccessService $projectAccess;
 
     public function __construct(
         ITaskRepository $taskRepository,
         TaskDtoAssembler $taskDtoAssembler,
-        IProjectAccess $projectAccess,
+        IProjectAccessService $projectAccess,
     ) {
         $this->taskRepository   = $taskRepository;
         $this->taskDtoAssembler = $taskDtoAssembler;

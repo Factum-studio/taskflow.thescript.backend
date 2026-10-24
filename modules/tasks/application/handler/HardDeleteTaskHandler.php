@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace modules\tasks\application\handler;
 
 use modules\tasks\application\command\HardDeleteTaskCommand;
-use modules\tasks\application\port\ITaskAccess;
+use modules\projectRbac\application\port\ITaskAccessService;
 use modules\tasks\domain\repository\ITaskRepository;
 use modules\tasks\domain\valueObject\TaskId;
 use RuntimeException;
@@ -13,11 +13,11 @@ use RuntimeException;
 class HardDeleteTaskHandler
 {
     private ITaskRepository $taskRepository;
-    private ITaskAccess $taskAccess;
+    private ITaskAccessService $taskAccess;
 
     public function __construct(
         ITaskRepository $taskRepository,
-        ITaskAccess $taskAccess,
+        ITaskAccessService $taskAccess,
     ) {
         $this->taskRepository   = $taskRepository;
         $this->taskAccess       = $taskAccess;

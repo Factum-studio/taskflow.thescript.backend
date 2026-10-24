@@ -6,7 +6,7 @@ namespace modules\tasks\application\handler;
 
 use InvalidArgumentException;
 use modules\tasks\application\command\DeleteCommentCommand;
-use modules\tasks\application\port\ITaskAccess;
+use modules\projectRbac\application\port\ITaskAccessService;
 use modules\tasks\domain\repository\ICommentRepository;
 use modules\tasks\domain\valueObject\CommentId;
 use RuntimeException;
@@ -14,11 +14,11 @@ use RuntimeException;
 class DeleteCommentHandler
 {
     private ICommentRepository $commentRepository;
-    private ITaskAccess $taskAccess;
+    private ITaskAccessService $taskAccess;
 
     public function __construct(
         ICommentRepository $commentRepository,
-        ITaskAccess $taskAccess,
+        ITaskAccessService $taskAccess,
     ) {
         $this->commentRepository    = $commentRepository;
         $this->taskAccess           = $taskAccess;

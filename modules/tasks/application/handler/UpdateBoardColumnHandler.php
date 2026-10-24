@@ -7,7 +7,7 @@ namespace modules\tasks\application\handler;
 use modules\tasks\application\command\UpdateBoardColumnCommand;
 use modules\tasks\application\dto\BoardColumnDto;
 use modules\tasks\application\assembler\BoardColumnDtoAssembler;
-use modules\tasks\application\port\ITaskAccess;
+use modules\projectRbac\application\port\ITaskAccessService;
 use modules\tasks\domain\repository\IBoardColumnRepository;
 use modules\tasks\domain\valueObject\ColumnId;
 use RuntimeException;
@@ -16,12 +16,12 @@ class UpdateBoardColumnHandler
 {
     private IBoardColumnRepository $columnRepository;
     private BoardColumnDtoAssembler $dtoAssembler;
-    private ITaskAccess $taskAccess;
+    private ITaskAccessService $taskAccess;
 
     public function __construct(
         IBoardColumnRepository $columnRepository,
         BoardColumnDtoAssembler $dtoAssembler,
-        ITaskAccess $taskAccess,
+        ITaskAccessService $taskAccess,
     ) {
         $this->columnRepository = $columnRepository;
         $this->dtoAssembler     = $dtoAssembler;

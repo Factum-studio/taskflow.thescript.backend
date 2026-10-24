@@ -8,7 +8,7 @@ use core\domain\valueObject\UserId;
 use modules\tasks\application\assembler\TaskDtoAssembler;
 use modules\tasks\application\command\AssignTaskCommand;
 use modules\tasks\application\dto\TaskDto;
-use modules\tasks\application\port\ITaskAccess;
+use modules\projectRbac\application\port\ITaskAccessService;
 use modules\tasks\domain\event\IEventDispatcher;
 use modules\tasks\domain\event\TaskAssignedEvent;
 use modules\tasks\domain\repository\ITaskRepository;
@@ -20,13 +20,13 @@ class AssignTaskHandler
     private ITaskRepository $taskRepository;
     private TaskDtoAssembler $taskDtoAssembler;
     private IEventDispatcher $eventDispatcher;
-    private ITaskAccess $taskAccess;
+    private ITaskAccessService $taskAccess;
 
     public function __construct(
         ITaskRepository $taskRepository,
         TaskDtoAssembler $taskDtoAssembler,
         IEventDispatcher $eventDispatcher,
-        ITaskAccess $taskAccess,
+        ITaskAccessService $taskAccess,
     ) {
         $this->taskRepository   = $taskRepository;
         $this->taskDtoAssembler = $taskDtoAssembler;

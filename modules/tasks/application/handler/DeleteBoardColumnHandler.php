@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace modules\tasks\application\handler;
 
 use modules\tasks\application\command\DeleteBoardColumnCommand;
-use modules\tasks\application\port\ITaskAccess;
+use modules\projectRbac\application\port\ITaskAccessService;
 use modules\tasks\domain\repository\IBoardColumnRepository;
 use modules\tasks\domain\valueObject\ColumnId;
 use RuntimeException;
@@ -13,11 +13,11 @@ use RuntimeException;
 class DeleteBoardColumnHandler
 {
     private IBoardColumnRepository $columnRepository;
-    private ITaskAccess $taskAccess;
+    private ITaskAccessService $taskAccess;
 
     public function __construct(
         IBoardColumnRepository $columnRepository,
-        ITaskAccess $taskAccess,
+        ITaskAccessService $taskAccess,
     ) {
         $this->columnRepository = $columnRepository;
         $this->taskAccess       = $taskAccess;

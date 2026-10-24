@@ -9,7 +9,7 @@ use InvalidArgumentException;
 use modules\tasks\application\assembler\TaskDtoAssembler;
 use modules\tasks\application\command\CreateTaskCommand;
 use modules\tasks\application\dto\TaskDto;
-use modules\tasks\application\port\ITaskAccess;
+use modules\projectRbac\application\port\ITaskAccessService;
 use modules\tasks\domain\entity\Task;
 use modules\tasks\domain\event\IEventDispatcher;
 use modules\tasks\domain\event\TaskCreatedEvent;
@@ -30,7 +30,7 @@ class CreateTaskHandler
     private IEventDispatcher $eventDispatcher;
     private IBoardColumnRepository $columnRepository;
     private ITaskPriorityRepository $priorityRepository;
-    private ITaskAccess $taskAccess;
+    private ITaskAccessService $taskAccess;
 
     public function __construct(
         ITaskRepository $taskRepository,
@@ -38,7 +38,7 @@ class CreateTaskHandler
         IEventDispatcher $eventDispatcher,
         IBoardColumnRepository $columnRepository,
         ITaskPriorityRepository $priorityRepository,
-        ITaskAccess $taskAccess,
+        ITaskAccessService $taskAccess,
     ) {
         $this->taskRepository       = $taskRepository;
         $this->taskDtoAssembler     = $taskDtoAssembler;

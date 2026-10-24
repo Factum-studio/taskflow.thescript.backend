@@ -6,7 +6,7 @@ namespace modules\tasks\application\handler;
 
 use modules\tasks\application\assembler\StickerDtoAssembler;
 use modules\tasks\application\dto\StickerDto;
-use modules\tasks\application\port\ITaskAccess;
+use modules\projectRbac\application\port\ITaskAccessService;
 use modules\tasks\application\query\GetTaskStickersQuery;
 use modules\tasks\domain\repository\IStickerRepository;
 use modules\tasks\domain\repository\ITaskRepository;
@@ -20,14 +20,14 @@ class GetTaskStickersHandler
     private IStickerRepository $stickerRepository;
     private StickerDtoAssembler $stickerDtoAssembler;
     private ITaskRepository $taskRepository;
-    private ITaskAccess $taskAccess;
+    private ITaskAccessService $taskAccess;
 
     public function __construct(
         ITaskStickerRepository $taskStickerRepository,
         IStickerRepository $stickerRepository,
         StickerDtoAssembler $stickerDtoAssembler,
         ITaskRepository $taskRepository,
-        ITaskAccess $taskAccess,
+        ITaskAccessService $taskAccess,
     ) {
         $this->taskStickerRepository    = $taskStickerRepository;
         $this->stickerRepository        = $stickerRepository;

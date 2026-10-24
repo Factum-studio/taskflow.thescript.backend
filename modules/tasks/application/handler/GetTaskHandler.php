@@ -6,7 +6,7 @@ namespace modules\tasks\application\handler;
 
 use modules\tasks\application\assembler\TaskDtoAssembler;
 use modules\tasks\application\dto\TaskDto;
-use modules\tasks\application\port\ITaskAccess;
+use modules\projectRbac\application\port\ITaskAccessService;
 use modules\tasks\application\query\GetTaskQuery;
 use modules\tasks\domain\repository\ITaskRepository;
 use modules\tasks\domain\valueObject\TaskId;
@@ -16,12 +16,12 @@ class GetTaskHandler
 {
     private ITaskRepository $taskRepository;
     private TaskDtoAssembler $taskDtoAssembler;
-    private ITaskAccess $taskAccess;
+    private ITaskAccessService $taskAccess;
 
     public function __construct(
         ITaskRepository $taskRepository,
         TaskDtoAssembler $taskDtoAssembler,
-        ITaskAccess $taskAccess,
+        ITaskAccessService $taskAccess,
     ) {
         $this->taskRepository   = $taskRepository;
         $this->taskDtoAssembler = $taskDtoAssembler;

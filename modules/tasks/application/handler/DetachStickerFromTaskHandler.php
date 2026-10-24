@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace modules\tasks\application\handler;
 
 use modules\tasks\application\command\DetachStickerFromTaskCommand;
-use modules\tasks\application\port\ITaskAccess;
+use modules\projectRbac\application\port\ITaskAccessService;
 use modules\tasks\domain\repository\ITaskRepository;
 use modules\tasks\domain\repository\ITaskStickerRepository;
 use modules\tasks\domain\valueObject\StickerId;
@@ -16,12 +16,12 @@ class DetachStickerFromTaskHandler
 {
     private ITaskStickerRepository $taskStickerRepository;
     private ITaskRepository $taskRepository;
-    private ITaskAccess $taskAccess;
+    private ITaskAccessService $taskAccess;
 
     public function __construct(
         ITaskStickerRepository $taskStickerRepository,
         ITaskRepository $taskRepository,
-        ITaskAccess $taskAccess,
+        ITaskAccessService $taskAccess,
     ) {
         $this->taskStickerRepository    = $taskStickerRepository;
         $this->taskRepository           = $taskRepository;

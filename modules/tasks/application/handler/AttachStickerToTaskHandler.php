@@ -6,7 +6,7 @@ namespace modules\tasks\application\handler;
 
 use InvalidArgumentException;
 use modules\tasks\application\command\AttachStickerToTaskCommand;
-use modules\tasks\application\port\ITaskAccess;
+use modules\projectRbac\application\port\ITaskAccessService;
 use modules\tasks\domain\event\IEventDispatcher;
 use modules\tasks\domain\event\StickerAttachedToTaskEvent;
 use modules\tasks\domain\repository\IStickerRepository;
@@ -22,14 +22,14 @@ class AttachStickerToTaskHandler
     private ITaskRepository $taskRepository;
     private IStickerRepository $stickerRepository;
     private IEventDispatcher $eventDispatcher;
-    private ITaskAccess $taskAccess;
+    private ITaskAccessService $taskAccess;
 
     public function __construct(
         ITaskStickerRepository $taskStickerRepository,
         ITaskRepository $taskRepository,
         IStickerRepository $stickerRepository,
         IEventDispatcher $eventDispatcher,
-        ITaskAccess $taskAccess,
+        ITaskAccessService $taskAccess,
     ) {
         $this->taskStickerRepository    = $taskStickerRepository;
         $this->taskRepository           = $taskRepository;

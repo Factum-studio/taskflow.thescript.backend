@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace modules\tasks\application\handler;
 
-use modules\projects\application\port\IProjectAccess;
+use modules\projectRbac\application\port\IProjectAccessService;
 use modules\tasks\application\assembler\BoardColumnDtoAssembler;
 use modules\tasks\application\dto\BoardColumnDto;
-use modules\tasks\application\port\ITaskAccess;
 use modules\tasks\application\query\GetBoardColumnQuery;
 use modules\tasks\domain\repository\IBoardColumnRepository;
 use modules\tasks\domain\valueObject\ColumnId;
@@ -17,12 +16,12 @@ class GetBoardColumnHandler
 {
     private IBoardColumnRepository $columnRepository;
     private BoardColumnDtoAssembler $dtoAssembler;
-    private IProjectAccess $projectAccess;
+    private IProjectAccessService $projectAccess;
 
     public function __construct(
         IBoardColumnRepository $columnRepository,
         BoardColumnDtoAssembler $dtoAssembler,
-        IProjectAccess $projectAccess,
+        IProjectAccessService $projectAccess,
     ) {
         $this->columnRepository = $columnRepository;
         $this->dtoAssembler     = $dtoAssembler;
