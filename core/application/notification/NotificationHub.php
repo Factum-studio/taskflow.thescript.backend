@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace core\application\notification;
 
-use core\application\notification\Channel\EmailChannel;
+use core\application\notification\channel\EmailChannel;
 use core\application\notification\channel\PushChannel;
-use core\application\notification\Channel\TelegramChannel;
+use core\application\notification\channel\TelegramChannel;
 use Yii;
 
 class NotificationHub

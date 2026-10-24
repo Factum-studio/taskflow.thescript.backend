@@ -57,7 +57,7 @@ class UserDto implements JsonSerializable
         return new self(
             $user->getId()->value(),
             $user->getPassportId(),
-            $user->getEmail()?->value(),
+            $user->getEmail()->value(),
             $user->getSurname(),
             $user->getName(),
             $user->getPatronymic(),
