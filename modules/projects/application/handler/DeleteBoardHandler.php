@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace modules\projects\application\handler;
 
 use modules\projects\application\command\DeleteBoardCommand;
-use modules\projects\application\port\IProjectAccess;
+use modules\projectRbac\application\port\IProjectAccessService;
 use modules\projects\domain\repository\IBoardRepository;
 use modules\projects\domain\valueObject\BoardId;
 use RuntimeException;
@@ -13,11 +13,11 @@ use RuntimeException;
 class DeleteBoardHandler
 {
     private IBoardRepository $boardRepository;
-    private IProjectAccess $projectAccess;
+    private IProjectAccessService $projectAccess;
 
     public function __construct(
         IBoardRepository $boardRepository,
-        IProjectAccess $projectAccess,
+        IProjectAccessService $projectAccess,
     ) {
         $this->boardRepository  = $boardRepository;
         $this->projectAccess    = $projectAccess;

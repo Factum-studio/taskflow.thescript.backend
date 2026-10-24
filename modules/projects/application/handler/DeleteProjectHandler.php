@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace modules\projects\application\handler;
 
 use modules\projects\application\command\DeleteProjectCommand;
-use modules\projects\application\port\IProjectAccess;
+use modules\projectRbac\application\port\IProjectAccessService;
 use modules\projects\domain\repository\IProjectRepository;
 use modules\projects\domain\valueObject\ProjectId;
 use RuntimeException;
@@ -13,11 +13,11 @@ use RuntimeException;
 class DeleteProjectHandler
 {
     private IProjectRepository $projectRepository;
-    private IProjectAccess $projectAccess;
+    private IProjectAccessService $projectAccess;
 
     public function __construct(
         IProjectRepository $projectRepository,
-        IProjectAccess $projectAccess,
+        IProjectAccessService $projectAccess,
     ) {
         $this->projectRepository    = $projectRepository;
         $this->projectAccess        = $projectAccess;

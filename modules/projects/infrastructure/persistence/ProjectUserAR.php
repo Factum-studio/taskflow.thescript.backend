@@ -10,10 +10,13 @@ use yii\db\ActiveRecord;
  * @property int $project_id
  * @property int $user_id
  * @property string $role
+ * @property int|null $role_id
  * @property int|null $invited_by
  * @property string|null $invited_at
  * @property string|null $accepted_at
  * @property string $joined_at
+ * @property int $is_left
+ * @property string|null $left_at
  */
 class ProjectUserAR extends ActiveRecord
 {

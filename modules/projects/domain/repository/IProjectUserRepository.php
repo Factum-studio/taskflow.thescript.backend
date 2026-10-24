@@ -14,6 +14,9 @@ interface IProjectUserRepository
 
     public function remove(ProjectUser $projectUser): void;
 
+    /** Mark a membership as left without deleting its history. */
+    public function markLeft(ProjectId $projectId, UserId $userId): void;
+
     public function find(ProjectId $projectId, UserId $userId): ?ProjectUser;
 
     /**

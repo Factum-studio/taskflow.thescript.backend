@@ -6,7 +6,7 @@ namespace modules\projects\application\handler;
 
 use core\domain\valueObject\UserId;
 use modules\projects\application\command\RemoveProjectMemberCommand;
-use modules\projects\application\port\IProjectAccess;
+use modules\projectRbac\application\port\IProjectAccessService;
 use modules\projects\domain\event\IEventDispatcher;
 use modules\projects\domain\event\ProjectMemberRemovedEvent;
 use modules\projects\domain\repository\IProjectUserRepository;
@@ -16,12 +16,12 @@ use RuntimeException;
 class RemoveProjectMemberHandler
 {
     private IProjectUserRepository $projectUserRepository;
-    private IProjectAccess $projectAccess;
+    private IProjectAccessService $projectAccess;
     private IEventDispatcher $eventDispatcher;
 
     public function __construct(
         IProjectUserRepository $projectUserRepository,
-        IProjectAccess $projectAccess,
+        IProjectAccessService $projectAccess,
         IEventDispatcher $eventDispatcher,
     ) {
         $this->projectUserRepository    = $projectUserRepository;
@@ -43,7 +43,7 @@ class RemoveProjectMemberHandler
             throw new RuntimeException("User is not a member of this project");
         }
 
-        $this->projectUserRepository->remove($projectUser);
+        $this->projectUserRepository->markLeft($projectId, $userId);
 
         $this->eventDispatcher->dispatch(new ProjectMemberRemovedEvent($projectId, $userId, $command->removedBy));
     }

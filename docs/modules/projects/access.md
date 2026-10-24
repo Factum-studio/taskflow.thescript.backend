@@ -1,13 +1,13 @@
-# Управление доступом в модуле projects (IProjectAccess / ProjectAccess)
+# Управление доступом в модуле projects (IProjectAccessService / ProjectAccess)
 
 > Документ описывает модель прав на проекты и доски: роли участников, ограничения, лимиты.
 
-## 1. Порт `IProjectAccess`
+## 1. Порт `IProjectAccessService`
 
-**Файл:** `modules/projects/application/port/IProjectAccess.php`
+**Файл:** `modules/projectRbac/application/port/IProjectAccessService.php`
 
 ```php
-interface IProjectAccess
+interface IProjectAccessService
 {
     public function getUserProjectIds(int $userId): array;
     public function getProjectBoardIds(int $projectId): array;
@@ -32,7 +32,7 @@ interface IProjectAccess
 
 **Файл:** `modules/projects/infrastructure/access/ProjectAccess.php`
 
-### Константы-лимиты (захардкожены в коде!)
+### Лимиты тарифа (через конфигурационный Billing service)
 
 | Константа | Значение | Описание |
 |---|---|---|
@@ -81,7 +81,7 @@ interface IProjectAccess
 
 ## 5. Использование модулем tasks
 
-`TaskAccess` (модуль tasks) делегирует проверки прав на доску в `IProjectAccess`:
+`TaskAccess` (модуль tasks) делегирует проверки прав на доску в `IProjectAccessService`:
 
 - `canViewTask` → `canViewBoard(projectAccess)`.
 - `canCreateTask` → `canViewBoard`.
@@ -98,4 +98,4 @@ if (!$this->projectAccess->canManageProject($userId, $projectId)) {
 }
 ```
 
-Хендлеры получают `IProjectAccess` через DI (реализация — `ProjectAccess`).
+Хендлеры получают `IProjectAccessService` через DI (реализация — `ProjectAccess`).

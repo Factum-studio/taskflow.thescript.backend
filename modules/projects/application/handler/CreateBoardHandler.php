@@ -8,7 +8,7 @@ use core\domain\valueObject\UserId;
 use modules\projects\application\assembler\BoardDtoAssembler;
 use modules\projects\application\command\CreateBoardCommand;
 use modules\projects\application\dto\BoardDto;
-use modules\projects\application\port\IProjectAccess;
+use modules\projectRbac\application\port\IProjectAccessService;
 use modules\projects\domain\entity\Board;
 use modules\projects\domain\event\BoardCreatedEvent;
 use modules\projects\domain\event\IEventDispatcher;
@@ -25,14 +25,14 @@ class CreateBoardHandler
     private IBoardRepository $boardRepository;
     private IProjectRepository $projectRepository;
     private BoardDtoAssembler $boardDtoAssembler;
-    private IProjectAccess $projectAccess;
+    private IProjectAccessService $projectAccess;
     private IEventDispatcher $eventDispatcher;
 
     public function __construct(
         IBoardRepository $boardRepository,
         IProjectRepository $projectRepository,
         BoardDtoAssembler $boardDtoAssembler,
-        IProjectAccess $projectAccess,
+        IProjectAccessService $projectAccess,
         IEventDispatcher $eventDispatcher,
     ) {
         $this->boardRepository      = $boardRepository;
@@ -61,7 +61,7 @@ class CreateBoardHandler
             $command->name,
             new UserId($command->createdBy),
             $command->description,
-            new Settings($command->settings ?? []),
+            new Settings($command->settings),
             new DateTimeImmutable(),
             new DateTimeImmutable(),
         );

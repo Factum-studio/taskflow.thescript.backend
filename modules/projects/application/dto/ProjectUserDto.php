@@ -9,6 +9,7 @@ class ProjectUserDto
     public int $projectId;
     public int $userId;
     public string $role;
+    public ?int $roleId;
     public ?int $invitedBy;
     public ?string $invitedAt;
     public ?string $acceptedAt;
@@ -19,6 +20,7 @@ class ProjectUserDto
         $this->projectId    = $data['projectId'];
         $this->userId       = $data['userId'];
         $this->role         = $data['role'];
+        $this->roleId       = isset($data['roleId']) ? (int)$data['roleId'] : null;
         $this->invitedBy    = $data['invitedBy'] ?? null;
         $this->invitedAt    = $data['invitedAt'] ?? null;
         $this->acceptedAt   = $data['acceptedAt'] ?? null;

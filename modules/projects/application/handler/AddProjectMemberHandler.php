@@ -9,7 +9,9 @@ use core\domain\valueObject\UserId;
 use modules\projects\application\assembler\ProjectUserDtoAssembler;
 use modules\projects\application\command\AddProjectMemberCommand;
 use modules\projects\application\dto\ProjectUserDto;
-use modules\projects\application\port\IProjectAccess;
+use modules\projectRbac\application\port\IProjectAccessService;
+use modules\projectRbac\application\port\IProjectRoleRepository;
+use modules\projectRbac\application\service\ProjectRoleService;
 use modules\projects\domain\entity\ProjectUser;
 use modules\projects\domain\event\IEventDispatcher;
 use modules\projects\domain\event\ProjectMemberAddedEvent;
@@ -24,17 +26,21 @@ class AddProjectMemberHandler
     private IProjectUserRepository $projectUserRepository;
     private IProjectRepository $projectRepository;
     private ProjectUserDtoAssembler $projectUserDtoAssembler;
-    private IProjectAccess $projectAccess;
+    private IProjectAccessService $projectAccess;
     private IUserRepository $userRepository;
     private IEventDispatcher $eventDispatcher;
+    private IProjectRoleRepository $roleRepository;
+    private ProjectRoleService $roleService;
 
     public function __construct(
         IProjectUserRepository $projectUserRepository,
         IProjectRepository $projectRepository,
         ProjectUserDtoAssembler $projectUserDtoAssembler,
-        IProjectAccess $projectAccess,
+        IProjectAccessService $projectAccess,
         IUserRepository $userRepository,
         IEventDispatcher $eventDispatcher,
+        IProjectRoleRepository $roleRepository,
+        ProjectRoleService $roleService,
     ) {
         $this->projectUserRepository    = $projectUserRepository;
         $this->projectRepository        = $projectRepository;
@@ -42,6 +48,8 @@ class AddProjectMemberHandler
         $this->projectAccess            = $projectAccess;
         $this->userRepository           = $userRepository;
         $this->eventDispatcher          = $eventDispatcher;
+        $this->roleRepository           = $roleRepository;
+        $this->roleService              = $roleService;
     }
 
     public function handle(AddProjectMemberCommand $command): ProjectUserDto
@@ -58,19 +66,31 @@ class AddProjectMemberHandler
         }
 
         $user = $this->userRepository->findById(new UserId($command->userId));
-        if ($user === null) {
-            throw new RuntimeException("User with ID {$command->userId} not found");
-        }
 
         $existing = $this->projectUserRepository->find($projectId, new UserId($command->userId));
         if ($existing !== null) {
             throw new RuntimeException("User is already a member of this project");
         }
 
+        $targetRole = null;
+        foreach ($this->roleRepository->findRolesByProject($command->projectId) as $projectRole) {
+            if ($projectRole->getSlug() === $command->role) {
+                $targetRole = $projectRole;
+                break;
+            }
+        }
+        if ($targetRole === null) {
+            throw new RuntimeException('Role does not exist in this project');
+        }
+        if (!$this->roleService->canAssignRole($command->addedBy, $command->projectId, $targetRole)) {
+            throw new RuntimeException('You cannot assign this role based on the project role hierarchy');
+        }
+
         $projectUser = new ProjectUser(
             $projectId,
             new UserId($command->userId),
-            new UserRole($command->role),
+            new UserRole($command->role === 'admin' ? UserRole::ADMIN : UserRole::MEMBER),
+            $targetRole->getId(),
             new UserId($command->addedBy),
             new \DateTimeImmutable(),
             null,

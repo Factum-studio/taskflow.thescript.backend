@@ -8,7 +8,7 @@ use core\application\port\IUserRepository;
 use core\domain\valueObject\Email;
 use core\domain\valueObject\UserId;
 use modules\projects\application\command\InviteUserCommand;
-use modules\projects\application\port\IProjectAccess;
+use modules\projectRbac\application\port\IProjectAccessService;
 use modules\projects\domain\entity\Invitation;
 use modules\projects\domain\event\IEventDispatcher;
 use modules\projects\domain\event\InvitationCreatedEvent;
@@ -23,14 +23,14 @@ class InviteUserHandler
 {
     private IInvitationRepository $invitationRepository;
     private IProjectRepository $projectRepository;
-    private IProjectAccess $projectAccess;
+    private IProjectAccessService $projectAccess;
     private IEventDispatcher $eventDispatcher;
     private IUserRepository $userRepository;
 
     public function __construct(
         IInvitationRepository $invitationRepository,
         IProjectRepository $projectRepository,
-        IProjectAccess $projectAccess,
+        IProjectAccessService $projectAccess,
         IEventDispatcher $eventDispatcher,
         IUserRepository $userRepository,
     ) {
@@ -52,21 +52,20 @@ class InviteUserHandler
             throw new RuntimeException("Project with ID {$command->projectId} not found");
         }
 
-        if (!$this->projectAccess->canInviteUser($command->invitedBy, $command->userId, $command->projectId)) {
-            throw new RuntimeException('You are not allowed to invite users to this project');
-        }
-
-        if ($command->userId === null && $command->email === null) {
-            throw new RuntimeException('Either email or userId must be provided');
+        if (($command->userId === null) === ($command->email === null || trim((string)$command->email) === '')) {
+            throw new RuntimeException('Provide either a user ID or an email address');
         }
 
         if ($command->userId !== null) {
             $user = $this->userRepository->findById(new UserId($command->userId));
         } else {
-            $user = $this->userRepository->findByEmail(new Email($command->email));
+            $user = $this->userRepository->findByEmail(new Email((string)$command->email));
+        }
+        $userId = $user->getId()->value();
+        if (!$this->projectAccess->canInviteUser($command->invitedBy, $userId, $command->projectId)) {
+            throw new RuntimeException('You are not allowed to invite users to this project');
         }
 
-        $userId    = $user->getId()->value();
         $userEmail = $user->getEmail()->value();
 
         if ($this->projectAccess->canViewProject($userId, $command->projectId)) {

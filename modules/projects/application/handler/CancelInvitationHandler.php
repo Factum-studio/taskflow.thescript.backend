@@ -7,7 +7,7 @@ namespace modules\projects\application\handler;
 use core\application\port\IUserRepository;
 use core\domain\valueObject\UserId;
 use modules\projects\application\command\CancelInvitationCommand;
-use modules\projects\application\port\IProjectAccess;
+use modules\projectRbac\application\port\IProjectAccessService;
 use modules\projects\domain\event\IEventDispatcher;
 use modules\projects\domain\event\InvitationCancelledEvent;
 use modules\projects\domain\repository\IInvitationRepository;
@@ -17,13 +17,13 @@ use RuntimeException;
 class CancelInvitationHandler
 {
     private IInvitationRepository $invitationRepository;
-    private IProjectAccess $projectAccess;
+    private IProjectAccessService $projectAccess;
     private IUserRepository $userRepository;
     private IEventDispatcher $eventDispatcher;
 
     public function __construct(
         IInvitationRepository $invitationRepository,
-        IProjectAccess $projectAccess,
+        IProjectAccessService $projectAccess,
         IUserRepository $userRepository,
         IEventDispatcher $eventDispatcher,
     ) {
@@ -37,13 +37,13 @@ class CancelInvitationHandler
     {
         $projectId = new ProjectId($command->projectId);
 
-        $isAdmin = $this->projectAccess->canInviteUser($command->cancelledBy, $command->projectId);
+        $isAdmin = $this->projectAccess->canManageProject($command->cancelledBy, $command->projectId);
 
         if (!$isAdmin) {
             $currentUserEmail = $this->userRepository->findById(
                 new UserId($command->cancelledBy),
             )->getEmail();
-            if ($currentUserEmail !== $command->email) {
+            if ($currentUserEmail->value() !== $command->email) {
                 throw new RuntimeException('You are not allowed to cancel this invitation');
             }
         }

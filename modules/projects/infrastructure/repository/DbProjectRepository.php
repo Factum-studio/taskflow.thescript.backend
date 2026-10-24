@@ -67,7 +67,7 @@ class DbProjectRepository implements IProjectRepository
     {
         // Проекты, где пользователь владелец ИЛИ участник
         $ars = ProjectAR::find()
-            ->leftJoin('{{%project_user}}', 'project.id = project_user.project_id')
+            ->leftJoin('{{%project_user}}', 'project.id = project_user.project_id AND project_user.is_left = 0')
             ->where(['or',
                 ['project.owner_id' => $userId->value()],
                 ['project_user.user_id' => $userId->value()],
@@ -94,6 +94,23 @@ class DbProjectRepository implements IProjectRepository
     {
         $ar = $this->findARById($project->getId());
         $ar?->delete();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function updateOwner(ProjectId $projectId, UserId $newOwnerId): void
+    {
+        $ar = $this->findARById($projectId);
+        if (!$ar) {
+            throw new RuntimeException('Project not found');
+        }
+        $ar->owner_id = $newOwnerId->value();
+        if (!$ar->save()) {
+            throw new RuntimeException(
+                'Failed to update project owner: ' . implode(', ', $ar->getFirstErrors()),
+            );
+        }
     }
 
     private function mapEntityToAR(Project $project, ProjectAR $ar): void
