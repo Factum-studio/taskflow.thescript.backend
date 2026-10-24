@@ -8,14 +8,14 @@ use yii\base\Model;
 
 class CreateTaskRequest extends Model
 {
-    public string $title;
+    public ?string $title = null;
     public ?string $description = null;
-    public int $columnId;
-    public int $priorityId;
+    public ?int $columnId = null;
+    public ?int $priorityId = null;
     public ?string $dueDate = null;
     public ?string $plannedStart = null;
     public ?string $plannedEnd = null;
-    public int $boardId;
+    public ?int $boardId = null;
     public ?int $assignedTo = null;
     public ?int $parentId = null;
 

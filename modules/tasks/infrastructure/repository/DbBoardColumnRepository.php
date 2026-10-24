@@ -34,7 +34,7 @@ class DbBoardColumnRepository implements IBoardColumnRepository
             throw new RuntimeException('Failed to save board column: ' . implode(', ', $ar->getFirstErrors()));
         }
 
-        if (!$column->getId() || $column->getId()->value() !== (int)$ar->id) {
+        if (!$column->getId()->value() <= 0 || $column->getId()->value() !== (int)$ar->id) {
             $column->setId(new ColumnId((int)$ar->id));
         }
 

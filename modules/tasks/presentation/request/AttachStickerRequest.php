@@ -8,7 +8,7 @@ use yii\base\Model;
 
 class AttachStickerRequest extends Model
 {
-    public int $stickerId;
+    public ?int $stickerId = null;
 
     public function rules(): array
     {

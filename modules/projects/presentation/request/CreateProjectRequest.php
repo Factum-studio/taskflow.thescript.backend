@@ -8,8 +8,8 @@ use yii\base\Model;
 
 class CreateProjectRequest extends Model
 {
-    public string $name;
-    public string $type;
+    public ?string $name = null;
+    public ?string $type = null;
     public ?array $settings = null;
 
     public function rules(): array

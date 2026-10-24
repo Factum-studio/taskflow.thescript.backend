@@ -38,4 +38,8 @@ return [
         'class' => 'modules\\passport\\proxy\\Module',
         'controllerNamespace' => 'modules\\passport\\proxy\\presentation\\controller',
     ],
+    'project-rbac' => [
+        'class' => 'modules\\projectRbac\\Module',
+        'controllerNamespace' => 'modules\\project-rbac\\presentation\\controller',
+    ],
 ];

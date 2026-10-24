@@ -40,7 +40,7 @@ class DbCompanyRepository implements ICompanyRepository
             throw new RuntimeException('Failed to save company: ' . implode(', ', $ar->getFirstErrors()));
         }
 
-        if (!$company->getId() || $company->getId()->value() !== (int)$ar->id) {
+        if ($company->getId()->value() <= 0 || $company->getId()->value() !== (int)$ar->id) {
             $company->setId(new CompanyId((int)$ar->id));
         }
 

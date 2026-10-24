@@ -10,7 +10,6 @@ use core\application\port\IUserRoleRepository;
 use core\domain\exception\EntityNotFoundException;
 use core\domain\exception\EntityUnavailableException;
 use core\domain\exception\UserNotFoundException;
-use core\domain\valueObject\UserRoleId;
 use core\application\dto\UserRoleFiltersDto;
 
 class RemoveUserRoleHandler

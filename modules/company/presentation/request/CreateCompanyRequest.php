@@ -8,7 +8,7 @@ use yii\base\Model;
 
 class CreateCompanyRequest extends Model
 {
-    public string $name;
+    public ?string $name = null;
     public ?string $email = null;
     public ?string $website = null;
     public ?string $phone = null;

@@ -76,7 +76,7 @@ class InvitationController extends BaseController
             return $this->error('Validation failed', 422, $request->getErrors());
         }
 
-        $userId = $this->getUserId();
+        $userId = (int)$this->getUserId();
         if (!$userId) {
             return $this->error('User not authenticated', 401);
         }
@@ -134,7 +134,7 @@ class InvitationController extends BaseController
             return $this->error('Token is required', 422);
         }
 
-        $userId = $this->getUserId();
+        $userId = (int)$this->getUserId();
         if (!$userId) {
             return $this->error('User not authenticated', 401);
         }
@@ -185,7 +185,7 @@ class InvitationController extends BaseController
             return $this->error('Email parameter is required', 422);
         }
 
-        $userId = $this->getUserId();
+        $userId = (int)$this->getUserId();
         if (!$userId) {
             return $this->error('User not authenticated', 401);
         }

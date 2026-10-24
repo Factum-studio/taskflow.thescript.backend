@@ -6,23 +6,22 @@ namespace modules\tasks\application\handler;
 
 use modules\tasks\application\assembler\CommentDtoAssembler;
 use modules\tasks\application\dto\CommentDto;
-use modules\tasks\application\port\ITaskAccess;
+use modules\projectRbac\application\port\ITaskAccessService;
 use modules\tasks\application\query\GetCommentQuery;
 use modules\tasks\domain\repository\ICommentRepository;
 use modules\tasks\domain\valueObject\CommentId;
-use modules\tasks\domain\valueObject\TaskId;
 use RuntimeException;
 
 class GetCommentHandler
 {
     private ICommentRepository $commentRepository;
     private CommentDtoAssembler $commentDtoAssembler;
-    private ITaskAccess $taskAccess;
+    private ITaskAccessService $taskAccess;
 
     public function __construct(
         ICommentRepository $commentRepository,
         CommentDtoAssembler $commentDtoAssembler,
-        ITaskAccess $taskAccess,
+        ITaskAccessService $taskAccess,
     ) {
         $this->commentRepository    = $commentRepository;
         $this->commentDtoAssembler  = $commentDtoAssembler;

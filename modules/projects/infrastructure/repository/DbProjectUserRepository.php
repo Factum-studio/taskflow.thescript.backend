@@ -48,19 +48,35 @@ class DbProjectUserRepository implements IProjectUserRepository
         $ar?->delete();
     }
 
+    public function markLeft(ProjectId $projectId, UserId $userId): void
+    {
+        $this->db->createCommand()->update(
+            '{{%project_user}}',
+            [
+                'is_left' => 1,
+                'left_at' => (new DateTimeImmutable())->format('Y-m-d H:i:s'),
+            ],
+            [
+                'project_id' => $projectId->value(),
+                'user_id' => $userId->value(),
+                'is_left' => 0,
+            ],
+        )->execute();
+    }
+
     /**
      * @throws Exception
      */
     public function find(ProjectId $projectId, UserId $userId): ?ProjectUser
     {
         $ar = $this->findAR($projectId, $userId);
-        return $ar ? $this->mapARToEntity($ar) : null;
+        return $ar && !(bool)$ar->is_left ? $this->mapARToEntity($ar) : null;
     }
 
     public function findByProject(ProjectId $projectId): array
     {
         $ars = ProjectUserAR::find()
-            ->where(['project_id' => $projectId->value()])
+            ->where(['project_id' => $projectId->value(), 'is_left' => 0])
             ->all();
         return array_map([$this, 'mapARToEntity'], $ars);
     }
@@ -68,7 +84,7 @@ class DbProjectUserRepository implements IProjectUserRepository
     public function findByUser(UserId $userId): array
     {
         $ars = ProjectUserAR::find()
-            ->where(['user_id' => $userId->value()])
+            ->where(['user_id' => $userId->value(), 'is_left' => 0])
             ->all();
         return array_map([$this, 'mapARToEntity'], $ars);
     }
@@ -86,10 +102,13 @@ class DbProjectUserRepository implements IProjectUserRepository
         $ar->project_id     = $projectUser->getProjectId()->value();
         $ar->user_id        = $projectUser->getUserId()->value();
         $ar->role           = $projectUser->getRole()->value();
+        $ar->role_id        = $projectUser->getRoleId();
         $ar->invited_by     = $projectUser->getInvitedBy()?->value();
         $ar->invited_at     = $projectUser->getInvitedAt()?->format('Y-m-d H:i:s');
         $ar->accepted_at    = $projectUser->getAcceptedAt()?->format('Y-m-d H:i:s');
         $ar->joined_at      = $projectUser->getJoinedAt()->format('Y-m-d H:i:s');
+        $ar->is_left        = 0;
+        $ar->left_at        = null;
     }
 
     /**
@@ -101,6 +120,7 @@ class DbProjectUserRepository implements IProjectUserRepository
             new ProjectId((int)$ar->project_id),
             new UserId((int)$ar->user_id),
             new UserRole($ar->role),
+            $ar->role_id ? (int)$ar->role_id : null,
             $ar->invited_by ? new UserId((int)$ar->invited_by) : null,
             $ar->invited_at ? new DateTimeImmutable($ar->invited_at) : null,
             $ar->accepted_at ? new DateTimeImmutable($ar->accepted_at) : null,

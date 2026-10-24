@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace modules\tasks\application\handler;
 
 use InvalidArgumentException;
-use modules\projects\application\port\IProjectAccess;
+use modules\projectRbac\application\port\IProjectAccessService;
 use modules\tasks\application\command\DeleteStickerCommand;
 use modules\tasks\domain\repository\IStickerRepository;
 use modules\tasks\domain\valueObject\StickerId;
@@ -14,11 +14,11 @@ use RuntimeException;
 class DeleteStickerHandler
 {
     private IStickerRepository $stickerRepository;
-    private IProjectAccess $projectAccess;
+    private IProjectAccessService $projectAccess;
 
     public function __construct(
         IStickerRepository $stickerRepository,
-        IProjectAccess $projectAccess,
+        IProjectAccessService $projectAccess,
     ) {
         $this->stickerRepository    = $stickerRepository;
         $this->projectAccess        = $projectAccess;

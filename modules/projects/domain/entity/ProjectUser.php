@@ -15,6 +15,7 @@ class ProjectUser
     private ProjectId $projectId;
     private UserId $userId;
     private UserRole $role;
+    private ?int $roleId;                   // FK → project_roles.id (projectRbac)
     private ?UserId $invitedBy;
     private ?DateTimeImmutable $invitedAt;
     private ?DateTimeImmutable $acceptedAt;
@@ -24,6 +25,7 @@ class ProjectUser
         ProjectId $projectId,
         UserId $userId,
         UserRole $role,
+        ?int $roleId = null,
         ?UserId $invitedBy = null,
         ?DateTimeImmutable $invitedAt = null,
         ?DateTimeImmutable $acceptedAt = null,
@@ -32,6 +34,7 @@ class ProjectUser
         $this->projectId    = $projectId;
         $this->userId       = $userId;
         $this->role         = $role;
+        $this->roleId       = $roleId;
         $this->invitedBy    = $invitedBy;
         $this->invitedAt    = $invitedAt;
         $this->acceptedAt   = $acceptedAt;
@@ -50,6 +53,15 @@ class ProjectUser
     {
         return $this->role;
     }
+
+    /**
+     * @return ?int  project role id (FK → project_roles.id), null if not migrated yet
+     */
+    public function getRoleId(): ?int
+    {
+        return $this->roleId;
+    }
+
     public function getInvitedBy(): ?UserId
     {
         return $this->invitedBy;
@@ -70,6 +82,17 @@ class ProjectUser
     public function changeRole(UserRole $newRole): void
     {
         $this->role = $newRole;
+    }
+
+    /**
+     * Update the role_id reference (projectRbac).
+     *
+     * @param int $newRoleId
+     * @return void
+     */
+    public function changeRoleId(int $newRoleId): void
+    {
+        $this->roleId = $newRoleId;
     }
 
     public function accept(): void

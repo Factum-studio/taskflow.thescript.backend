@@ -25,4 +25,13 @@ interface IProjectRepository
     public function findByUser(UserId $userId): array; // проекты, где пользователь участник (включая владельца)
     public function countByOwner(UserId $ownerId): int;
     public function remove(Project $project): void;
+
+    /**
+     * Transfer project ownership to another user.
+     *
+     * @param ProjectId $projectId
+     * @param UserId    $newOwnerId
+     * @return void
+     */
+    public function updateOwner(ProjectId $projectId, UserId $newOwnerId): void;
 }

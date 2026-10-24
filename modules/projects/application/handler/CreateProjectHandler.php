@@ -8,7 +8,7 @@ use core\domain\valueObject\UserId;
 use modules\projects\application\assembler\ProjectDtoAssembler;
 use modules\projects\application\command\CreateProjectCommand;
 use modules\projects\application\dto\ProjectDto;
-use modules\projects\application\port\IProjectAccess;
+use modules\projectRbac\application\port\IProjectAccessService;
 use modules\projects\domain\entity\Project;
 use modules\projects\domain\event\IEventDispatcher;
 use modules\projects\domain\event\ProjectCreatedEvent;
@@ -23,13 +23,13 @@ class CreateProjectHandler
 {
     private IProjectRepository $projectRepository;
     private ProjectDtoAssembler $projectDtoAssembler;
-    private IProjectAccess $projectAccess;
+    private IProjectAccessService $projectAccess;
     private IEventDispatcher $eventDispatcher;
 
     public function __construct(
         IProjectRepository $projectRepository,
         ProjectDtoAssembler $projectDtoAssembler,
-        IProjectAccess $projectAccess,
+        IProjectAccessService $projectAccess,
         IEventDispatcher $eventDispatcher,
     ) {
         $this->projectRepository    = $projectRepository;
@@ -49,7 +49,7 @@ class CreateProjectHandler
             $command->name,
             new ProjectType($command->type),
             new UserId($command->ownerId),
-            new Settings($command->settings ?? []),
+            new Settings($command->settings),
             new DateTimeImmutable(),
             new DateTimeImmutable(),
         );

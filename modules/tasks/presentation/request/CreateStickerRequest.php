@@ -8,8 +8,8 @@ use yii\base\Model;
 
 class CreateStickerRequest extends Model
 {
-    public string $name;
-    public string $type;
+    public ?string $name = null;
+    public ?string $type = null;
     public ?int $projectId = null;
     public ?array $data = null;
     public ?string $color = null;

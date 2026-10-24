@@ -7,7 +7,7 @@ namespace modules\projects\application\handler;
 use modules\projects\application\assembler\ProjectDtoAssembler;
 use modules\projects\application\command\UpdateProjectCommand;
 use modules\projects\application\dto\ProjectDto;
-use modules\projects\application\port\IProjectAccess;
+use modules\projectRbac\application\port\IProjectAccessService;
 use modules\projects\domain\repository\IProjectRepository;
 use modules\projects\domain\valueObject\ProjectId;
 use RuntimeException;
@@ -16,12 +16,12 @@ class UpdateProjectHandler
 {
     private IProjectRepository $projectRepository;
     private ProjectDtoAssembler $projectDtoAssembler;
-    private IProjectAccess $projectAccess;
+    private IProjectAccessService $projectAccess;
 
     public function __construct(
         IProjectRepository $projectRepository,
         ProjectDtoAssembler $projectDtoAssembler,
-        IProjectAccess $projectAccess,
+        IProjectAccessService $projectAccess,
     ) {
         $this->projectRepository    = $projectRepository;
         $this->projectDtoAssembler  = $projectDtoAssembler;

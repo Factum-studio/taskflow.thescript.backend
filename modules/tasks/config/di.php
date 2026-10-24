@@ -6,7 +6,7 @@ use core\application\port\IEventDispatcher as GlobalEventDispatcher;
 use core\application\port\ITaskStatisticsService;
 use modules\tasks\application\service\TaskStatisticsService;
 use modules\tasks\domain\event\IEventDispatcher as TaskEventDispatcher;
-use modules\tasks\application\port\ITaskAccess;
+use modules\projectRbac\application\port\ITaskAccessService;
 use modules\tasks\domain\event\CommentAddedEvent;
 use modules\tasks\domain\event\CommentUpdatedEvent;
 use modules\tasks\domain\event\IntervalLoggedEvent;
@@ -71,7 +71,7 @@ Yii::$container->set(IDailySummaryRepository::class, function () {
 });
 
 Yii::$container->set(
-    ITaskAccess::class,
+    ITaskAccessService::class,
     TaskAccess::class,
 );
 

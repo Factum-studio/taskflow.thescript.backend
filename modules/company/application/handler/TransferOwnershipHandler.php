@@ -8,7 +8,6 @@ use core\domain\exception\ValidationException;
 use core\domain\valueObject\UserId;
 use modules\company\application\command\TransferOwnershipCommand;
 use modules\company\application\port\ICompanyAccess;
-use modules\company\domain\entity\CompanyMember;
 use modules\company\domain\event\CompanyTransferOwnershipEvent;
 use modules\company\domain\event\IEventDispatcher;
 use modules\company\domain\repository\ICompanyMemberRepository;

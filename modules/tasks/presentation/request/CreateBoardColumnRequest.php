@@ -8,8 +8,8 @@ use yii\base\Model;
 
 class CreateBoardColumnRequest extends Model
 {
-    public string $name;
-    public string $label;
+    public ?string $name = null;
+    public ?string $label = null;
     public ?int $sortOrder = null;
     public ?bool $isActive = null;
     public ?bool $isFinal = null;

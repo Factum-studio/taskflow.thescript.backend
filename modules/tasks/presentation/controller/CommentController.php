@@ -102,7 +102,7 @@ class CommentController extends BaseController
      */
     public function actionIndex(int $taskId): CollectionDto|array
     {
-        $query = new ListCommentsQuery($taskId);
+        $query = new ListCommentsQuery($taskId, (int)$this->getUserId());
         try {
             $comments = $this->listCommentsHandler->handle($query);
         } catch (RuntimeException $e) {
@@ -159,7 +159,7 @@ class CommentController extends BaseController
      */
     public function actionView(int $id): ItemDto|array
     {
-        $query = new GetCommentQuery($id);
+        $query = new GetCommentQuery($id, (int)$this->getUserId());
         try {
             $comment = $this->getCommentHandler->handle($query);
         } catch (RuntimeException $e) {
@@ -232,7 +232,7 @@ class CommentController extends BaseController
             return $this->error('Validation failed', 422, $request->getErrors());
         }
 
-        $userId = $this->getUserId();
+        $userId = (int)$this->getUserId();
         if (!$userId) {
             return $this->error('User not authenticated', 401);
         }
@@ -322,7 +322,7 @@ class CommentController extends BaseController
             return $this->error('Validation failed', 422, $request->getErrors());
         }
 
-        $userId = $this->getUserId();
+        $userId = (int)$this->getUserId();
         if (!$userId) {
             return $this->error('User not authenticated', 401);
         }
@@ -395,7 +395,7 @@ class CommentController extends BaseController
      */
     public function actionDelete(int $id): SuccessDto|ErrorDto|array
     {
-        $userId = $this->getUserId();
+        $userId = (int)$this->getUserId();
         if (!$userId) {
             return $this->error('User not authenticated', 401);
         }

@@ -8,7 +8,7 @@ use yii\base\Model;
 
 class InviteCompanyMemberRequest extends Model
 {
-    public string $email;
+    public ?string $email = null;
 
     public function rules(): array
     {

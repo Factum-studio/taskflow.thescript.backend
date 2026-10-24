@@ -7,7 +7,7 @@ namespace modules\projects\application\handler;
 use modules\projects\application\assembler\BoardDtoAssembler;
 use modules\projects\application\command\UpdateBoardCommand;
 use modules\projects\application\dto\BoardDto;
-use modules\projects\application\port\IProjectAccess;
+use modules\projectRbac\application\port\IProjectAccessService;
 use modules\projects\domain\repository\IBoardRepository;
 use modules\projects\domain\valueObject\BoardId;
 use RuntimeException;
@@ -16,12 +16,12 @@ class UpdateBoardHandler
 {
     private IBoardRepository $boardRepository;
     private BoardDtoAssembler $boardDtoAssembler;
-    private IProjectAccess $projectAccess;
+    private IProjectAccessService $projectAccess;
 
     public function __construct(
         IBoardRepository $boardRepository,
         BoardDtoAssembler $boardDtoAssembler,
-        IProjectAccess $projectAccess,
+        IProjectAccessService $projectAccess,
     ) {
         $this->boardRepository      = $boardRepository;
         $this->boardDtoAssembler    = $boardDtoAssembler;

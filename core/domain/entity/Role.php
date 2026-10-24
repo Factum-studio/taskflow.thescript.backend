@@ -23,7 +23,7 @@ class Role
         RoleId $id,
         RoleName $name,
         ?string $description = null,
-        string $createdAt = null,
+        ?string $createdAt = null,
     ) {
         $this->id           = $id;
         $this->name         = $name;

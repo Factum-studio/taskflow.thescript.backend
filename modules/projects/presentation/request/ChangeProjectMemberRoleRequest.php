@@ -8,12 +8,13 @@ use yii\base\Model;
 
 class ChangeProjectMemberRoleRequest extends Model
 {
-    public string $role;
+    public ?string $role = null;
 
     public function rules(): array
     {
         return [
             ['role', 'required'],
+            // TODO check logic
             ['role', 'in', 'range' => ['admin', 'member']],
         ];
     }

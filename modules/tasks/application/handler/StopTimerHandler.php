@@ -11,7 +11,6 @@ use modules\tasks\application\command\StopTimerCommand;
 use modules\tasks\application\dto\TimeIntervalDto;
 use modules\tasks\domain\event\IEventDispatcher;
 use modules\tasks\domain\event\TimerStoppedEvent;
-use modules\tasks\domain\repository\ITaskRepository;
 use modules\tasks\domain\repository\ITimeIntervalRepository;
 use modules\tasks\domain\valueObject\TimeIntervalId;
 use RuntimeException;
@@ -19,18 +18,15 @@ use RuntimeException;
 class StopTimerHandler
 {
     private ITimeIntervalRepository $intervalRepository;
-    private ITaskRepository $taskRepository;
     private TimeIntervalDtoAssembler $dtoAssembler;
     private IEventDispatcher $eventDispatcher;
 
     public function __construct(
         ITimeIntervalRepository $intervalRepository,
-        ITaskRepository $taskRepository,
         TimeIntervalDtoAssembler $dtoAssembler,
         IEventDispatcher $eventDispatcher,
     ) {
         $this->intervalRepository   = $intervalRepository;
-        $this->taskRepository       = $taskRepository;
         $this->dtoAssembler         = $dtoAssembler;
         $this->eventDispatcher      = $eventDispatcher;
     }

@@ -1,13 +1,13 @@
-# Управление доступом в модуле tasks (ITaskAccess / TaskAccess)
+# Управление доступом в модуле tasks (ITaskAccessService / TaskAccess)
 
-> Документ описывает права на задачи и колонки в рамках модуля tasks. Все проверки делегируются в `IProjectAccess` (модуль projects), т.к. задачи/колонки живут внутри досок проектов.
+> Документ описывает права на задачи и колонки в рамках модуля tasks. Все проверки делегируются в `IProjectAccessService` (модуль projects), т.к. задачи/колонки живут внутри досок проектов.
 
-## 1. Порт `ITaskAccess`
+## 1. Порт `ITaskAccessService`
 
-**Файл:** `modules/tasks/application/port/ITaskAccess.php`
+**Файл:** `modules/projectRbac/application/port/ITaskAccessService.php`
 
 ```php
-interface ITaskAccess
+interface ITaskAccessService
 {
     public function getProjectIdsByColumnId(int $columnId): array;
     public function canViewTask(int $userId, int $taskId): bool;
@@ -30,7 +30,7 @@ interface ITaskAccess
 
 **Файл:** `modules/tasks/infrastructure/access/TaskAccess.php`
 
-Зависимости: `ITaskRepository`, `IBoardColumnRepository`, `IProjectAccess`.
+Зависимости: `ITaskRepository`, `IBoardColumnRepository`, `IProjectAccessService`.
 
 ### Правила
 
@@ -65,7 +65,7 @@ if (!$this->taskAccess->canViewTask($userId, $taskId)) {
 }
 ```
 
-Все хендлеры модуля получают `ITaskAccess` через DI.
+Все хендлеры модуля получают `ITaskAccessService` через DI.
 
 ## 4. Диаграмма делегирования
 

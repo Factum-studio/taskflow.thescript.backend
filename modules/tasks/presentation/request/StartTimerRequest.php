@@ -8,7 +8,7 @@ use yii\base\Model;
 
 class StartTimerRequest extends Model
 {
-    public int $taskId;
+    public ?int $taskId = null;
     public ?string $comment = null;
 
     public function rules(): array

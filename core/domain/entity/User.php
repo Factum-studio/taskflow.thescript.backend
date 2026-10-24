@@ -20,8 +20,8 @@ class User
     private ?string $name;
     private ?string $patronymic;
     private ?string $post;
-    private ?bool $isOwner;
-    private ?DateTimeImmutable $syncedAt;
+    private bool $isOwner;
+    private DateTimeImmutable $syncedAt;
     private DateTimeImmutable $createdAt;
     private DateTimeImmutable $updatedAt;
 
@@ -41,8 +41,8 @@ class User
         ?string $post,
         bool $isOwner,
         ?DateTimeImmutable $syncedAt = null,
-        DateTimeImmutable $createdAt = null,
-        DateTimeImmutable $updatedAt = null,
+        ?DateTimeImmutable $createdAt = null,
+        ?DateTimeImmutable $updatedAt = null,
         array $roles = [],
     ) {
         $this->id               = $id;

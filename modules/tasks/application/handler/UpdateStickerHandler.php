@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace modules\tasks\application\handler;
 
 use InvalidArgumentException;
-use modules\projects\application\port\IProjectAccess;
+use modules\projectRbac\application\port\IProjectAccessService;
 use modules\tasks\application\assembler\StickerDtoAssembler;
 use modules\tasks\application\command\UpdateStickerCommand;
 use modules\tasks\application\dto\StickerDto;
@@ -18,12 +18,12 @@ class UpdateStickerHandler
 {
     private IStickerRepository $stickerRepository;
     private StickerDtoAssembler $stickerDtoAssembler;
-    private IProjectAccess $projectAccess;
+    private IProjectAccessService $projectAccess;
 
     public function __construct(
         IStickerRepository $stickerRepository,
         StickerDtoAssembler $stickerDtoAssembler,
-        IProjectAccess $projectAccess,
+        IProjectAccessService $projectAccess,
     ) {
         $this->stickerRepository    = $stickerRepository;
         $this->stickerDtoAssembler  = $stickerDtoAssembler;

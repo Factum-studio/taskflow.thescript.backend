@@ -8,7 +8,7 @@ use InvalidArgumentException;
 use modules\tasks\application\assembler\CommentDtoAssembler;
 use modules\tasks\application\command\UpdateCommentCommand;
 use modules\tasks\application\dto\CommentDto;
-use modules\tasks\application\port\ITaskAccess;
+use modules\projectRbac\application\port\ITaskAccessService;
 use modules\tasks\domain\event\CommentUpdatedEvent;
 use modules\tasks\domain\event\IEventDispatcher;
 use modules\tasks\domain\repository\ICommentRepository;
@@ -20,13 +20,13 @@ class UpdateCommentHandler
     private ICommentRepository $commentRepository;
     private CommentDtoAssembler $commentDtoAssembler;
     private IEventDispatcher $eventDispatcher;
-    private ITaskAccess $taskAccess;
+    private ITaskAccessService $taskAccess;
 
     public function __construct(
         ICommentRepository $commentRepository,
         CommentDtoAssembler $commentDtoAssembler,
         IEventDispatcher $eventDispatcher,
-        ITaskAccess $taskAccess,
+        ITaskAccessService $taskAccess,
     ) {
         $this->commentRepository    = $commentRepository;
         $this->commentDtoAssembler  = $commentDtoAssembler;

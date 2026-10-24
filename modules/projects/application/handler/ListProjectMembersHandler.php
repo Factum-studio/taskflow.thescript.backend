@@ -6,7 +6,7 @@ namespace modules\projects\application\handler;
 
 use modules\projects\application\assembler\ProjectUserDtoAssembler;
 use modules\projects\application\dto\ProjectUserDto;
-use modules\projects\application\port\IProjectAccess;
+use modules\projectRbac\application\port\IProjectAccessService;
 use modules\projects\application\query\ListProjectMembersQuery;
 use modules\projects\domain\repository\IProjectUserRepository;
 use modules\projects\domain\valueObject\ProjectId;
@@ -16,12 +16,12 @@ class ListProjectMembersHandler
 {
     private IProjectUserRepository $projectUserRepository;
     private ProjectUserDtoAssembler $projectUserDtoAssembler;
-    private IProjectAccess $projectAccess;
+    private IProjectAccessService $projectAccess;
 
     public function __construct(
         IProjectUserRepository $projectUserRepository,
         ProjectUserDtoAssembler $projectUserDtoAssembler,
-        IProjectAccess $projectAccess,
+        IProjectAccessService $projectAccess,
     ) {
         $this->projectUserRepository    = $projectUserRepository;
         $this->projectUserDtoAssembler  = $projectUserDtoAssembler;

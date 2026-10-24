@@ -8,7 +8,7 @@ use yii\base\Model;
 
 class AcceptInvitationRequest extends Model
 {
-    public string $token;
+    public ?string $token = null;
 
     public function rules(): array
     {

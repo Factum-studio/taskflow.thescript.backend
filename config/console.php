@@ -10,6 +10,7 @@ $migrationNamespaces    = require __DIR__ . '/migration_namespaces.php';
 $diConfigs          = [
     __DIR__ . '/../modules/projects/config/di.php',
     __DIR__ . '/../modules/tasks/config/di.php',
+    __DIR__ . '/../modules/projectRbac/config/di.php',
 ];
 
 require __DIR__ . '/container.php';

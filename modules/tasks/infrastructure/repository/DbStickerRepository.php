@@ -44,7 +44,7 @@ class DbStickerRepository implements IStickerRepository
                 ->andWhere(['project_id' => $sticker->getProjectId()])
                 ->andWhere(['type' => 'user'])
                 ->exists();
-            if ($exists && (!$sticker->getId() || $this->findARById($sticker->getId())->name !== $sticker->getName()->value())) {
+            if ($exists && ($sticker->getId()->value() <= 0 || ($currentSticker = $this->findARById($sticker->getId())) === null || $currentSticker->name !== $sticker->getName()->value())) {
                 throw new RuntimeException("Sticker with name '{$sticker->getName()->value()}' already exists in this project");
             }
         } else {
@@ -53,7 +53,7 @@ class DbStickerRepository implements IStickerRepository
                 ->where(['name' => $sticker->getName()->value()])
                 ->andWhere(['type' => 'system'])
                 ->exists();
-            if ($exists && (!$sticker->getId() || $this->findARById($sticker->getId())->name !== $sticker->getName()->value())) {
+            if ($exists && ($sticker->getId()->value() <= 0 || ($currentSticker = $this->findARById($sticker->getId())) === null || $currentSticker->name !== $sticker->getName()->value())) {
                 throw new RuntimeException("System sticker with name '{$sticker->getName()->value()}' already exists");
             }
         }
@@ -62,7 +62,7 @@ class DbStickerRepository implements IStickerRepository
             throw new RuntimeException('Failed to save sticker: ' . implode(', ', $ar->getFirstErrors()));
         }
 
-        if (!$sticker->getId() || $sticker->getId()->value() !== (int)$ar->id) {
+        if ($sticker->getId()->value() <= 0 || $sticker->getId()->value() !== (int)$ar->id) {
             $sticker->setId(new StickerId((int)$ar->id));
         }
 

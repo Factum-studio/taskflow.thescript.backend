@@ -162,7 +162,7 @@ class TaskController extends BaseController
     )]
     public function actionIndex(): ErrorDto|CollectionDto
     {
-        $userId = $this->getUserId();
+        $userId = (int)$this->getUserId();
         if (!$userId) {
             return $this->error('User not authenticated', 401);
         }
@@ -264,7 +264,7 @@ class TaskController extends BaseController
      */
     public function actionView(int $id): ErrorDto|ItemDto
     {
-        $userId = $this->getUserId();
+        $userId = (int)$this->getUserId();
         if (!$userId) {
             return $this->error('User not authenticated', 401);
         }
@@ -332,7 +332,7 @@ class TaskController extends BaseController
             return $this->error('Validation failed', 422, $request->getErrors());
         }
 
-        $userId = $this->getUserId();
+        $userId = (int)$this->getUserId();
         if (!$userId) {
             return $this->error('User not authenticated', 401);
         }
@@ -435,7 +435,7 @@ class TaskController extends BaseController
             return $this->error('Validation failed', 422, $updateRequest->getErrors());
         }
 
-        $userId = $this->getUserId();
+        $userId = (int)$this->getUserId();
         if (!$userId) {
             return $this->error('User not authenticated', 401);
         }
@@ -540,7 +540,7 @@ class TaskController extends BaseController
             return $this->error('Validation failed', 422, $request->getErrors());
         }
 
-        $userId = $this->getUserId();
+        $userId = (int)$this->getUserId();
         if (!$userId) {
             return $this->error('User not authenticated', 401);
         }
@@ -632,7 +632,7 @@ class TaskController extends BaseController
             return $this->error('Validation failed', 422, $request->getErrors());
         }
 
-        $userId = $this->getUserId();
+        $userId = (int)$this->getUserId();
         if (!$userId) {
             return $this->error('User not authenticated', 401);
         }
@@ -708,7 +708,7 @@ class TaskController extends BaseController
     public function actionDelete(int $id): SuccessDto|ErrorDto|array
     {
         $request = new SoftDeleteTaskRequest();
-        $userId = $this->getUserId();
+        $userId = (int)$this->getUserId();
         if (!$userId) {
             return $this->error('User not authenticated', 401);
         }
@@ -785,7 +785,7 @@ class TaskController extends BaseController
     public function actionRestore(int $id): ItemDto|ErrorDto|array
     {
         $request = new RestoreTaskRequest();
-        $userId = $this->getUserId();
+        $userId = (int)$this->getUserId();
         if (!$userId) {
             return $this->error('User not authenticated', 401);
         }
@@ -860,13 +860,14 @@ class TaskController extends BaseController
     public function actionHardDelete(int $id): ErrorDto|SuccessDto|array
     {
         $request = new HardDeleteTaskRequest();
-        $userId = $this->getUserId();
+        $userId = (int)$this->getUserId();
         if (!$userId) {
             return $this->error('User not authenticated', 401);
         }
 
         $command = new HardDeleteTaskCommand(
             id: $id,
+            deletedBy: $userId,
         );
 
         try {

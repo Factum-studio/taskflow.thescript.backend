@@ -5,7 +5,11 @@ declare(strict_types=1);
 namespace modules\projects\infrastructure\access;
 
 use core\domain\valueObject\UserId;
-use modules\projects\application\port\IProjectAccess;
+use modules\projectRbac\application\port\ILocalRbacService;
+use modules\projectRbac\application\port\IProjectRoleRepository;
+use modules\projectRbac\application\service\ProjectRoleService;
+use modules\projectRbac\application\port\IBillingLimitsService;
+use modules\projectRbac\application\port\IProjectAccessService;
 use modules\projects\domain\repository\IProjectRepository;
 use modules\projects\domain\repository\IBoardRepository;
 use modules\projects\domain\repository\IProjectUserRepository;
@@ -14,20 +18,43 @@ use modules\projects\domain\valueObject\BoardId;
 use modules\projects\domain\entity\Project;
 use modules\projects\domain\entity\Board;
 use modules\company\domain\repository\ICompanyMemberRepository;
-use modules\company\domain\valueObject\CompanyId;
 
-class ProjectAccess implements IProjectAccess
+/**
+ * Project access checking — delegates to LocalRbacService for RBAC,
+ * keeps hard-coded business rules that cannot be overridden.
+ */
+class ProjectAccess implements IProjectAccessService
 {
-    private const MAX_USER_PROJECTS = 10;
-    private const MAX_PROJECT_BOARDS = 4;
+    private ILocalRbacService $rbac;
+    private IProjectRepository $projectRepository;
+    private IBoardRepository $boardRepository;
+    private IProjectUserRepository $projectUserRepository;
+    private ICompanyMemberRepository $companyMemberRepository;
+    private IBillingLimitsService $billingLimits;
+    private IProjectRoleRepository $roleRepository;
+    private ProjectRoleService $roleService;
 
     public function __construct(
-        private IProjectRepository $projectRepository,
-        private IBoardRepository $boardRepository,
-        private IProjectUserRepository $projectUserRepository,
-        private ICompanyMemberRepository $companyMemberRepository,
+        ILocalRbacService $rbac,
+        IProjectRepository $projectRepository,
+        IBoardRepository $boardRepository,
+        IProjectUserRepository $projectUserRepository,
+        ICompanyMemberRepository $companyMemberRepository,
+        IBillingLimitsService $billingLimits,
+        IProjectRoleRepository $roleRepository,
+        ProjectRoleService $roleService,
     ) {
+        $this->rbac                    = $rbac;
+        $this->projectRepository       = $projectRepository;
+        $this->boardRepository         = $boardRepository;
+        $this->projectUserRepository   = $projectUserRepository;
+        $this->companyMemberRepository = $companyMemberRepository;
+        $this->billingLimits           = $billingLimits;
+        $this->roleRepository         = $roleRepository;
+        $this->roleService            = $roleService;
     }
+
+    // ── Utility ─────────────────────────────────────────────
 
     public function getUserProjectIds(int $userId): array
     {
@@ -47,9 +74,12 @@ class ProjectAccess implements IProjectAccess
         return $board?->getProjectId()->value();
     }
 
+    // ── View ────────────────────────────────────────────────
+
     public function canViewProject(int $userId, int $projectId): bool
     {
-        return $this->isUserInProject($userId, $projectId);
+        return $this->rbac->hasPermission($userId, $projectId, 'project.view')
+            || $this->isUserInProject($userId, $projectId);
     }
 
     public function canViewBoard(int $userId, int $boardId): bool
@@ -58,39 +88,17 @@ class ProjectAccess implements IProjectAccess
         if (!$projectId) {
             return false;
         }
-        return $this->canViewProject($userId, $projectId);
+        return $this->rbac->hasPermission($userId, $projectId, 'board.view')
+            || $this->isUserInProject($userId, $projectId);
     }
 
-    public function canManageUser(int $userId, int $targetUserId, int $projectId): bool
-    {
-        if (!$this->isAdmin($userId, $projectId)) {
-            return false;
-        }
-
-        $project = $this->projectRepository->findById(new ProjectId($projectId));
-        if (!$project) {
-            return false;
-        }
-
-        // Нельзя управлять владельцем проекта
-        if ($targetUserId === $project->getOwnerId()->value()) {
-            return false;
-        }
-
-        // Проверка последнего администратора
-        if ($targetUserId !== $userId && $this->isAdmin($targetUserId, $projectId)) {
-            $adminsCount = $this->countAdmins($projectId);
-            if ($adminsCount <= 1) {
-                return false;
-            }
-        }
-
-        return true;
-    }
+    // ── Manage ──────────────────────────────────────────────
 
     public function canManageProject(int $userId, int $projectId): bool
     {
-        return $this->isOwner($userId, $projectId) || $this->isAdmin($userId, $projectId);
+        // Manage project = either owner or admin
+        return $this->isOwner($userId, $projectId)
+            || $this->rbac->hasPermission($userId, $projectId, 'project.settings.manage');
     }
 
     public function canManageBoard(int $userId, int $boardId): bool
@@ -99,17 +107,32 @@ class ProjectAccess implements IProjectAccess
         if (!$projectId) {
             return false;
         }
+        return $this->rbac->hasPermission($userId, $projectId, 'board.settings.manage')
+            || $this->isOwner($userId, $projectId);
+    }
 
-        if ($this->isAdmin($userId, $projectId)) {
-            return true;
-        }
+    // ── Participants ────────────────────────────────────────
 
-        $board = $this->boardRepository->findById(new BoardId($boardId));
-        if (!$board) {
+    public function canManageUser(int $userId, int $targetUserId, int $projectId): bool
+    {
+        // Нельзя управлять владельцем
+        if ($targetUserId === $this->getOwnerId($projectId)) {
             return false;
         }
 
-        return $board->getCreatedBy()->value() === $userId;
+        if (!$this->canManageTargetRole($userId, $targetUserId, $projectId)) {
+            return false;
+        }
+
+        // Business rule: последнего админа нельзя понизить/удалить
+        if ($targetUserId !== $userId && $this->isAdmin($targetUserId, $projectId)) {
+            $adminsCount = $this->countAdmins($projectId);
+            if ($adminsCount <= 1) {
+                return false;
+            }
+        }
+
+        return $this->rbac->hasPermission($userId, $projectId, 'member.role.change');
     }
 
     public function canAddMember(int $userId, int $targetUserId, int $projectId): bool
@@ -119,21 +142,27 @@ class ProjectAccess implements IProjectAccess
             return false;
         }
 
+        // Personal — нельзя добавить никого
         if ($project->getType()->isPersonal()) {
             return false;
         }
 
+        // Collaborative — только через приглашение (addMember всегда false)
         if ($project->getType()->isCollaborative()) {
             return false;
         }
 
+        // Corporate — только из своей компании
         if ($project->getType()->isCorporate()) {
-            $userCompany    = $this->getUserCompanyId($userId);
-            $targetCompany  = $this->getUserCompanyId($targetUserId);
-            return $userCompany !== null && $userCompany === $targetCompany;
+            $userCompany   = $this->getUserCompanyId($userId);
+            $targetCompany = $this->getUserCompanyId($targetUserId);
+            if ($userCompany === null || $userCompany !== $targetCompany) {
+                return false;
+            }
         }
 
-        return false;
+        return $this->billingLimits->canAddMember($projectId)
+            && $this->rbac->hasPermission($userId, $projectId, 'member.add');
     }
 
     public function canInviteUser(int $userId, int $targetUserId, int $projectId): bool
@@ -143,52 +172,44 @@ class ProjectAccess implements IProjectAccess
             return false;
         }
 
+        // Personal — нельзя приглашать
         if ($project->getType()->isPersonal()) {
             return false;
         }
 
-        if (!$this->isAdmin($userId, $projectId)) {
-            return false;
-        }
-
+        // Corporate: invite только если компании РАЗНЫЕ (иначе addMember)
         if ($project->getType()->isCorporate()) {
-            $userCompany    = $this->getUserCompanyId($userId);
-            $targetCompany  = $this->getUserCompanyId($targetUserId);
-            return !($userCompany !== null && $userCompany === $targetCompany);
+            $userCompany   = $this->getUserCompanyId($userId);
+            $targetCompany = $this->getUserCompanyId($targetUserId);
+            // Если в одной компании — используй addMember, не invite
+            if ($userCompany !== null && $userCompany === $targetCompany) {
+                return false;
+            }
         }
 
-        return true;
-    }
-
-    /**
-     * Проверяет, находятся ли два пользователя в одной компании.
-     */
-    private function getUserCompanyId(int $userId): ?int
-    {
-        $members = $this->companyMemberRepository->findByUser(new \core\domain\valueObject\UserId($userId));
-        if (empty($members)) {
-            return null;
-        }
-        return $members[0]->getCompanyId()->value();
+        $memberRole = $this->roleRepository->findSystemRole($projectId, 'member');
+        return $memberRole !== null
+            && $this->roleService->canAssignRole($userId, $projectId, $memberRole)
+            && $this->rbac->hasPermission($userId, $projectId, 'member.invite');
     }
 
     public function canRemoveUser(int $userId, int $targetUserId, int $projectId): bool
     {
-        if (!$this->isAdmin($userId, $projectId)) {
-            return false;
-        }
-
         $project = $this->projectRepository->findById(new ProjectId($projectId));
         if (!$project) {
             return false;
         }
 
-        // Нельзя удалить владельца проекта
+        // Нельзя удалить владельца
         if ($targetUserId === $project->getOwnerId()->value()) {
             return false;
         }
 
-        // Проверка последнего администратора
+        if (!$this->canManageTargetRole($userId, $targetUserId, $projectId)) {
+            return false;
+        }
+
+        // Нельзя удалить последнего админа
         if ($this->isAdmin($targetUserId, $projectId)) {
             $adminsCount = $this->countAdmins($projectId);
             if ($adminsCount <= 1) {
@@ -196,8 +217,24 @@ class ProjectAccess implements IProjectAccess
             }
         }
 
-        return true;
+        return $this->rbac->hasPermission($userId, $projectId, 'member.remove');
     }
+
+
+    private function canManageTargetRole(int $actorUserId, int $targetUserId, int $projectId): bool
+    {
+        $targetMember = $this->projectUserRepository->find(new ProjectId($projectId), new UserId($targetUserId));
+        $targetRoleId = $targetMember?->getRoleId();
+        if ($targetRoleId === null) {
+            return false;
+        }
+        $targetRole = $this->roleRepository->findRoleById($targetRoleId);
+        return $targetRole !== null
+            && $targetRole->getProjectId() === $projectId
+            && $this->roleService->canRemoveRoleAssignment($actorUserId, $projectId, $targetRole);
+    }
+
+    // ── Delete ──────────────────────────────────────────────
 
     public function canDeleteProject(int $userId, int $projectId): bool
     {
@@ -206,11 +243,12 @@ class ProjectAccess implements IProjectAccess
             return false;
         }
 
-        // Нельзя удалить personal‑проект
+        // Personal нельзя удалить
         if ($project->getType()->isPersonal()) {
             return false;
         }
 
+        // Только owner
         return $project->getOwnerId()->value() === $userId;
     }
 
@@ -226,24 +264,35 @@ class ProjectAccess implements IProjectAccess
             return false;
         }
 
-        return $project->getOwnerId()->value() === $userId;
-    }
-
-    public function canCreateBoard(int $userId, int $projectId): bool
-    {
-        if (!$this->isAdmin($userId, $projectId) && !$this->isOwner($userId, $projectId)) {
+        // Personal — доску нельзя удалить (правило бизнеса)
+        if ($project->getType()->isPersonal()) {
             return false;
         }
 
-        $boardsCount = $this->boardRepository->countByProject(new ProjectId($projectId));
-        return $boardsCount < self::MAX_PROJECT_BOARDS;
+        return $this->rbac->hasPermission($userId, $projectId, 'board.delete');
     }
 
+    // ── Create (с лимитами) ────────────────────────────────
+
+    public function canCreateBoard(int $userId, int $projectId): bool
+    {
+        if (!$this->billingLimits->canCreateBoard($projectId)) {
+            return false;
+        }
+        return $this->rbac->hasPermission($userId, $projectId, 'board.create');
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * Лимит MAX_USER_PROJECTS планируется вынести в billing.
+     */
     public function canCreateProject(int $userId): bool
     {
-        $projectsCount = $this->projectRepository->countByOwner(new UserId($userId));
-        return $projectsCount < self::MAX_USER_PROJECTS;
+        return $this->billingLimits->canCreateProject($userId);
     }
+
+    // ── Private: business rules helpers ──────────────────────
 
     private function isUserInProject(int $userId, int $projectId): bool
     {
@@ -260,7 +309,11 @@ class ProjectAccess implements IProjectAccess
             new ProjectId($projectId),
             new UserId($userId),
         );
-        return $projectUser && $projectUser->getRole()->isAdmin();
+        if (!$projectUser || $projectUser->getRoleId() === null) {
+            return false;
+        }
+        $role = $this->roleRepository->findRoleById($projectUser->getRoleId());
+        return $role !== null && $role->getProjectId() === $projectId && $role->getSlug() === 'admin' && $role->isSystem();
     }
 
     private function isOwner(int $userId, int $projectId): bool
@@ -269,10 +322,31 @@ class ProjectAccess implements IProjectAccess
         return $project && $project->getOwnerId()->value() === $userId;
     }
 
+    private function getOwnerId(int $projectId): ?int
+    {
+        $project = $this->projectRepository->findById(new ProjectId($projectId));
+        return $project?->getOwnerId()->value();
+    }
+
     private function countAdmins(int $projectId): int
     {
         $members = $this->projectUserRepository->findByProject(new ProjectId($projectId));
-        $admins = array_filter($members, fn ($m) => $m->getRole()->isAdmin());
-        return count($admins);
+        return count(array_filter($members, function ($member) use ($projectId): bool {
+            $roleId = $member->getRoleId();
+            if ($roleId === null) { return false; }
+            $role = $this->roleRepository->findRoleById($roleId);
+            return $role !== null && $role->getProjectId() === $projectId && $role->getSlug() === 'admin' && $role->isSystem();
+        }));
+    }
+
+    private function getUserCompanyId(int $userId): ?int
+    {
+        $members = $this->companyMemberRepository->findByUser(
+            new \core\domain\valueObject\UserId($userId),
+        );
+        if (empty($members)) {
+            return null;
+        }
+        return $members[0]->getCompanyId()->value();
     }
 }

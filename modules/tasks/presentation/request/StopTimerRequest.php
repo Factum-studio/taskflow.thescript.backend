@@ -8,7 +8,7 @@ use yii\base\Model;
 
 class StopTimerRequest extends Model
 {
-    public int $intervalId;
+    public ?int $intervalId = null;
     public ?string $comment = null;
 
     public function rules(): array

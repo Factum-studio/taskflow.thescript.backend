@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace modules\tasks\application\handler;
 
-use modules\projects\application\port\IProjectAccess;
+use modules\projectRbac\application\port\IProjectAccessService;
 use modules\tasks\application\assembler\StickerDtoAssembler;
 use modules\tasks\application\dto\StickerDto;
 use modules\tasks\application\query\ListStickersQuery;
@@ -15,12 +15,12 @@ class ListStickersHandler
 {
     private IStickerRepository $stickerRepository;
     private StickerDtoAssembler $stickerDtoAssembler;
-    private IProjectAccess $projectAccess;
+    private IProjectAccessService $projectAccess;
 
     public function __construct(
         IStickerRepository $stickerRepository,
         StickerDtoAssembler $stickerDtoAssembler,
-        IProjectAccess $projectAccess,
+        IProjectAccessService $projectAccess,
     ) {
         $this->stickerRepository    = $stickerRepository;
         $this->stickerDtoAssembler  = $stickerDtoAssembler;

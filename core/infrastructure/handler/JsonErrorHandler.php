@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace core\infrastructure\handler;
 
 use core\domain\exception\IHttpException;
-use core\domain\exception\ValidationException;
 use Throwable;
 use Yii;
 use yii\web\ErrorHandler;

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use core\domain\event\UserFirstLoginEvent;
-use modules\projects\application\port\IProjectAccess;
+use modules\projectRbac\application\port\IProjectAccessService;
 use core\application\port\IEventDispatcher as GlobalEventDispatcher;
 use modules\projects\domain\event\BoardCreatedEvent;
 use modules\projects\domain\event\IEventDispatcher as ProjectEventDispatcher;
@@ -54,7 +54,7 @@ Yii::$container->set(BoardDtoAssembler::class);
 Yii::$container->set(ProjectUserDtoAssembler::class);
 
 Yii::$container->set(
-    IProjectAccess::class,
+    IProjectAccessService::class,
     ProjectAccess::class,
 );
 
@@ -62,7 +62,7 @@ Yii::$container->set(AddOwnerAsMemberListener::class);
 Yii::$container->set(SendInvitationEmailListener::class);
 
 Yii::$container->set(ModuleEventDispatcher::class, function (Container $container) {
-    /** @var AddOwnerAsMemberListener $listener */
+    /** @var AddOwnerAsMemberListener $ownerListener */
     $ownerListener = $container->get(AddOwnerAsMemberListener::class);
     /** @var ProjectLoggerListener $logger */
     $logger = $container->get(ProjectLoggerListener::class);

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace modules\company\application\handler;
 
 use core\domain\exception\ValidationException;
-use core\domain\valueObject\UserId;
 use modules\company\application\assembler\CompanyDtoAssembler;
 use modules\company\application\command\UpdateCompanyCommand;
 use modules\company\application\dto\CompanyDto;

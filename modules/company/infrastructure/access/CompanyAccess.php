@@ -7,7 +7,6 @@ namespace modules\company\infrastructure\access;
 use core\domain\exception\ValidationException;
 use core\domain\valueObject\UserId;
 use modules\company\application\port\ICompanyAccess;
-use modules\company\domain\entity\Company;
 use modules\company\domain\repository\ICompanyMemberRepository;
 use modules\company\domain\repository\ICompanyRepository;
 use modules\company\domain\valueObject\CompanyId;

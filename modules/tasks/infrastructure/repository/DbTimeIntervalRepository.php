@@ -38,7 +38,7 @@ class DbTimeIntervalRepository implements ITimeIntervalRepository
         if (!$ar->save()) {
             throw new RuntimeException('Failed to save time interval: ' . implode(', ', $ar->getFirstErrors()));
         }
-        if (!$interval->getId() || $interval->getId()->value() !== (int)$ar->id) {
+        if (!$interval->getId()->value() <= 0 || $interval->getId()->value() !== (int)$ar->id) {
             $interval->setId(new TimeIntervalId((int)$ar->id));
         }
         return $interval;

@@ -7,12 +7,11 @@ namespace modules\tasks\application\handler;
 use core\domain\valueObject\UserId;
 use DateTimeImmutable;
 use InvalidArgumentException;
-use modules\projects\application\port\IProjectAccess;
+use modules\projectRbac\application\port\IProjectAccessService;
 use modules\tasks\application\assembler\StickerDtoAssembler;
 use modules\tasks\application\command\CreateStickerCommand;
 use modules\tasks\application\dto\StickerDto;
 use modules\tasks\domain\entity\Sticker;
-use modules\tasks\domain\event\IEventDispatcher;
 use modules\tasks\domain\repository\IStickerRepository;
 use modules\tasks\domain\valueObject\StickerId;
 use modules\tasks\domain\valueObject\StickerName;
@@ -24,17 +23,16 @@ class CreateStickerHandler
     private IStickerRepository $stickerRepository;
     private StickerDtoAssembler $stickerDtoAssembler;
     private IEventDispatcher $eventDispatcher;
-    private IProjectAccess $projectAccess;
+    private IProjectAccessService $projectAccess;
 
     public function __construct(
         IStickerRepository $stickerRepository,
         StickerDtoAssembler $stickerDtoAssembler,
         IEventDispatcher $eventDispatcher,
-        IProjectAccess $projectAccess,
+        IProjectAccessService $projectAccess,
     ) {
         $this->stickerRepository    = $stickerRepository;
         $this->stickerDtoAssembler  = $stickerDtoAssembler;
-        $this->eventDispatcher      = $eventDispatcher;
         $this->projectAccess        = $projectAccess;
     }
 

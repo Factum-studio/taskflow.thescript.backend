@@ -98,7 +98,7 @@ class BoardColumnController extends BaseController
      */
     public function actionIndex(int $boardId): CollectionDto|array
     {
-        $userId = $this->getUserId();
+        $userId = (int)$this->getUserId();
         if (!$userId) {
             throw new UnauthorizedHttpException('User not authenticated');
         }
@@ -151,7 +151,7 @@ class BoardColumnController extends BaseController
      */
     public function actionView(int $id): ItemDto|array
     {
-        $userId = $this->getUserId();
+        $userId = (int)$this->getUserId();
         if (!$userId) {
             throw new UnauthorizedHttpException('User not authenticated');
         }
@@ -217,7 +217,7 @@ class BoardColumnController extends BaseController
             return $this->error('Validation failed', 422, $request->getErrors());
         }
 
-        $userId = $this->getUserId();
+        $userId = (int)$this->getUserId();
         if (!$userId) {
             return $this->error('User not authenticated', 401);
         }
@@ -298,7 +298,7 @@ class BoardColumnController extends BaseController
             return $this->error('Validation failed', 422, $request->getErrors());
         }
 
-        $userId = $this->getUserId();
+        $userId = (int)$this->getUserId();
         if (!$userId) {
             return $this->error('User not authenticated', 401);
         }
@@ -368,7 +368,7 @@ class BoardColumnController extends BaseController
      */
     public function actionDelete(int $id): ErrorDto|SuccessDto|array
     {
-        $userId = $this->getUserId();
+        $userId = (int)$this->getUserId();
         if (!$userId) {
             return $this->error('User not authenticated', 401);
         }
@@ -436,7 +436,7 @@ class BoardColumnController extends BaseController
             return $this->error('Validation failed', 422, $request->getErrors());
         }
 
-        $userId = $this->getUserId();
+        $userId = (int)$this->getUserId();
         if (!$userId) {
             return $this->error('User not authenticated', 401);
         }
