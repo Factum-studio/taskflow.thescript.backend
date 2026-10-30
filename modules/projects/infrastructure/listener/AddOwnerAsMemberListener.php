@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace modules\projects\infrastructure\listener;
 
+use core\application\port\ITransactionManager;
 use core\domain\valueObject\UserId;
 use modules\projects\domain\entity\ProjectUser;
 use modules\projects\domain\event\ProjectCreatedEvent;
@@ -15,7 +16,6 @@ use modules\projects\domain\valueObject\UserRole;
 use DateTimeImmutable;
 use RuntimeException;
 use Throwable;
-use yii\db\Connection;
 use Yii;
 
 class AddOwnerAsMemberListener
@@ -23,24 +23,24 @@ class AddOwnerAsMemberListener
     private IProjectUserRepository $projectUserRepository;
     private IProjectRepository $projectRepository;
     private ILocalRbacService $localRbac;
-    private Connection $db;
+    private ITransactionManager $transactionManager;
 
     public function __construct(
         IProjectUserRepository $projectUserRepository,
         IProjectRepository $projectRepository,
         ILocalRbacService $localRbac,
-        Connection $db,
+        ITransactionManager $transactionManager,
     ) {
         $this->projectUserRepository = $projectUserRepository;
         $this->projectRepository = $projectRepository;
         $this->localRbac = $localRbac;
-        $this->db = $db;
+        $this->transactionManager = $transactionManager;
     }
 
     public function handleProjectCreated(ProjectCreatedEvent $event): void
     {
         try {
-            $this->db->transaction(function () use ($event): void {
+            $this->transactionManager->run(function () use ($event): void {
                 $projectId = new ProjectId($event->getAggregateId());
                 $projectUser = new ProjectUser(
                     $projectId,
